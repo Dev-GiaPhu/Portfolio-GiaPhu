@@ -2328,3 +2328,180 @@ img {
     letter-spacing:-.018em!important;
   }
 }
+
+
+/* Portrait terminal refinement: soft lower fade + adaptive reveal space */
+.terminal-shell{
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease,
+    border-color .18s ease,
+    width .32s ease;
+}
+
+.terminal-card-inner{
+  transition:min-height .34s cubic-bezier(.2,.8,.2,1);
+}
+
+/* Always keep the portrait bottom softly dissolved into the terminal */
+.portrait-frame{
+  isolation:isolate;
+}
+
+.portrait-frame:after{
+  content:"";
+  position:absolute;
+  z-index:3;
+  left:0;
+  right:0;
+  bottom:0;
+  height:34%;
+  pointer-events:none;
+  background:
+    linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(9,13,20,.16) 28%,
+      rgba(9,13,20,.68) 72%,
+      #090d14 100%
+    );
+}
+
+.portrait-frame img{
+  transition:
+    top .34s cubic-bezier(.2,.8,.2,1),
+    height .34s cubic-bezier(.2,.8,.2,1),
+    filter .28s ease;
+}
+
+/* Give the information panel more room once it appears */
+.hero-terminal-card.is-info-visible .terminal-card-inner,
+.hero-terminal-card.is-info-pinned .terminal-card-inner{
+  min-height:585px;
+}
+
+.hero-terminal-card.is-info-visible .portrait-frame img,
+.hero-terminal-card.is-info-pinned .portrait-frame img{
+  top:-24px;
+  height:710px;
+}
+
+.hero-terminal-card.is-info-visible .terminal-shell,
+.hero-terminal-card.is-info-pinned .terminal-shell{
+  width:min(100%,515px);
+}
+
+/* Eye control for manually pinning/hiding personal information */
+.contact-toggle{
+  position:absolute;
+  z-index:10;
+  right:18px!important;
+  bottom:18px!important;
+  top:auto!important;
+  width:40px;
+  height:40px;
+  display:grid;
+  place-items:center;
+  border:1px solid #ffffff24;
+  border-radius:50%;
+  background:#090d14d9;
+  color:var(--mint);
+  box-shadow:0 12px 30px #0007;
+  backdrop-filter:blur(10px);
+  transform:translateZ(92px);
+  transition:
+    background .2s ease,
+    color .2s ease,
+    border-color .2s ease,
+    box-shadow .2s ease,
+    transform .2s ease,
+    opacity .2s ease;
+}
+
+.contact-toggle:hover{
+  border-color:#8ff5d066;
+  background:#101923ef;
+  transform:translateZ(92px) translateY(-1px) scale(1.04);
+}
+
+.contact-toggle svg{
+  width:18px;
+  height:18px;
+  fill:currentColor;
+}
+
+.contact-toggle[aria-expanded="true"]{
+  color:#07110e;
+  background:var(--mint);
+  border-color:transparent;
+  box-shadow:0 0 28px #8ff5d03d,0 12px 30px #0007;
+}
+
+/* Pinned state behaves like the normal information-visible state */
+.hero-terminal-card.is-info-pinned .terminal-card-meta{
+  opacity:1;
+  visibility:visible;
+  filter:none;
+  clip-path:inset(0 0 0 0);
+  transform:translateZ(58px) translateY(0);
+  transition-delay:0s;
+}
+
+.hero-terminal-card.is-info-pinned .terminal-card-meta:after{
+  animation:digitalResolve .55s ease-out 1;
+}
+
+/* Eye can intentionally hide info even while pointer remains over the card */
+.hero-terminal-card.is-info-suppressed .terminal-card-meta{
+  opacity:0!important;
+  visibility:hidden!important;
+  filter:blur(8px)!important;
+  clip-path:inset(0 0 100% 0)!important;
+  transform:translateZ(58px) translateY(14px)!important;
+}
+
+.hero-terminal-card.is-info-suppressed .terminal-card-inner{
+  min-height:535px;
+}
+
+.hero-terminal-card.is-info-suppressed .portrait-frame img{
+  top:8px;
+  height:690px;
+}
+
+@media(max-width:980px){
+  .hero-terminal-card.is-info-visible .terminal-card-inner,
+  .hero-terminal-card.is-info-pinned .terminal-card-inner{
+    min-height:565px;
+  }
+
+  .hero-terminal-card.is-info-visible .portrait-frame img,
+  .hero-terminal-card.is-info-pinned .portrait-frame img{
+    top:-18px;
+    height:680px;
+  }
+}
+
+@media(max-width:560px){
+  .hero-terminal-card.is-info-visible .terminal-card-inner,
+  .hero-terminal-card.is-info-pinned .terminal-card-inner{
+    min-height:510px;
+  }
+
+  .hero-terminal-card.is-info-visible .portrait-frame img,
+  .hero-terminal-card.is-info-pinned .portrait-frame img{
+    top:-12px;
+    height:610px;
+  }
+
+  .contact-toggle{
+    right:12px!important;
+    bottom:12px!important;
+    width:38px;
+    height:38px;
+  }
+
+  .portrait-frame:after{
+    height:38%;
+  }
+}
