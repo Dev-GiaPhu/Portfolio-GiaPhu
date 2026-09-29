@@ -489,3 +489,77 @@ footer{max-width:1320px;margin:auto;padding:24px 28px 38px;border-top:1px solid 
     50%{transform:translateY(330px) translateZ(75px);opacity:.95}
   }
 }
+
+
+/* Hidden contact reveal */
+.contact-toggle{
+  position:absolute;
+  top:18px;
+  right:18px;
+  z-index:8;
+  width:38px;
+  height:38px;
+  display:grid;
+  place-items:center;
+  border:1px solid #ffffff20;
+  border-radius:12px;
+  background:#090d14cc;
+  color:var(--mint);
+  box-shadow:0 12px 30px #0006;
+  backdrop-filter:blur(10px);
+  transition:transform .18s ease,background .18s ease,border-color .18s ease,color .18s ease;
+  transform:translateZ(90px);
+}
+.contact-toggle svg{width:17px;height:17px;fill:currentColor}
+.contact-toggle:hover{transform:translateZ(90px) translateY(-1px);background:#ffffff0d;border-color:#8ff5d05c}
+.contact-toggle[aria-expanded="true"]{background:var(--mint);color:#07110e;border-color:transparent}
+.contact-reveal{
+  display:grid;
+  gap:7px;
+  max-height:0;
+  opacity:0;
+  overflow:hidden;
+  transform:translateY(8px);
+  transition:max-height .32s ease,opacity .24s ease,transform .28s ease,margin .28s ease;
+  margin-top:0;
+}
+.hero-terminal-card.is-contact-open .contact-reveal{
+  max-height:170px;
+  opacity:1;
+  transform:none;
+  margin-top:12px;
+}
+.contact-reveal a{
+  display:grid;
+  grid-template-columns:66px minmax(0,1fr);
+  gap:10px;
+  align-items:center;
+  padding:7px 9px;
+  border:1px solid #ffffff10;
+  border-radius:9px;
+  background:#ffffff05;
+  font:9px 'Space Mono',monospace;
+  transform:translateZ(60px);
+}
+.contact-reveal a:hover{border-color:#8ff5d047;background:#8ff5d008}
+.contact-reveal span{color:var(--mint);letter-spacing:.08em}
+.contact-reveal strong{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:#dbe4ec;
+  font-weight:400;
+}
+.contact-hint{
+  margin:4px 0 0;
+  color:#687483;
+  font:9px 'Space Mono',monospace;
+  letter-spacing:.08em;
+  transition:opacity .2s ease;
+}
+.hero-terminal-card.is-contact-open .contact-hint{opacity:0}
+@media(max-width:560px){
+  .contact-toggle{top:14px;right:14px;width:36px;height:36px}
+  .contact-reveal a{grid-template-columns:58px minmax(0,1fr);font-size:8px}
+}
