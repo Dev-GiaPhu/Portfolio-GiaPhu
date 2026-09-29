@@ -2505,3 +2505,164 @@ img {
     height:38%;
   }
 }
+
+
+/* Contact eye now controls only sensitive values; info panel stays hover-driven */
+.terminal-card-meta{
+  left:14px;
+  right:14px;
+  bottom:12px;
+  padding:11px 48px 11px 12px;
+  border-radius:12px;
+  background:linear-gradient(180deg,#0710184f,#071018d9);
+  backdrop-filter:blur(9px);
+}
+
+.terminal-card-meta .console-label{
+  margin:0 0 3px;
+  font-size:8px;
+  letter-spacing:.1em;
+}
+
+.terminal-card-meta h3{
+  margin:0 0 7px;
+  font-size:clamp(20px,2.2vw,28px);
+  line-height:1!important;
+}
+
+.terminal-card-meta h3 br{
+  display:none;
+}
+
+.contact-reveal{
+  grid-template-columns:1fr!important;
+  gap:4px!important;
+  margin-top:4px!important;
+}
+
+.contact-reveal a{
+  grid-template-columns:52px minmax(0,1fr);
+  min-height:24px;
+  padding:4px 6px;
+  font-size:7.5px;
+  background:#ffffff035;
+}
+
+.contact-reveal strong{
+  position:relative;
+  filter:blur(4.5px)!important;
+  opacity:.46!important;
+  text-shadow:2px 0 #8ff5d04d,-2px 0 #7ca7ff4d!important;
+  user-select:none!important;
+  transition:filter .22s ease,opacity .22s ease,text-shadow .22s ease;
+}
+
+.contact-reveal strong:after{
+  content:"";
+  position:absolute;
+  inset:-2px 0;
+  pointer-events:none;
+  opacity:.45;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0 3px,
+      rgba(143,245,208,.08) 3px 4px
+    );
+}
+
+.hero-terminal-card.is-contact-revealed .contact-reveal strong{
+  filter:none!important;
+  opacity:1!important;
+  text-shadow:none!important;
+  user-select:text!important;
+}
+
+.hero-terminal-card.is-contact-revealed .contact-reveal strong:after{
+  opacity:0;
+}
+
+.contact-toggle{
+  right:18px!important;
+  bottom:18px!important;
+  width:34px;
+  height:34px;
+}
+
+.contact-toggle svg{
+  width:16px;
+  height:16px;
+}
+
+.contact-toggle[aria-expanded="true"]{
+  background:var(--mint);
+  color:#07110e;
+}
+
+/* Keep hover reveal compact so the portrait remains dominant */
+.hero-terminal-card.is-info-visible .terminal-card-inner{
+  min-height:555px;
+}
+
+.hero-terminal-card.is-info-visible .portrait-frame img{
+  top:-14px;
+  height:700px;
+}
+
+.hero-terminal-card.is-info-visible .terminal-shell{
+  width:min(100%,505px);
+}
+
+/* Remove old whole-panel eye states */
+.hero-terminal-card.is-info-pinned .terminal-card-inner,
+.hero-terminal-card.is-info-suppressed .terminal-card-inner{
+  min-height:555px;
+}
+
+.hero-terminal-card.is-info-pinned .portrait-frame img,
+.hero-terminal-card.is-info-suppressed .portrait-frame img{
+  top:-14px;
+  height:700px;
+}
+
+.hero-terminal-card.is-info-suppressed .terminal-card-meta{
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+  clip-path:inset(0 0 0 0)!important;
+  transform:translateZ(58px) translateY(0)!important;
+}
+
+@media(max-width:560px){
+  .terminal-card-meta{
+    left:10px;
+    right:10px;
+    bottom:10px;
+    padding:9px 42px 9px 10px;
+  }
+
+  .terminal-card-meta h3{
+    font-size:20px;
+  }
+
+  .contact-reveal a{
+    grid-template-columns:48px minmax(0,1fr);
+    font-size:7px;
+  }
+
+  .contact-toggle{
+    right:12px!important;
+    bottom:12px!important;
+    width:32px;
+    height:32px;
+  }
+
+  .hero-terminal-card.is-info-visible .terminal-card-inner{
+    min-height:485px;
+  }
+
+  .hero-terminal-card.is-info-visible .portrait-frame img{
+    top:-8px;
+    height:600px;
+  }
+}
