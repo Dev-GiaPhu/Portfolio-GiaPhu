@@ -1,4 +1,4 @@
-// Điền thông tin Supabase của portfolio tại đây.
-// Hai giá trị này là public client credentials (anon key), KHÔNG đặt service_role key trong website.
-window.PORTFOLIO_SUPABASE_URL = "";
-window.PORTFOLIO_SUPABASE_ANON_KEY = "";
+// Supabase public client config for portfolio likes.
+// Publishable key is safe to expose in frontend code. Never use service_role here.
+window.PORTFOLIO_SUPABASE_URL = "https://cdsmnoavkoxeufpeofpw.supabase.co";
+window.PORTFOLIO_SUPABASE_ANON_KEY = "sb_publishable_tI9kto302ueXiURAAXsb-Q_CtOkg1F_";
