@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Sora:wght@600;700;800&family=Space+Mono:wght@400;700&display=swap');
 :root {
   --bg:#07090d;
   --bg2:#0c1017;
@@ -1804,5 +1804,342 @@ img {
   .page-title, .section-head h2, .cta h2 {
     line-height:1.16;
     letter-spacing:-.01em;
+  }
+}
+
+
+/* 2026 refresh: expressive Vietnamese display type + staged terminal reveals */
+:root{
+  --display:'Sora','Be Vietnam Pro',sans-serif;
+}
+
+/* Large text only: modern, geometric, Vietnamese-safe */
+.portfolio-title,
+.page-title,
+.section-head h2,
+.cta h2,
+.panel h2,
+.list-item h2,
+.terminal-project-card .console-body h3,
+.terminal-card-meta h3{
+  font-family:var(--display)!important;
+  font-weight:800;
+  letter-spacing:-.025em!important;
+  line-height:1.1!important;
+  text-rendering:optimizeLegibility;
+}
+
+.portfolio-title{
+  font-size:clamp(54px,9.5vw,126px)!important;
+  letter-spacing:-.045em!important;
+}
+
+.page-title{
+  line-height:1.08!important;
+}
+
+.section-head h2,
+.cta h2{
+  line-height:1.1!important;
+}
+
+.panel h2,
+.list-item h2{
+  font-weight:700;
+  line-height:1.22!important;
+  letter-spacing:-.018em!important;
+}
+
+/* Portrait terminal: shorter card, larger portrait, crop lower body */
+.hero-terminal-card{
+  min-height:610px;
+}
+
+.terminal-shell{
+  width:min(100%,500px);
+}
+
+.terminal-card-inner{
+  min-height:535px;
+  padding:0;
+}
+
+.portrait-frame{
+  position:absolute;
+  inset:0;
+  height:auto;
+  display:block;
+  overflow:hidden;
+  transform:translateZ(46px);
+}
+
+.portrait-frame:before{
+  width:88%;
+  left:6%;
+  bottom:2%;
+}
+
+.portrait-frame img{
+  position:absolute;
+  top:8px;
+  left:50%;
+  height:690px;
+  width:auto;
+  max-width:none;
+  max-height:none;
+  object-fit:contain;
+  transform:translateX(-50%);
+  -webkit-mask-image:linear-gradient(to bottom,#000 0,#000 72%,#000f 82%,#0007 92%,transparent 100%);
+  mask-image:linear-gradient(to bottom,#000 0,#000 72%,#000f 82%,#0007 92%,transparent 100%);
+}
+
+/* Nothing informational is visible before interaction */
+.terminal-card-meta{
+  position:absolute;
+  z-index:7;
+  left:22px;
+  right:22px;
+  bottom:20px;
+  margin:0;
+  padding:18px;
+  border:1px solid #ffffff14;
+  border-radius:16px;
+  background:linear-gradient(180deg,#07101866,#071018ed);
+  backdrop-filter:blur(12px);
+  transform:translateZ(58px) translateY(14px);
+  opacity:0;
+  visibility:hidden;
+  filter:blur(8px);
+  clip-path:inset(0 0 100% 0);
+  transition:
+    opacity .32s ease,
+    filter .38s ease,
+    transform .38s ease,
+    clip-path .45s cubic-bezier(.2,.8,.2,1),
+    visibility 0s linear .45s;
+}
+
+.hero-terminal-card.is-info-visible .terminal-card-meta{
+  opacity:1;
+  visibility:visible;
+  filter:none;
+  clip-path:inset(0 0 0 0);
+  transform:translateZ(58px) translateY(0);
+  transition-delay:0s;
+}
+
+.terminal-card-meta:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:0;
+  background:
+    linear-gradient(180deg,transparent 0 46%,#8ff5d01e 49%,transparent 52%),
+    repeating-linear-gradient(0deg,transparent 0 4px,#ffffff08 4px 5px);
+}
+
+.hero-terminal-card.is-info-visible .terminal-card-meta:after{
+  animation:digitalResolve .55s ease-out 1;
+}
+
+@keyframes digitalResolve{
+  0%{opacity:.85;transform:translateY(-18%)}
+  100%{opacity:.08;transform:translateY(22%)}
+}
+
+.terminal-card-meta .console-label{
+  margin-bottom:6px;
+}
+
+.terminal-card-meta h3{
+  margin:4px 0 10px;
+  font-size:clamp(30px,3.5vw,44px);
+}
+
+.contact-reveal{
+  display:grid!important;
+  gap:6px!important;
+  margin-top:8px!important;
+  padding-right:0!important;
+  max-height:none!important;
+  opacity:1!important;
+  overflow:visible!important;
+  transform:none!important;
+}
+
+.contact-reveal a{
+  grid-template-columns:62px minmax(0,1fr);
+  padding:6px 8px;
+  font-size:8px;
+  border-radius:8px;
+}
+
+.contact-reveal strong{
+  filter:none!important;
+  opacity:1!important;
+  text-shadow:none!important;
+  user-select:text!important;
+}
+
+/* Portrait scan only runs on interaction */
+.hero-terminal-card .portrait-scan{
+  opacity:0;
+  animation:none;
+  top:42px;
+}
+
+.hero-terminal-card.is-scanning .portrait-scan{
+  opacity:1;
+  animation:portraitSingleScan .62s cubic-bezier(.2,.8,.2,1) 1 forwards;
+}
+
+@keyframes portraitSingleScan{
+  0%{transform:translateY(0) translateZ(75px);opacity:0}
+  12%{opacity:.95}
+  88%{opacity:.9}
+  100%{transform:translateY(455px) translateZ(75px);opacity:0}
+}
+
+/* Project terminals: only number + title before interaction */
+.terminal-project-card{
+  min-height:400px;
+}
+
+.terminal-project-card .scan{
+  opacity:0;
+  animation:none;
+}
+
+.terminal-project-card .console-label,
+.terminal-project-card .console-body > p,
+.terminal-project-card .stack-list,
+.terminal-project-card .project-terminal-link{
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(10px);
+  filter:blur(6px);
+  clip-path:inset(0 0 100% 0);
+  transition:
+    opacity .28s ease,
+    transform .34s ease,
+    filter .34s ease,
+    clip-path .4s cubic-bezier(.2,.8,.2,1),
+    visibility 0s linear .4s;
+}
+
+.terminal-project-card.is-scanning .scan{
+  opacity:1;
+  animation:projectSingleScan .6s cubic-bezier(.2,.8,.2,1) 1 forwards;
+}
+
+@keyframes projectSingleScan{
+  0%{transform:translateY(0);opacity:0}
+  15%{opacity:1}
+  90%{opacity:.9}
+  100%{transform:translateY(320px);opacity:0}
+}
+
+.terminal-project-card.is-info-visible .console-label,
+.terminal-project-card.is-info-visible .console-body > p,
+.terminal-project-card.is-info-visible .stack-list,
+.terminal-project-card.is-info-visible .project-terminal-link{
+  opacity:1;
+  visibility:visible;
+  transform:none;
+  filter:none;
+  clip-path:inset(0 0 0 0);
+  transition-delay:0s;
+}
+
+.terminal-project-card.is-info-visible .console-body{
+  background:
+    linear-gradient(180deg,transparent,#08101824),
+    repeating-linear-gradient(0deg,transparent 0 5px,#8ff5d006 5px 6px);
+}
+
+.terminal-project-card .console-body h3{
+  margin-top:26px;
+}
+
+/* Keyboard focus should also expose usable content */
+.hero-terminal-card:focus-within .terminal-card-meta,
+.terminal-project-card:focus-within .console-label,
+.terminal-project-card:focus-within .console-body > p,
+.terminal-project-card:focus-within .stack-list,
+.terminal-project-card:focus-within .project-terminal-link{
+  opacity:1;
+  visibility:visible;
+  transform:none;
+  filter:none;
+  clip-path:inset(0 0 0 0);
+}
+
+/* Touch layout: JS tap activates cards, sizing remains compact */
+@media(max-width:980px){
+  .hero-terminal-card{
+    min-height:auto;
+  }
+
+  .terminal-shell{
+    width:min(100%,520px);
+  }
+
+  .terminal-card-inner{
+    min-height:520px;
+  }
+
+  .portrait-frame img{
+    height:660px;
+    top:5px;
+  }
+}
+
+@media(max-width:560px){
+  .terminal-card-inner{
+    min-height:465px;
+  }
+
+  .portrait-frame img{
+    height:585px;
+    top:4px;
+  }
+
+  .terminal-card-meta{
+    left:12px;
+    right:12px;
+    bottom:12px;
+    padding:13px;
+  }
+
+  .terminal-card-meta h3{
+    font-size:28px;
+  }
+
+  .contact-reveal a{
+    grid-template-columns:54px minmax(0,1fr);
+    font-size:7.5px;
+  }
+
+  .terminal-project-card{
+    min-height:360px;
+  }
+
+  .terminal-project-card .console-body h3{
+    font-size:clamp(28px,9vw,38px);
+  }
+}
+
+@media(max-width:390px){
+  .terminal-card-inner{
+    min-height:430px;
+  }
+
+  .portrait-frame img{
+    height:545px;
+  }
+
+  .portfolio-title{
+    font-size:clamp(40px,14vw,56px)!important;
   }
 }
