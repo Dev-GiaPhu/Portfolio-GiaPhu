@@ -108,7 +108,15 @@
 
   function deactivateTerminal(card) {
     clearRevealTimer(card);
+    if (card.classList.contains('is-info-pinned')) return;
     card.classList.remove('is-scanning', 'is-info-visible');
+
+    if (card.classList.contains('hero-terminal-card')) {
+      card.classList.remove('is-info-suppressed');
+      const eye = card.querySelector('[data-contact-toggle]');
+      eye?.setAttribute('aria-expanded', 'false');
+      eye?.setAttribute('aria-label', 'Hiện thông tin liên hệ');
+    }
   }
 
   terminalCards.forEach((card) => {
@@ -129,6 +137,35 @@
         activateTerminal(card);
       }
     });
+  });
+
+
+  // Eye toggle: manually pin or hide portrait contact information.
+  const contactToggle = document.querySelector('[data-contact-toggle]');
+  const portraitCard = contactToggle?.closest('.hero-terminal-card');
+
+  contactToggle?.addEventListener('click', (event) => {
+    event.stopPropagation();
+    if (!portraitCard) return;
+
+    const currentlyPinned = portraitCard.classList.contains('is-info-pinned');
+
+    if (currentlyPinned) {
+      portraitCard.classList.remove('is-info-pinned', 'is-info-visible', 'is-scanning');
+      portraitCard.classList.add('is-info-suppressed');
+      contactToggle.setAttribute('aria-expanded', 'false');
+      contactToggle.setAttribute('aria-label', 'Hiện thông tin liên hệ');
+      return;
+    }
+
+    portraitCard.classList.remove('is-info-suppressed');
+    activateTerminal(portraitCard);
+
+    window.setTimeout(() => {
+      portraitCard.classList.add('is-info-pinned', 'is-info-visible');
+      contactToggle.setAttribute('aria-expanded', 'true');
+      contactToggle.setAttribute('aria-label', 'Ẩn thông tin liên hệ');
+    }, reducedMotion ? 0 : 430);
   });
 
   // Best-effort shortcut deterrence. Browsers can still expose DevTools
