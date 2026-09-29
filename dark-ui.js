@@ -126,17 +126,12 @@
       return;
     }
 
-    // Touch devices have no hover, so tap the card to run the same sequence.
-    card.addEventListener('click', (event) => {
-      if (event.target.closest('a, button')) return;
-
-      if (card.classList.contains('is-info-visible') ||
-          card.classList.contains('is-scanning')) {
-        deactivateTerminal(card);
-      } else {
-        activateTerminal(card);
-      }
-    });
+    // Touch/mobile: show terminal information immediately.
+    // Personal values inside the portrait card still stay masked
+    // until the eye button is pressed.
+    clearRevealTimer(card);
+    card.classList.remove('is-scanning');
+    card.classList.add('is-info-visible');
   });
   // Eye toggle: reveal or mask contact values only.
   const contactToggle = document.querySelector('[data-contact-toggle]');
