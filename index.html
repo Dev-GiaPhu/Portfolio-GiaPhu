@@ -1,3 +1,65 @@
-<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#111723"><title>Dev-GiaPhu — Pixel Playground</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%238ee8c6' d='M4 4h24v24H4z'/%3E%3Cpath fill='%23111723' d='M9 9h14v5H14v9H9z'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body>
-<header><a class="logo" href="index.html"><span class="logo-mark">G.</span> GIA PHU <span class="muted">/ GAME DEV</span></a><nav aria-label="Menu chính"><a href="index.html" aria-current="page">Sân chơi</a><a href="projects.html">Dự án</a><a href="about.html">Về tôi</a><a href="contact.html">Liên hệ</a></nav><a class="github" href="https://github.com/Dev-GiaPhu" target="_blank" rel="noopener">GITHUB ↗</a></header>
-<main class="home"><div class="scene-top"><span><i></i> WORLD 01 — THE BEGINNING</span><span>MOVE. JUMP. EXPLORE.</span></div><section class="game-shell" aria-label="Sân chơi portfolio"><h1 class="sr-only">PORTFOLIO — sân chơi của Dev-GiaPhu</h1><canvas id="game" width="960" height="600" tabindex="0" aria-label="Game platformer. Dùng A D để chạy, Space để nhảy hai lần, E để vào trang Dự án khi đứng gần cổng."></canvas><div class="game-hud"><span class="badge">◆ <span id="score">0 / 5</span></span><div><button id="sound" aria-pressed="false" title="Bật âm thanh">Âm thanh: tắt</button><button id="pause" aria-pressed="false">Tạm dừng</button><button id="reset" title="Chơi lại">↻ Reset</button></div></div><div class="scene-label"><span>HELLO, PLAYER ONE.</span><p>Tôi là Gia Phú. Tôi tạo ra những thứ bạn có thể chơi.</p></div><div id="message" role="status" aria-live="polite">Thu thập 5 tinh thể. Khám phá theo cách của bạn.</div><a class="portal-link" href="projects.html">KHÁM PHÁ DỰ ÁN <span>ENTER THE NEXT LEVEL</span></a><div class="touch-controls" aria-label="Điều khiển cảm ứng"><button data-control="left" aria-label="Sang trái">◀</button><button data-control="right" aria-label="Sang phải">▶</button><button data-control="jump" aria-label="Nhảy">NHẢY</button></div></section><div class="under-game"><p><kbd>A</kbd> <kbd>D</kbd> di chuyển <span></span><kbd>SPACE</kbd> nhảy ×2 <span></span><kbd>E</kbd> tương tác</p><p>Không cần phá đảo. <a href="projects.html">Xem dự án trực tiếp ↗</a></p></div><footer><span>© 2026 DEV-GIAPHU</span><span>SMALL PIXELS. BIG POSSIBILITIES.</span><span>LOCAL PROTOTYPE / V.02</span></footer></main><script src="game.js"></script></body></html>
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#07090d">
+<meta name="description" content="Portfolio của Nguyễn Gia Phú — game developer tập trung vào Unity, C# và các trải nghiệm game tương tác.">
+<title>Nguyễn Gia Phú — Game Developer</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%238ff5d0' d='M4 4h24v24H4z'/%3E%3Cpath fill='%2307090d' d='M9 9h14v5H14v9H9z'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+<a class="logo" href="index.html"><span class="logo-mark">GP</span><span>GIA PHU <span class="muted">/ GAME DEVELOPER</span></span></a>
+<nav aria-label="Menu chính"><a href="index.html" aria-current="page">Home</a><a href="projects.html">Projects</a><a href="about.html">About</a><a href="contact.html">Contact</a></nav>
+<div class="header-actions"><button class="icon-btn" data-command-open aria-label="Open quick navigation">⌘ K</button><a class="primary-btn" href="projects.html">View work ↗</a><button class="icon-btn nav-toggle" data-nav-toggle aria-label="Toggle menu" aria-expanded="false">☰</button></div>
+</header>
+
+<main>
+<section class="hero">
+<div data-reveal>
+<p class="eyebrow">Game developer · Unity / C# · Vietnam</p>
+<h1><span class="outline">I BUILD</span><br><span class="accent">PLAYABLE</span><br>WORLDS.</h1>
+<p class="hero-copy">Mình là <strong>Nguyễn Gia Phú</strong>, game developer tập trung vào việc biến ý tưởng thành gameplay có cảm giác tốt, hệ thống rõ ràng và trải nghiệm có thể tương tác ngay.</p>
+<div class="hero-actions"><a class="primary-btn" href="projects.html">Explore projects ↗</a><a class="ghost-btn" href="about.html">About me</a><button class="ghost-btn" data-command-open>Quick search · ⌘K</button></div>
+<div class="hero-meta"><span><i></i> Open to game projects</span><span>Unity 6</span><span>C#</span><span>Gameplay systems</span></div>
+</div>
+
+<aside class="hero-console" data-reveal>
+<div class="scan"></div>
+<div class="console-top"><div class="dots"><i></i><i></i><i></i></div><span>DEV_PROFILE.EXE</span></div>
+<div class="console-body">
+<div class="console-label">FEATURED BUILD / 01</div>
+<h2>DREAMY<br>FARM</h2>
+<p>2D farm-simulator project built with Unity 6. Inventory, item system, fishing, wood cutting and mining are already implemented.</p>
+<div class="stack-list"><span class="chip">UNITY 6</span><span class="chip">C#</span><span class="chip">2D</span><span class="chip">PERSONAL PROJECT</span></div>
+<p style="margin-top:24px"><a class="back" href="project.html">OPEN CASE STUDY ↗</a></p>
+</div>
+</aside>
+</section>
+
+<section class="section" id="work">
+<div class="section-head" data-reveal><div><p class="eyebrow">Selected work / 2026</p><h2>PROJECTS THAT<br>SHOW HOW I BUILD.</h2></div><p>Portfolio này ưu tiên project thật từ GitHub của mình, tập trung vào gameplay, hệ thống và quá trình implementation thay vì chỉ trưng ảnh.</p></div>
+<div class="project-grid">
+<a class="project-card featured" data-tilt data-reveal href="project.html"><span class="project-index">01 / FEATURED PROJECT</span><span class="project-link">↗</span><h3>Dreamy<br>Farm</h3><p>Unity 6 farm-sim 2D với inventory, item system, fishing, wood cutting và mining.</p><div class="project-tags"><span class="chip">UNITY 6</span><span class="chip">C#</span><span class="chip">SIMULATION</span></div></a>
+<a class="project-card" data-tilt data-reveal href="https://github.com/Dev-GiaPhu/Elementaria" target="_blank" rel="noopener"><span class="project-index">02 / UNITY PROJECT</span><span class="project-link">↗</span><h3>Elementaria</h3><p>Một project Unity trong bộ game projects công khai của mình.</p><div class="project-tags"><span class="chip">UNITY</span><span class="chip">GAME DEV</span></div></a>
+<a class="project-card" data-tilt data-reveal href="https://github.com/Dev-GiaPhu/Garden_Guardian" target="_blank" rel="noopener"><span class="project-index">03 / GAME PROJECT</span><span class="project-link">↗</span><h3>Garden Guardian</h3><p>Game project đang được lưu trữ công khai trên GitHub.</p><div class="project-tags"><span class="chip">GAMEPLAY</span><span class="chip">PROJECT</span></div></a>
+</div>
+</section>
+
+<section class="section">
+<div class="section-head" data-reveal><div><p class="eyebrow">Toolkit</p><h2>WHAT I WORK WITH.</h2></div><p>Những công cụ và hướng phát triển thể hiện rõ qua các project hiện tại.</p></div>
+<div class="skills">
+<div class="skill" data-reveal><strong>Unity</strong><span>2D / 3D game projects, gameplay implementation.</span></div>
+<div class="skill" data-reveal><strong>C#</strong><span>Gameplay logic, systems and tooling.</span></div>
+<div class="skill" data-reveal><strong>Game Systems</strong><span>Inventory, items, interaction and progression mechanics.</span></div>
+<div class="skill" data-reveal><strong>Git / GitHub</strong><span>Branch-based workflow and public project portfolio.</span></div>
+</div>
+</section>
+
+<section class="cta" data-reveal><p class="eyebrow">Next level</p><h2>LET'S BUILD SOMETHING PEOPLE CAN PLAY.</h2><p>Mình đang tiếp tục phát triển các game project và mở rộng portfolio theo hướng gameplay programmer / game developer.</p><div class="hero-actions"><a class="primary-btn" href="contact.html">Contact me ↗</a><a class="ghost-btn" href="https://github.com/Dev-GiaPhu" target="_blank" rel="noopener">GitHub</a></div></section>
+</main>
+
+<footer><span>© 2026 NGUYEN GIA PHU</span><span>GAME DEVELOPER / UNITY / C#</span><span>DARK UI / V.01</span></footer>
+<div class="command-backdrop" id="command-palette" hidden><div class="command" role="dialog" aria-modal="true" aria-label="Quick navigation"><div class="command-head"><input id="command-search" type="search" placeholder="Search portfolio..." autocomplete="off"><button data-close-palette aria-label="Close">ESC</button></div><div class="command-results" id="command-results"></div></div></div><div class="cursor-glow"></div>
+<script src="dark-ui.js"></script>
+</body></html>
