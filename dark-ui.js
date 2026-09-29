@@ -138,9 +138,7 @@
       }
     });
   });
-
-
-  // Eye toggle: manually pin or hide portrait contact information.
+  // Eye toggle: reveal or mask contact values only.
   const contactToggle = document.querySelector('[data-contact-toggle]');
   const portraitCard = contactToggle?.closest('.hero-terminal-card');
 
@@ -148,24 +146,12 @@
     event.stopPropagation();
     if (!portraitCard) return;
 
-    const currentlyPinned = portraitCard.classList.contains('is-info-pinned');
-
-    if (currentlyPinned) {
-      portraitCard.classList.remove('is-info-pinned', 'is-info-visible', 'is-scanning');
-      portraitCard.classList.add('is-info-suppressed');
-      contactToggle.setAttribute('aria-expanded', 'false');
-      contactToggle.setAttribute('aria-label', 'Hiện thông tin liên hệ');
-      return;
-    }
-
-    portraitCard.classList.remove('is-info-suppressed');
-    activateTerminal(portraitCard);
-
-    window.setTimeout(() => {
-      portraitCard.classList.add('is-info-pinned', 'is-info-visible');
-      contactToggle.setAttribute('aria-expanded', 'true');
-      contactToggle.setAttribute('aria-label', 'Ẩn thông tin liên hệ');
-    }, reducedMotion ? 0 : 430);
+    const revealed = portraitCard.classList.toggle('is-contact-revealed');
+    contactToggle.setAttribute('aria-expanded', String(revealed));
+    contactToggle.setAttribute(
+      'aria-label',
+      revealed ? 'Ẩn thông tin liên hệ' : 'Hiện thông tin liên hệ'
+    );
   });
 
   // Best-effort shortcut deterrence. Browsers can still expose DevTools
