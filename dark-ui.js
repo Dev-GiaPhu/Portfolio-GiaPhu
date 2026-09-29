@@ -114,7 +114,7 @@
       card.classList.remove('is-contact-revealed');
       const eye = card.querySelector('[data-contact-toggle]');
       eye?.setAttribute('aria-expanded', 'false');
-      eye?.setAttribute('aria-label', 'Hiện thông tin liên hệ');
+      eye?.setAttribute('aria-label', 'Hiện thông tin cá nhân');
       eye?.blur();
     }
   }
@@ -150,7 +150,7 @@
     contactToggle.setAttribute('aria-expanded', String(revealed));
     contactToggle.setAttribute(
       'aria-label',
-      revealed ? 'Ẩn thông tin liên hệ' : 'Hiện thông tin liên hệ'
+      revealed ? 'Ẩn thông tin cá nhân' : 'Hiện thông tin cá nhân'
     );
   });
 
