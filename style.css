@@ -114,3 +114,12 @@ footer{max-width:1320px;margin:auto;padding:24px 28px 38px;border-top:1px solid 
 .portfolio-title{white-space:nowrap;font-size:clamp(48px,10vw,132px)!important;letter-spacing:-.045em!important}
 .portfolio-title .outline,.portfolio-title .accent{display:inline}
 @media(max-width:720px){.portfolio-title{font-size:clamp(42px,15vw,78px)!important;letter-spacing:-.055em!important}}
+
+.portfolio-title{
+  color:var(--ink)!important;
+  -webkit-text-stroke:0!important;
+  background:none!important;
+  -webkit-background-clip:initial!important;
+  background-clip:initial!important;
+  text-shadow:none!important;
+}
