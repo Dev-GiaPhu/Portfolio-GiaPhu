@@ -329,3 +329,163 @@ footer{max-width:1320px;margin:auto;padding:24px 28px 38px;border-top:1px solid 
     50%{transform:translateY(400px);opacity:.95}
   }
 }
+
+
+/* Hero terminal portrait card */
+.hero-terminal-card{
+  position:relative;
+  min-height:720px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  perspective:1400px;
+}
+.terminal-shell{
+  width:min(100%,520px);
+  border:1px solid #ffffff1a;
+  border-radius:30px;
+  background:linear-gradient(180deg,#111824f2,#080c13f7);
+  box-shadow:0 34px 100px #0009, inset 0 0 0 1px #ffffff05;
+  overflow:hidden;
+  transform-style:preserve-3d;
+  will-change:transform;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+}
+.hero-terminal-card.is-hovering .terminal-shell{
+  border-color:#8ff5d050;
+  box-shadow:0 42px 120px #000b,0 0 60px #8ff5d00e,inset 0 0 0 1px #ffffff08;
+}
+.terminal-card-inner{
+  position:relative;
+  min-height:640px;
+  padding:24px 24px 20px;
+  overflow:hidden;
+  transform-style:preserve-3d;
+  background:
+    radial-gradient(circle at 22% 12%,#8ff5d014,transparent 30%),
+    radial-gradient(circle at 82% 18%,#7ca7ff16,transparent 34%),
+    linear-gradient(180deg,#0d131d 0%,#090d14 100%);
+}
+.terminal-card-inner:before{
+  content:"";
+  position:absolute;
+  inset:-20%;
+  background:linear-gradient(115deg,transparent 12%,#ffffff08 25%,#8ff5d012 38%,#7ca7ff14 50%,#a995ff12 61%,transparent 76%);
+  mix-blend-mode:screen;
+  opacity:.55;
+  transform:translateZ(28px) rotate(4deg);
+  pointer-events:none;
+}
+.terminal-card-inner:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:repeating-linear-gradient(115deg,transparent 0 11px,#ffffff08 11px 12px);
+  opacity:.16;
+  mix-blend-mode:screen;
+  pointer-events:none;
+}
+.terminal-card-glare{
+  position:absolute;
+  inset:-18%;
+  z-index:5;
+  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),#ffffff42 0,#ffffff20 9%,#8ff5d01a 20%,#7ca7ff10 34%,transparent 58%);
+  opacity:0;
+  transition:opacity .16s ease;
+  mix-blend-mode:screen;
+  pointer-events:none;
+  transform:translateZ(70px);
+}
+.hero-terminal-card.is-hovering .terminal-card-glare{opacity:1}
+.terminal-card-grid{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  background-image:linear-gradient(#ffffff07 1px,transparent 1px),linear-gradient(90deg,#ffffff07 1px,transparent 1px);
+  background-size:22px 22px;
+  -webkit-mask-image:linear-gradient(180deg,#0009,transparent 88%);
+  mask-image:linear-gradient(180deg,#0009,transparent 88%);
+  opacity:.24;
+  pointer-events:none;
+}
+.portrait-frame{
+  position:relative;
+  z-index:2;
+  height:500px;
+  display:flex;
+  justify-content:center;
+  align-items:flex-end;
+  transform:translateZ(46px);
+}
+.portrait-frame:before{
+  content:"";
+  position:absolute;
+  width:82%;
+  aspect-ratio:1;
+  bottom:8%;
+  border-radius:50%;
+  background:radial-gradient(circle,#8ff5d026 0,#7ca7ff1d 34%,transparent 70%);
+  filter:blur(30px);
+  z-index:-1;
+}
+.portrait-frame img{
+  width:min(116%,500px);
+  max-height:610px;
+  object-fit:contain;
+  object-position:center bottom;
+  filter:drop-shadow(0 28px 42px #000a);
+  transform:translateY(30px);
+  -webkit-mask-image:linear-gradient(to bottom,#000 0,#000 70%,#000e 79%,#0008 89%,transparent 100%);
+  mask-image:linear-gradient(to bottom,#000 0,#000 70%,#000e 79%,#0008 89%,transparent 100%);
+}
+.hero-terminal-card .portrait-scan{
+  position:absolute;
+  z-index:6;
+  left:7%;
+  right:7%;
+  top:70px;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--mint),#eafff8,var(--mint),transparent);
+  box-shadow:0 0 14px #8ff5d099,0 0 30px #8ff5d055;
+  animation:terminalPortraitScan 4.2s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes terminalPortraitScan{
+  0%,100%{transform:translateY(0) translateZ(75px);opacity:.08}
+  50%{transform:translateY(420px) translateZ(75px);opacity:.95}
+}
+.terminal-card-meta{
+  position:relative;
+  z-index:3;
+  margin-top:-6px;
+  padding:0 7px 8px;
+  transform:translateZ(54px);
+}
+.terminal-card-meta h3{
+  font:700 clamp(34px,4vw,54px)/.98 'Space Mono',monospace;
+  letter-spacing:-.035em;
+  margin:8px 0 10px;
+}
+.terminal-role{
+  margin:0;
+  color:var(--muted);
+  font:10px 'Space Mono',monospace;
+  letter-spacing:.09em;
+}
+@media(max-width:900px){
+  .hero-terminal-card{min-height:630px}
+  .terminal-shell{width:min(100%,560px)}
+  .terminal-card-inner{min-height:590px}
+  .portrait-frame{height:445px}
+}
+@media(max-width:560px){
+  .hero-terminal-card{min-height:560px}
+  .terminal-card-inner{min-height:535px;padding:18px}
+  .portrait-frame{height:390px}
+  .portrait-frame img{width:124%;max-height:510px}
+  .terminal-card-meta h3{font-size:36px}
+  @keyframes terminalPortraitScan{
+    0%,100%{transform:translateY(0) translateZ(75px);opacity:.08}
+    50%{transform:translateY(330px) translateZ(75px);opacity:.95}
+  }
+}
