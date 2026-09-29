@@ -749,3 +749,68 @@ footer{max-width:1320px;margin:auto;padding:24px 28px 38px;border-top:1px solid 
 .panel,.skill,.console-body,.terminal-card-meta,.list-item,.contact-reveal a{min-width:0}
 .panel p,.skill span,.console-body p,.lede,.hero-copy,.list-item p,.contact-reveal strong{overflow-wrap:anywhere}
 img{max-width:100%;height:auto}
+
+
+/* Fix Vietnamese diacritics on large headings */
+.page-title,
+.section-head h2,
+.cta h2,
+.panel h2,
+.list-item h2,
+.terminal-project-card .console-body h3,
+.terminal-card-meta h3{
+  font-family:'Be Vietnam Pro',sans-serif;
+  font-kerning:normal;
+  text-rendering:optimizeLegibility;
+  letter-spacing:-.012em;
+  line-height:1.16;
+  padding-top:.08em;
+  padding-bottom:.08em;
+  overflow:visible;
+}
+
+.page-title{
+  line-height:1.12;
+  letter-spacing:-.018em;
+}
+
+.section-head h2,
+.cta h2{
+  line-height:1.14;
+}
+
+.panel h2,
+.list-item h2{
+  line-height:1.28;
+  letter-spacing:-.006em;
+}
+
+.terminal-project-card .console-body h3,
+.terminal-card-meta h3{
+  line-height:1.08;
+  letter-spacing:-.012em;
+}
+
+/* Keep English hero title in mono */
+.portfolio-title{
+  font-family:'Space Mono',monospace!important;
+  line-height:1!important;
+  padding-top:0!important;
+  padding-bottom:0!important;
+}
+
+/* Extra breathing room for Vietnamese uppercase headings */
+.page-title br,
+.section-head h2 br,
+.cta h2 br{
+  line-height:1.2;
+}
+
+@media(max-width:760px){
+  .page-title,
+  .section-head h2,
+  .cta h2{
+    line-height:1.16;
+    letter-spacing:-.01em;
+  }
+}
