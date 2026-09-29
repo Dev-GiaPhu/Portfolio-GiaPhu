@@ -101,3 +101,12 @@ footer{max-width:1320px;margin:auto;padding:24px 28px 38px;border-top:1px solid 
 
 /* Tối ưu hiển thị dấu tiếng Việt trên tiêu đề lớn */
 .hero h1,.page-title,.section-head h2,.cta h2,.project-card h3,.panel h2,.list-item h2{font-kerning:normal;text-rendering:optimizeLegibility}
+
+/* Nút tim portfolio */
+.like-btn{display:inline-flex;align-items:center;gap:8px;min-width:72px;justify-content:center;border:1px solid #ffffff1c;background:#ffffff06;color:var(--ink);padding:9px 12px;border-radius:999px;font:700 12px 'Space Mono',monospace;transition:transform .2s ease,border-color .2s ease,background .2s ease,color .2s ease}
+.like-btn:hover{transform:translateY(-1px);border-color:#ff7fa455;background:#ff7fa40d}
+.like-btn[aria-pressed="true"]{color:#ff7fa4;border-color:#ff7fa466;background:#ff7fa412}
+.like-btn:disabled{opacity:.55;cursor:default;transform:none}
+.like-heart{font-size:18px;line-height:1;transform:translateY(-1px)}
+.like-btn[aria-pressed="true"] .like-heart{font-variation-settings:'FILL' 1}
+.like-count{min-width:18px;text-align:center}
