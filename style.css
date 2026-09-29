@@ -2759,3 +2759,45 @@ img {
   text-shadow:none!important;
   user-select:text!important;
 }
+
+
+/* Personal detail rows inside portrait terminal */
+.contact-reveal .contact-row{
+  position:relative;
+  display:grid;
+  grid-template-columns:52px minmax(0,1fr);
+  gap:10px;
+  align-items:center;
+  min-height:24px;
+  padding:4px 6px;
+  border:1px solid #ffffff10;
+  border-radius:8px;
+  background:#ffffff035;
+  font:7.5px 'Space Mono',monospace;
+  overflow:hidden;
+}
+
+.contact-reveal .contact-row span{
+  position:relative;
+  z-index:2;
+  color:var(--mint);
+  letter-spacing:.08em;
+}
+
+.contact-reveal .contact-row strong{
+  position:relative;
+  z-index:2;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:#dbe4ec;
+  font-weight:400;
+}
+
+@media(max-width:560px){
+  .contact-reveal .contact-row{
+    grid-template-columns:48px minmax(0,1fr);
+    font-size:7px;
+  }
+}
