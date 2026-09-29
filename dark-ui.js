@@ -17,7 +17,8 @@ function open(){if(!palette)return;palette.hidden=false;document.body.classList.
 document.querySelectorAll('[data-command-open]').forEach(b=>b.addEventListener('click',open));search?.addEventListener('input',e=>render(e.target.value));palette?.addEventListener('click',e=>{if(e.target===palette||e.target.matches('[data-close-palette]'))close()});
 window.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();palette?.hidden?open():close()}if(e.key==='Escape')close();if(e.key==='Enter'&&palette&&!palette.hidden&&document.activeElement===search){const a=results?.querySelector('a');if(a){e.preventDefault();a.click()}}});
 const navToggle=document.querySelector('[data-nav-toggle]'),nav=document.querySelector('header nav');navToggle?.addEventListener('click',()=>{const opened=nav?.classList.toggle('open');navToggle.setAttribute('aria-expanded',String(Boolean(opened)))});
-if(!reduced){
+const canTilt=!reduced&&window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+if(canTilt){
   document.querySelectorAll('[data-tilt-card]').forEach((wrap)=>{
     const shell=wrap.querySelector('.terminal-shell');
     const glare=wrap.querySelector('.terminal-card-glare');
