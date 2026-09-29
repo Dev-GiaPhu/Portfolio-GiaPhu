@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Sora:wght@600;700;800&family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Geologica:wght@500;600;700;800&family=Space+Mono:wght@400;700&display=swap');
 :root {
   --bg:#07090d;
   --bg2:#0c1017;
@@ -1810,7 +1810,7 @@ img {
 
 /* 2026 refresh: expressive Vietnamese display type + staged terminal reveals */
 :root{
-  --display:'Sora','Be Vietnam Pro',sans-serif;
+  --display:'Geologica','Be Vietnam Pro',sans-serif;
 }
 
 /* Large text only: modern, geometric, Vietnamese-safe */
