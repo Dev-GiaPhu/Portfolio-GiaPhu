@@ -1,43 +1,153 @@
 (() => {
-  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches; if(!reduced&&'IntersectionObserver'in window) {
-    const o=new IntersectionObserver(es=>es.forEach(e=> {
-      if(e.isIntersecting) {
-        e.target.classList.add('is-visible');o.unobserve(e.target)
-      }
-    }), {
-      threshold:.12
-    });document.querySelectorAll('[data-reveal]').forEach(el=>o.observe(el))
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  // Reveal sections on scroll.
+  if (!reducedMotion && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('[data-reveal]').forEach((element) => {
+      observer.observe(element);
+    });
+  } else {
+    document.querySelectorAll('[data-reveal]').forEach((element) => {
+      element.classList.add('is-visible');
+    });
   }
-  else document.querySelectorAll('[data-reveal]').forEach(el=>el.classList.add('is-visible')); const glow=document.querySelector('.cursor-glow');if(glow&&!reduced)window.addEventListener('pointermove',e=> {
-    glow.style.setProperty('--x',e.clientX+'px');glow.style.setProperty('--y',e.clientY+'px')
-  }, {
-    passive:true
-  }); if(!reduced)document.querySelectorAll('[data-tilt]').forEach(card=> {
-    card.addEventListener('pointermove',e=> {
-      const r=card.getBoundingClientRect(),rx=((e.clientY-r.top)/r.height-.5)*-5,ry=((e.clientX-r.left)/r.width-.5)*7;card.style.transform=`perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-6px)`
-    });card.addEventListener('pointerleave',()=>card.style.transform='')
-  }); const navToggle=document.querySelector('[data-nav-toggle]'),nav=document.querySelector('header nav');navToggle?.addEventListener('click',()=> {
-    const opened=nav?.classList.toggle('open');navToggle.setAttribute('aria-expanded',String(Boolean(opened)))
-  }); const canTilt=!reduced&&window.matchMedia('(hover:hover) and (pointer:fine)').matches; if(canTilt) {
-    document.querySelectorAll('[data-tilt-card]').forEach((wrap)=> {
-      const shell=wrap.querySelector('.terminal-shell'); const glare=wrap.querySelector('.terminal-card-glare'); if(!shell)return; wrap.addEventListener('pointermove',(e)=> {
-        const r=wrap.getBoundingClientRect(); const px=(e.clientX-r.left)/r.width; const py=(e.clientY-r.top)/r.height; const ry=(px-.5)*16; const rx=(.5-py)*14; shell.style.transform=`rotateX(${rx}deg) rotateY(${ry}deg) translateY(-7px) scale(1.012)`; if(glare) {
-          glare.style.setProperty('--mx',`${px*100}%`); glare.style.setProperty('--my',`${py*100}%`);
+
+  // Soft cursor glow on desktop.
+  const glow = document.querySelector('.cursor-glow');
+  if (glow && !reducedMotion && finePointer) {
+    window.addEventListener('pointermove', (event) => {
+      glow.style.setProperty('--x', event.clientX + 'px');
+      glow.style.setProperty('--y', event.clientY + 'px');
+    }, { passive: true });
+  }
+
+  // Mobile navigation.
+  const navToggle = document.querySelector('[data-nav-toggle]');
+  const nav = document.querySelector('header nav');
+
+  navToggle?.addEventListener('click', () => {
+    const opened = nav?.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', String(Boolean(opened)));
+  });
+
+  // 3D rare-card tilt for the portrait.
+  if (!reducedMotion && finePointer) {
+    document.querySelectorAll('[data-tilt-card]').forEach((wrapper) => {
+      const shell = wrapper.querySelector('.terminal-shell');
+      const glare = wrapper.querySelector('.terminal-card-glare');
+
+      if (!shell) return;
+
+      wrapper.addEventListener('pointermove', (event) => {
+        const rect = wrapper.getBoundingClientRect();
+        const px = (event.clientX - rect.left) / rect.width;
+        const py = (event.clientY - rect.top) / rect.height;
+        const rotateY = (px - 0.5) * 16;
+        const rotateX = (0.5 - py) * 14;
+
+        shell.style.transform =
+          `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-7px) scale(1.012)`;
+
+        if (glare) {
+          glare.style.setProperty('--mx', `${px * 100}%`);
+          glare.style.setProperty('--my', `${py * 100}%`);
         }
-        wrap.classList.add('is-hovering');
-      }); wrap.addEventListener('pointerleave',()=> {
-        shell.style.transform=''; wrap.classList.remove('is-hovering');
+
+        wrapper.classList.add('is-hovering');
+      });
+
+      wrapper.addEventListener('pointerleave', () => {
+        shell.style.transform = '';
+        wrapper.classList.remove('is-hovering');
       });
     });
   }
-  const contactToggle=document.querySelector('[data-contact-toggle]'); const contactCard=contactToggle?.closest('.hero-terminal-card'); contactToggle?.addEventListener('click',(e)=> {
-    e.stopPropagation(); const open=contactCard?.classList.toggle('is-contact-open'); contactToggle.setAttribute('aria-expanded',String(Boolean(open))); contactToggle.setAttribute('aria-label',open?'Ẩn thông tin liên hệ':'Hiện thông tin liên hệ');
-  }); /* Best-effort browser shortcut deterrence.
-   This cannot truly disable DevTools; it only blocks common shortcuts/context menu. */ document.addEventListener('contextmenu',e=>e.preventDefault()); window.addEventListener('keydown',e=> {
-    const key=e.key.toLowerCase(); const devtoolsShortcut= e.key==='F12' || (e.ctrlKey&&e.shiftKey&&['i','j','c'].includes(key)) || (e.metaKey&&e.altKey&&['i','j','c'].includes(key)) || ((e.ctrlKey||e.metaKey)&&key==='u'); if(devtoolsShortcut) {
-      e.preventDefault(); e.stopPropagation();
+
+  // Terminal interaction sequence:
+  // enter/tap -> one scan pass -> digitally reveal information.
+  const terminalCards = document.querySelectorAll(
+    '.hero-terminal-card, .terminal-project-card'
+  );
+
+  const revealTimers = new WeakMap();
+
+  function clearRevealTimer(card) {
+    const timer = revealTimers.get(card);
+    if (timer) {
+      window.clearTimeout(timer);
+      revealTimers.delete(card);
     }
-  }, {
-    capture:true
+  }
+
+  function activateTerminal(card) {
+    clearRevealTimer(card);
+    card.classList.remove('is-info-visible');
+    card.classList.remove('is-scanning');
+
+    // Force a reflow so the one-shot scan animation restarts cleanly.
+    void card.offsetWidth;
+
+    card.classList.add('is-scanning');
+
+    const timer = window.setTimeout(() => {
+      card.classList.add('is-info-visible');
+      revealTimers.delete(card);
+    }, reducedMotion ? 0 : 430);
+
+    revealTimers.set(card, timer);
+  }
+
+  function deactivateTerminal(card) {
+    clearRevealTimer(card);
+    card.classList.remove('is-scanning', 'is-info-visible');
+  }
+
+  terminalCards.forEach((card) => {
+    if (finePointer) {
+      card.addEventListener('pointerenter', () => activateTerminal(card));
+      card.addEventListener('pointerleave', () => deactivateTerminal(card));
+      return;
+    }
+
+    // Touch devices have no hover, so tap the card to run the same sequence.
+    card.addEventListener('click', (event) => {
+      if (event.target.closest('a, button')) return;
+
+      if (card.classList.contains('is-info-visible') ||
+          card.classList.contains('is-scanning')) {
+        deactivateTerminal(card);
+      } else {
+        activateTerminal(card);
+      }
+    });
   });
+
+  // Best-effort shortcut deterrence. Browsers can still expose DevTools
+  // through their own menus; client-side code cannot disable that absolutely.
+  document.addEventListener('contextmenu', (event) => {
+    event.preventDefault();
+  });
+
+  window.addEventListener('keydown', (event) => {
+    const key = event.key.toLowerCase();
+    const devtoolsShortcut =
+      event.key === 'F12' ||
+      (event.ctrlKey && event.shiftKey && ['i', 'j', 'c'].includes(key)) ||
+      (event.metaKey && event.altKey && ['i', 'j', 'c'].includes(key)) ||
+      ((event.ctrlKey || event.metaKey) && key === 'u');
+
+    if (!devtoolsShortcut) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+  }, { capture: true });
 })();
