@@ -2836,3 +2836,45 @@ img {
     font-size:7.4px!important;
   }
 }
+
+
+/* Touch/mobile: hover-only content is always visible */
+@media (hover:none), (pointer:coarse){
+  .hero-terminal-card .terminal-card-meta{
+    opacity:1!important;
+    visibility:visible!important;
+    filter:none!important;
+    transform:translateZ(58px) translateY(0)!important;
+    clip-path:inset(0 0 0 0)!important;
+  }
+
+  .hero-terminal-card .contact-toggle{
+    opacity:1!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+    transform:translateZ(92px) translateY(0) scale(1)!important;
+  }
+
+  .terminal-project-card .console-label,
+  .terminal-project-card .console-body > p,
+  .terminal-project-card .stack-list,
+  .terminal-project-card .project-terminal-link{
+    opacity:1!important;
+    visibility:visible!important;
+    transform:none!important;
+    filter:none!important;
+    clip-path:inset(0 0 0 0)!important;
+  }
+
+  .hero-terminal-card .portrait-scan,
+  .terminal-project-card .scan{
+    display:none!important;
+  }
+
+  .hero-terminal-card:not(.is-contact-revealed) .contact-reveal strong{
+    filter:blur(4.5px)!important;
+    opacity:.46!important;
+    text-shadow:2px 0 #8ff5d04d,-2px 0 #7ca7ff4d!important;
+    user-select:none!important;
+  }
+}
