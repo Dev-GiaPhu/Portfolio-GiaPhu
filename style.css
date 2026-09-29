@@ -2801,3 +2801,38 @@ img {
     font-size:7px;
   }
 }
+
+
+/* Improve readability of portrait personal details */
+.contact-reveal a,
+.contact-reveal .contact-row{
+  font-size:8.5px!important;
+}
+
+.contact-reveal strong,
+.contact-reveal .contact-row strong{
+  font-size:9.5px!important;
+  letter-spacing:.015em;
+}
+
+.contact-reveal a > span,
+.contact-reveal .contact-row > span{
+  font-size:7.8px!important;
+}
+
+@media(max-width:560px){
+  .contact-reveal a,
+  .contact-reveal .contact-row{
+    font-size:8px!important;
+  }
+
+  .contact-reveal strong,
+  .contact-reveal .contact-row strong{
+    font-size:9px!important;
+  }
+
+  .contact-reveal a > span,
+  .contact-reveal .contact-row > span{
+    font-size:7.4px!important;
+  }
+}
