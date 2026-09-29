@@ -41,4 +41,12 @@ if(!reduced){
     });
   });
 }
+const contactToggle=document.querySelector('[data-contact-toggle]');
+const contactCard=contactToggle?.closest('.hero-terminal-card');
+contactToggle?.addEventListener('click',(e)=>{
+  e.stopPropagation();
+  const open=contactCard?.classList.toggle('is-contact-open');
+  contactToggle.setAttribute('aria-expanded',String(Boolean(open)));
+  contactToggle.setAttribute('aria-label',open?'Ẩn thông tin liên hệ':'Hiện thông tin liên hệ');
+});
 })();
