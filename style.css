@@ -110,3 +110,7 @@ footer{max-width:1320px;margin:auto;padding:24px 28px 38px;border-top:1px solid 
 .like-heart{font-size:18px;line-height:1;transform:translateY(-1px)}
 .like-btn[aria-pressed="true"] .like-heart{font-variation-settings:'FILL' 1}
 .like-count{min-width:18px;text-align:center}
+
+.portfolio-title{white-space:nowrap;font-size:clamp(48px,10vw,132px)!important;letter-spacing:-.045em!important}
+.portfolio-title .outline,.portfolio-title .accent{display:inline}
+@media(max-width:720px){.portfolio-title{font-size:clamp(42px,15vw,78px)!important;letter-spacing:-.055em!important}}
