@@ -108,14 +108,14 @@
 
   function deactivateTerminal(card) {
     clearRevealTimer(card);
-    if (card.classList.contains('is-info-pinned')) return;
     card.classList.remove('is-scanning', 'is-info-visible');
 
     if (card.classList.contains('hero-terminal-card')) {
-      card.classList.remove('is-info-suppressed');
+      card.classList.remove('is-contact-revealed');
       const eye = card.querySelector('[data-contact-toggle]');
       eye?.setAttribute('aria-expanded', 'false');
       eye?.setAttribute('aria-label', 'Hiện thông tin liên hệ');
+      eye?.blur();
     }
   }
 
