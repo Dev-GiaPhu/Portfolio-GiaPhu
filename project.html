@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#07090d">
     <meta name="description" content="Oops-Brake — dự án Unity của Nguyễn Gia Phú với vai trò trưởng nhóm và lập trình viên.">
     <title>Oops-Brake — Nguyễn Gia Phú</title>
-    <link rel="stylesheet" href="style.css?v=20261001-0043">
+    <link rel="stylesheet" href="style.css?v=20261001-0102">
   </head>
   <body>
     <header class="site-header">
@@ -29,64 +29,7 @@
       <button class="icon-btn nav-toggle" data-nav-toggle aria-label="Mở menu" aria-expanded="false">☰</button>
     </div>
   </header>
-  <main class="inner">
-    <a class="back" href="projects.html">← TẤT CẢ DỰ ÁN</a>
-    <p class="eyebrow" data-reveal style="margin-top:38px">Dự án nổi bật / 01</p>
-    <h1 class="page-title" data-reveal>OOPS<br>BRAKE.</h1>
-    <p class="lede" data-reveal>Tôi tham gia Oops Brake với vai trò <strong>trưởng nhóm và lập trình viên</strong>. Trong quá trình phát triển, tôi cùng nhóm xây dựng gameplay xe 3D, các thành phần giao thông, hiệu ứng và công cụ hỗ trợ làm việc trong Unity.</p>
-    <div class="project-hero" data-reveal>
-      <span>UNITY · C# · 3D · TRƯỞNG NHÓM</span>
-    </div>
-
-    <section class="playable-build" data-reveal aria-labelledby="playable-title">
-      <div class="playable-build-head">
-        <div>
-          <p class="eyebrow">PLAYABLE BUILD / WEBGL</p>
-          <h2 id="playable-title">CHƠI OOPS BRAKE<br>NGAY TRÊN WEB.</h2>
-        </div>
-        <p>Build WebGL sẽ chạy trực tiếp trong portfolio. Khi bạn upload build vào <code>games/oops-brake/</code>, khung bên dưới sẽ tự nhận game.</p>
-      </div>
-      <div class="playable-frame-shell">
-        <div class="playable-frame-top">
-          <span>OOPS BRAKE / WEBGL</span>
-          <a href="play-oops-brake.html" target="_blank" rel="noopener">MỞ RIÊNG ↗</a>
-        </div>
-        <iframe
-          class="playable-frame"
-          src="play-oops-brake.html"
-          title="Chơi Oops Brake trên web"
-          loading="lazy"
-          allow="fullscreen; autoplay; gamepad"
-          allowfullscreen
-        ></iframe>
-      </div>
-    </section>
-    <div class="info-grid">
-      <section class="panel" data-reveal>
-        <p class="eyebrow">01 / GAMEPLAY</p>
-        <h2>Hệ thống phương tiện</h2>
-        <p>Trong dự án, tôi làm việc với cấu trúc vehicle catalog, gameplay settings và các tài nguyên liên quan đến xe để phục vụ gameplay điều khiển phương tiện và tương tác trên đường.</p>
-      </section>
-      <section class="panel" data-reveal>
-        <p class="eyebrow">02 / GIAO THÔNG</p>
-        <h2>Traffic & môi trường đường</h2>
-        <p>Tôi cùng nhóm triển khai các thành phần traffic, road dust, mesh và logic phục vụ bối cảnh giao thông, hướng tới trải nghiệm đường phố rõ ràng hơn.</p>
-      </section>
-      <section class="panel" data-reveal>
-        <p class="eyebrow">03 / TOOLING</p>
-        <h2>Công cụ hỗ trợ Unity</h2>
-        <p>Trong quá trình làm việc, nhóm sử dụng các công cụ Editor như Scene Switcher, Vehicle Catalog Editor và Project Builder để hỗ trợ quy trình phát triển trong Unity.</p>
-      </section>
-      <section class="panel" data-reveal>
-        <p class="eyebrow">04 / VAI TRÒ</p>
-        <h2>Trưởng nhóm & lập trình viên</h2>
-        <p>Ngoài lập trình, tôi còn đảm nhiệm vai trò trưởng nhóm, tổ chức công việc và phối hợp quá trình phát triển giữa các thành viên.</p>
-      </section>
-    </div>
-    <p style="margin-top:36px">
-      <a class="btn" href="https://github.com/Dev-GiaPhu/Oops-Brake" target="_blank" rel="noopener">Xem mã nguồn trên GitHub ↗</a>
-    </p>
-  </main>
+  <main class="inner" id="project-detail"></main>
   <footer>
     <span>© 2026 NGUYỄN GIA PHÚ</span>
     <span>NHÀ PHÁT TRIỂN GAME · LẬP TRÌNH VIÊN UNITY</span>
@@ -94,8 +37,9 @@
   </footer>
   <div class="cursor-glow">
   </div>
-  <script src="dark-ui.js?v=20260930-0228">
-  </script>
+  <script src="project-setup.js?v=20261001-0102"></script>
+  <script src="project-page.js?v=20261001-0102"></script>
+  <script src="dark-ui.js?v=20261001-0102"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
   </script>
   <script src="supabase-config.js?v=20260930-0122">
