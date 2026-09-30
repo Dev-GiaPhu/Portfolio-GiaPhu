@@ -6,53 +6,6 @@
     <title>Unity Web Player | Oops Brake!</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
-    <style>
-      html, body {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        overflow: hidden;
-        background: #07090d;
-      }
-
-      #unity-container,
-      #unity-container.unity-desktop,
-      #unity-container.unity-mobile {
-        position: absolute !important;
-        inset: 0 !important;
-        width: 100% !important;
-        height: 100% !important;
-        left: 0 !important;
-        top: 0 !important;
-        transform: none !important;
-      }
-
-      #unity-canvas,
-      #unity-canvas.unity-mobile {
-        width: 100% !important;
-        height: 100% !important;
-        display: block;
-        background: #07090d;
-      }
-
-      #unity-footer {
-        display: none !important;
-      }
-
-      #unity-loading-bar {
-        left: 50% !important;
-        top: 50% !important;
-        transform: translate(-50%, -50%) !important;
-      }
-
-      #unity-warning {
-        left: 50% !important;
-        top: 18px !important;
-        transform: translateX(-50%) !important;
-        width: min(760px, calc(100% - 32px)) !important;
-        z-index: 20 !important;
-      }
-    </style>
   </head>
   <body>
     <div id="unity-container" class="unity-desktop">
@@ -99,12 +52,12 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/Oops-Beake_Web.loader.js";
+      var loaderUrl = buildUrl + "/Build.loader.js";
       var config = {
         arguments: [],
-        dataUrl: buildUrl + "/Oops-Beake_Web.data.br",
-        frameworkUrl: buildUrl + "/Oops-Beake_Web.framework.js.br",
-        codeUrl: buildUrl + "/Oops-Beake_Web.wasm.br",
+        dataUrl: buildUrl + "/Build.data",
+        frameworkUrl: buildUrl + "/Build.framework.js",
+        codeUrl: buildUrl + "/Build.wasm",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "LacVietGames",
         productName: "Oops Brake!",
@@ -151,8 +104,8 @@
 
       } else {
         // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
-        canvas.style.width = "100%";
-        canvas.style.height = "100%";
+        canvas.style.width = "960px";
+        canvas.style.height = "600px";
       }
 
       document.querySelector("#unity-loading-bar").style.display = "block";
