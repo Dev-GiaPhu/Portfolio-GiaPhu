@@ -9,88 +9,82 @@
     :root{
       color-scheme:dark;
       --bg:#07090d;
-      --panel:#0d131c;
       --line:#ffffff18;
       --ink:#f3f7f4;
       --muted:#8995a6;
       --mint:#8ff5d0;
     }
     *{box-sizing:border-box}
-    html,body{width:100%;height:100%;margin:0;background:var(--bg);overflow:hidden}
-    body{font-family:Arial,sans-serif;color:var(--ink)}
-    .stage{position:relative;width:100%;height:100%;min-height:420px;background:radial-gradient(circle at 50% 20%,#14362d55,transparent 36%),linear-gradient(180deg,#0b1118,#06080b)}
-    .status{position:absolute;inset:0;display:grid;place-items:center;padding:28px;text-align:center}
-    .status-card{width:min(560px,100%);padding:28px;border:1px solid var(--line);border-radius:18px;background:#0b1017dc;box-shadow:0 24px 80px #0008}
-    .eyebrow{margin:0 0 10px;color:var(--mint);font:700 11px/1.4 monospace;letter-spacing:.16em}
-    h1{margin:0 0 12px;font-size:clamp(26px,5vw,44px);line-height:1}
-    p{margin:0;color:var(--muted);font-size:13px;line-height:1.7}
-    code{color:#dffcf2}
-    iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000;display:none}
-    .controls{position:absolute;z-index:4;right:12px;top:12px;display:none;gap:8px}
-    button{border:1px solid #ffffff22;background:#080d13dd;color:var(--ink);border-radius:9px;padding:9px 11px;font:700 10px monospace;cursor:pointer;backdrop-filter:blur(10px)}
-    button:hover{border-color:#8ff5d066;color:var(--mint)}
-    .ready iframe{display:block}
-    .ready .controls{display:flex}
-    .ready .status{display:none}
-    @media(max-width:600px){
-      .stage{min-height:360px}
-      .status{padding:16px}
-      .status-card{padding:20px}
+    html,body{
+      width:100%;
+      height:100%;
+      margin:0;
+      background:var(--bg);
+      overflow:hidden;
     }
+    body{
+      display:grid;
+      place-items:center;
+      padding:24px;
+      color:var(--ink);
+      font-family:Arial,sans-serif;
+      background:
+        radial-gradient(circle at 50% 20%,#14362d55,transparent 36%),
+        linear-gradient(180deg,#0b1118,#06080b);
+    }
+    .status-card{
+      width:min(560px,100%);
+      padding:28px;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:#0b1017dc;
+      box-shadow:0 24px 80px #0008;
+      text-align:center;
+    }
+    .eyebrow{
+      margin:0 0 10px;
+      color:var(--mint);
+      font:700 11px/1.4 monospace;
+      letter-spacing:.16em;
+    }
+    h1{
+      margin:0 0 12px;
+      font-size:clamp(26px,5vw,44px);
+      line-height:1;
+    }
+    p{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.7;
+    }
+    code{color:#dffcf2}
   </style>
 </head>
 <body>
-  <main class="stage" id="gameStage">
-    <div class="status">
-      <div class="status-card">
-        <p class="eyebrow">PLAYABLE BUILD / WEBGL</p>
-        <h1 id="statusTitle">ĐANG KIỂM TRA BUILD...</h1>
-        <p id="statusText">Đang tìm <code>games/oops-brake/index.html</code>.</p>
-      </div>
-    </div>
-    <iframe
-      id="gameFrame"
-      title="Oops Brake WebGL"
-      allow="fullscreen; autoplay; gamepad"
-      allowfullscreen
-    ></iframe>
-    <div class="controls">
-      <button type="button" id="reloadGame">TẢI LẠI</button>
-      <button type="button" id="fullscreenGame">TOÀN MÀN HÌNH</button>
-    </div>
+  <main class="status-card">
+    <p class="eyebrow">PLAYABLE BUILD / WEBGL</p>
+    <h1 id="statusTitle">ĐANG MỞ GAME...</h1>
+    <p id="statusText">Đang kiểm tra <code>games/oops-brake/index.html</code>.</p>
   </main>
+
   <script>
     (() => {
-      const stage = document.getElementById('gameStage');
-      const frame = document.getElementById('gameFrame');
+      const gameUrl = 'games/oops-brake/index.html';
       const title = document.getElementById('statusTitle');
       const text = document.getElementById('statusText');
-      const gameUrl = 'games/oops-brake/index.html';
 
       fetch(gameUrl, { method: 'GET', cache: 'no-store' })
         .then((response) => {
           if (!response.ok) throw new Error('Build not found');
-          frame.src = gameUrl;
-          stage.classList.add('ready');
+          window.location.replace(gameUrl);
         })
         .catch(() => {
           title.textContent = 'CHƯA CÓ BUILD WEBGL';
           text.innerHTML =
             'Upload nguyên build Unity WebGL vào <code>games/oops-brake/</code>. ' +
-            'File chính phải là <code>games/oops-brake/index.html</code>. ' +
-            'Sau khi upload xong, khung này sẽ tự chạy game.';
+            'File chính phải là <code>games/oops-brake/index.html</code>.';
         });
-
-      document.getElementById('reloadGame').addEventListener('click', () => {
-        frame.src = gameUrl + '?v=' + Date.now();
-      });
-
-      document.getElementById('fullscreenGame').addEventListener('click', async () => {
-        const target = frame;
-        if (target.requestFullscreen) {
-          await target.requestFullscreen();
-        }
-      });
     })();
   </script>
 </body>
