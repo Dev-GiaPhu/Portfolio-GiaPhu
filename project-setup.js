@@ -34,8 +34,9 @@ window.PROJECT_SETUP = {
     titleLines: ["CHƠI OOPS BRAKE", "NGAY TRÊN WEB."],
     description:
       "Build WebGL chạy trực tiếp trong portfolio. Tôi có thể trải nghiệm bản build ngay tại đây.",
-    playerPage: "play-oops-brake.html",
-    label: "OOPS BRAKE / WEBGL"
+    playerPage: "games/oops-brake/index.html?v=20261001-2318",
+    label: "OOPS BRAKE / WEBGL",
+    frameless: true
   },
 
   /*
