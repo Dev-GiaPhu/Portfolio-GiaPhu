@@ -51,6 +51,39 @@
         transform:translate(-50%,-50%) !important;
       }
 
+      
+      #web-exit-blocker{
+        position:absolute;
+        z-index:100;
+        left:58.2%;
+        top:63.5%;
+        width:9.5%;
+        height:15%;
+        border:0;
+        padding:0;
+        margin:0;
+        background:transparent;
+        cursor:not-allowed;
+        touch-action:none;
+      }
+
+      #web-exit-blocker::after{
+        content:"";
+        position:absolute;
+        inset:0;
+        border-radius:18px;
+        background:transparent;
+      }
+
+      @media(max-width:700px){
+        #web-exit-blocker{
+          left:57.2%;
+          top:62.5%;
+          width:11%;
+          height:17%;
+        }
+      }
+
       #unity-warning {
         left:50% !important;
         top:16px !important;
@@ -62,6 +95,12 @@
   </head>
   <body>
     <div id="unity-container" class="unity-desktop">
+      <button
+        id="web-exit-blocker"
+        type="button"
+        aria-label="Nút thoát đã bị vô hiệu hóa trên phiên bản web"
+        title="Nút thoát đã bị vô hiệu hóa trên phiên bản web"
+      ></button>
       <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
       <div id="unity-loading-bar">
         <div id="unity-logo"></div>
@@ -78,6 +117,17 @@
     </div>
     <script>
       var canvas = document.querySelector("#unity-canvas");
+      var webExitBlocker = document.querySelector("#web-exit-blocker");
+
+      function blockWebExitEvent(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+      }
+
+      ["pointerdown","pointerup","mousedown","mouseup","click","touchstart","touchend"].forEach(function(type) {
+        webExitBlocker.addEventListener(type, blockWebExitEvent, { capture: true, passive: false });
+      });
 
       // Shows a temporary message banner/ribbon for a few seconds, or
       // a permanent error message on top of the canvas if type=='error'.
