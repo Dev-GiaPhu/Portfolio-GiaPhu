@@ -36,20 +36,33 @@
           </div>
           <p>${escapeHtml(config.playable.description || '')}</p>
         </div>
-        <div class="playable-frame-shell">
-          <div class="playable-frame-top">
-            <span>${escapeHtml(config.playable.label || 'WEBGL BUILD')}</span>
-            <a href="${escapeHtml(config.playable.playerPage || '#')}" target="_blank" rel="noopener">MỞ RIÊNG ↗</a>
-          </div>
-          <iframe
-            class="playable-frame"
-            src="${escapeHtml(config.playable.playerPage || '')}"
-            title="${escapeHtml('Chơi ' + (config.nameLines || []).join(' '))}"
-            loading="lazy"
-            allow="fullscreen; autoplay; gamepad"
-            allowfullscreen
-          ></iframe>
-        </div>
+        ${config.playable.frameless
+          ? `
+            <iframe
+              class="playable-frame playable-frame--frameless"
+              src="${escapeHtml(config.playable.playerPage || '')}"
+              title="${escapeHtml('Chơi ' + (config.nameLines || []).join(' '))}"
+              loading="lazy"
+              allow="fullscreen; autoplay; gamepad"
+              allowfullscreen
+            ></iframe>
+          `
+          : `
+            <div class="playable-frame-shell">
+              <div class="playable-frame-top">
+                <span>${escapeHtml(config.playable.label || 'WEBGL BUILD')}</span>
+                <a href="${escapeHtml(config.playable.playerPage || '#')}" target="_blank" rel="noopener">MỞ RIÊNG ↗</a>
+              </div>
+              <iframe
+                class="playable-frame"
+                src="${escapeHtml(config.playable.playerPage || '')}"
+                title="${escapeHtml('Chơi ' + (config.nameLines || []).join(' '))}"
+                loading="lazy"
+                allow="fullscreen; autoplay; gamepad"
+                allowfullscreen
+              ></iframe>
+            </div>
+          `}
       </section>
     `
     : '';
