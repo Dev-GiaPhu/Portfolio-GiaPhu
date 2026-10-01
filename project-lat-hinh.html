@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#07090d">
+    <meta name="description" content="Lật Hình Tìm Cặp — dự án Unity của Nguyễn Gia Phú.">
+    <title>Lật Hình Tìm Cặp — Nguyễn Gia Phú</title>
+    <link rel="stylesheet" href="style.css?v=20261001-1924">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="logo" href="index.html">
+        <span class="logo-mark">GP</span>
+        <span>GIA PHÚ <span class="muted">/ NHÀ PHÁT TRIỂN GAME · LẬP TRÌNH VIÊN UNITY</span></span>
+      </a>
+      <nav aria-label="Menu chính">
+        <a href="index.html">Trang chủ</a>
+        <a href="projects.html" aria-current="page">Dự án</a>
+        <a href="about.html">Giới thiệu</a>
+        <a href="contact.html">Liên hệ</a>
+      </nav>
+      <div class="header-actions">
+        <button class="like-btn" id="portfolio-like" type="button" aria-label="Thả tim cho portfolio" aria-pressed="false" title="Thả tim cho portfolio">
+          <span class="like-heart" aria-hidden="true">♡</span>
+          <span class="like-count" id="portfolio-like-count">—</span>
+        </button>
+        <button class="icon-btn nav-toggle" data-nav-toggle aria-label="Mở menu" aria-expanded="false">☰</button>
+      </div>
+    </header>
+
+    <main class="inner" id="project-detail"></main>
+
+    <footer>
+      <span>© 2026 NGUYỄN GIA PHÚ</span>
+      <span>NHÀ PHÁT TRIỂN GAME · LẬP TRÌNH VIÊN UNITY</span>
+      <span>PORTFOLIO</span>
+    </footer>
+
+    <div class="cursor-glow"></div>
+
+    <script src="project-lat-hinh-setup.js?v=20261001-1924"></script>
+    <script src="project-page.js?v=20261001-1924"></script>
+    <script src="dark-ui.js?v=20261001-1924"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js?v=20260930-0122"></script>
+    <script src="likes.js?v=20260930-0122"></script>
+  </body>
+</html>
