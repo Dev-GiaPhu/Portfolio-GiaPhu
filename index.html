@@ -12,7 +12,7 @@
     <header class="site-header">
       <a class="logo" href="index.html">
         <span class="logo-mark">GP</span>
-        <span>GIA PHÚ <span class="muted">/ NHÀ PHÁT TRIỂN GAME · LẬP TRÌNH VIÊN UNITY</span>
+        <span><span data-site-text="shortName">GIA PHÚ</span> <span class="muted">/ <span data-site-text="roleUpper">NHÀ PHÁT TRIỂN GAME · LẬP TRÌNH VIÊN UNITY</span></span>
       </span>
     </a>
     <nav aria-label="Menu chính">
@@ -34,7 +34,7 @@
       <div data-reveal>
         <p class="eyebrow">Nhà phát triển game · Lập trình viên Unity</p>
         <h1 class="portfolio-title">PORTFOLIO</h1>
-        <p class="hero-copy">Tôi là <strong>Nguyễn Gia Phú</strong>, một nhà phát triển game với chuyên môn về Unity và C#, kết hợp cùng kỹ năng thiết kế đồ họa game. Tôi sở hữu tư duy sáng tạo, khả năng phân tích nhạy bén và luôn chú trọng đến từng chi tiết nhỏ nhất.</p>
+        <p class="hero-copy">Tôi là <strong data-site-text="name">Nguyễn Gia Phú</strong>, một nhà phát triển game với chuyên môn về Unity và C#, kết hợp cùng kỹ năng thiết kế đồ họa game. Tôi sở hữu tư duy sáng tạo, khả năng phân tích nhạy bén và luôn chú trọng đến từng chi tiết nhỏ nhất.</p>
         <div class="hero-actions">
           <a class="primary-btn" href="projects.html">Xem dự án ↗</a>
           <a class="ghost-btn" href="about.html">Giới thiệu về tôi</a>
@@ -72,20 +72,20 @@
                 <img src="assets/GiaPhu_Avatar_transparent.png" alt="Nguyễn Gia Phú" loading="eager">
               </div>
               <div class="terminal-card-meta">
-                <p class="console-label">NGUYỄN GIA PHÚ</p>
+                <p class="console-label" data-site-text="nameUpper">NGUYỄN GIA PHÚ</p>
                 <h3>GAME DEVELOPER</h3>
                 <div class="contact-reveal" data-contact-panel aria-label="Thông tin cá nhân">
                   <div class="contact-row">
                     <span>NĂM SINH</span>
-                    <strong data-private-contact>2005</strong>
+                    <strong data-private-contact data-site-text="birthYear">2005</strong>
                   </div>
                   <div class="contact-row">
                     <span>ĐỊA CHỈ</span>
-                    <strong data-private-contact>Thành phố Hồ Chí Minh, Việt Nam</strong>
+                    <strong data-private-contact data-site-text="address">Thành phố Hồ Chí Minh, Việt Nam</strong>
                   </div>
-                  <a href="tel:+84397241056">
-                    <span>SĐT</span>
-                    <strong data-private-contact>0397 241 056</strong>
+                  <a href="mailto:giaphufpt1@gmail.com" data-site-mailto="email">
+                    <span>EMAIL</span>
+                    <strong data-private-contact data-site-text="email">giaphufpt1@gmail.com</strong>
                   </a>
                 </div>
               </div>
@@ -222,17 +222,19 @@
         <p>Tôi luôn muốn tiếp tục học hỏi, phát triển kỹ năng Unity và tham gia những dự án game có thử thách thực tế.</p>
         <div class="hero-actions">
           <a class="primary-btn" href="contact.html">Liên hệ với tôi ↗</a>
-          <a class="ghost-btn" href="CV%20-%20Nguy%E1%BB%85n%20Gia%20Ph%C3%BA.pdf" download="CV - Nguyễn Gia Phú.pdf">TẢI CV ↓</a>
+          <a class="ghost-btn" href="CV%20-%20Nguy%E1%BB%85n%20Gia%20Ph%C3%BA.pdf" data-site-href="cv.url" download="CV - Nguyễn Gia Phú.pdf" data-site-download="cv.downloadName">TẢI CV ↓</a>
         </div>
       </section>
     </main>
     <footer>
-      <span>© 2026 NGUYỄN GIA PHÚ</span>
-      <span>NHÀ PHÁT TRIỂN GAME · LẬP TRÌNH VIÊN UNITY</span>
+      <span>© 2026 <span data-site-text="nameUpper">NGUYỄN GIA PHÚ</span></span>
+      <span data-site-text="roleUpper">NHÀ PHÁT TRIỂN GAME · LẬP TRÌNH VIÊN UNITY</span>
       <span>PORTFOLIO</span>
     </footer>
     <div class="cursor-glow">
     </div>
+    <script src="site-info.js?v=20261001-2310"></script>
+    <script src="site-info-bind.js?v=20261001-2310"></script>
     <script src="dark-ui.js?v=20260930-0308">
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
