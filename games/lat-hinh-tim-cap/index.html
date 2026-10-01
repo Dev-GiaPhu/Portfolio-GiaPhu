@@ -105,7 +105,7 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/Web.loader.js?v=20261001-2202";
+      var loaderUrl = buildUrl + "/Web.loader.js?v=20261001-2218";
       var config = {
         arguments: [],
         dataUrl: buildUrl + "/Web.data",
@@ -116,6 +116,16 @@
         productName: "LatHinh2D",
         productVersion: "1.0",
         showBanner: unityShowBanner,
+        cacheControl: function(url) {
+          if (
+            url.endsWith(".data") ||
+            url.endsWith(".wasm") ||
+            url.endsWith(".framework.js")
+          ) {
+            return "immutable";
+          }
+          return "must-revalidate";
+        },
         // errorHandler: function(err, url, line) {
         //    alert("error " + err + " occurred at line " + line);
         //    // Return 'true' if you handled this error and don't want Unity
