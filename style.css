@@ -3174,3 +3174,30 @@ img {
     font-size:24px;
   }
 }
+
+
+/* True single-surface WebGL embed: no extra player chrome */
+.playable-frame--frameless{
+  display:block;
+  width:100%;
+  min-height:520px;
+  aspect-ratio:16 / 9;
+  border:0!important;
+  border-radius:0!important;
+  outline:0;
+  background:#05070a;
+  box-shadow:none!important;
+}
+
+@media(max-width:900px){
+  .playable-frame--frameless{
+    min-height:430px;
+  }
+}
+
+@media(max-width:560px){
+  .playable-frame--frameless{
+    min-height:360px;
+    aspect-ratio:4 / 3;
+  }
+}
