@@ -12,7 +12,7 @@
     <header class="site-header">
       <a class="logo" href="index.html">
         <span class="logo-mark">GP</span>
-        <span>GIA PHÚ <span class="muted">/ NHÀ PHÁT TRIỂN GAME · LẬP TRÌNH VIÊN UNITY</span>
+        <span><span data-site-text="shortName">GIA PHÚ</span> <span class="muted">/ <span data-site-text="roleUpper">NHÀ PHÁT TRIỂN GAME · LẬP TRÌNH VIÊN UNITY</span></span>
       </span>
     </a>
     <nav aria-label="Menu chính">
@@ -36,37 +36,39 @@
     <div class="info-grid">
       <section class="panel" data-reveal>
         <p class="eyebrow">GITHUB</p>
-        <h2>Dev-GiaPhu</h2>
+        <h2 data-site-text="github.label">Dev-GiaPhu</h2>
         <p>Bạn có thể xem repository và các dự án game của tôi tại đây.</p>
-        <a class="btn" href="https://github.com/Dev-GiaPhu" target="_blank" rel="noopener">Mở GitHub ↗</a>
+        <a class="btn" href="https://github.com/Dev-GiaPhu" data-site-href="github.url" target="_blank" rel="noopener">Mở GitHub ↗</a>
       </section>
       <section class="panel" data-reveal>
         <p class="eyebrow">EMAIL</p>
-        <h2>giaphufpt1@gmail.com</h2>
+        <h2 data-site-text="email">giaphufpt1@gmail.com</h2>
         <p>Kênh liên hệ trực tiếp cho công việc và dự án.</p>
-        <a class="btn" href="mailto:giaphufpt1@gmail.com">Gửi email ↗</a>
+        <a class="btn" href="mailto:giaphufpt1@gmail.com" data-site-mailto="email">Gửi email ↗</a>
       </section>
       <section class="panel" data-reveal>
         <p class="eyebrow">FACEBOOK</p>
-        <h2>Nguyễn Gia Phú</h2>
+        <h2 data-site-text="facebook.label">Nguyễn Gia Phú</h2>
         <p>Bạn có thể kết nối và trao đổi với tôi qua Facebook.</p>
-        <a class="btn" href="https://www.facebook.com/JemNaNa" target="_blank" rel="noopener">Mở Facebook ↗</a>
+        <a class="btn" href="https://www.facebook.com/JemNaNa" data-site-href="facebook.url" target="_blank" rel="noopener">Mở Facebook ↗</a>
       </section>
       <section class="panel" data-reveal>
         <p class="eyebrow">CV</p>
-        <h2>CV - Nguyễn Gia Phú</h2>
+        <h2 data-site-text="cv.label">CV - Nguyễn Gia Phú</h2>
         <p>Tải CV của tôi để xem chi tiết kinh nghiệm, kỹ năng, học vấn và hoạt động.</p>
-        <a class="btn" href="CV%20-%20Nguy%E1%BB%85n%20Gia%20Ph%C3%BA.pdf" download="CV - Nguyễn Gia Phú.pdf">Tải CV ↓</a>
+        <a class="btn" href="CV%20-%20Nguy%E1%BB%85n%20Gia%20Ph%C3%BA.pdf" data-site-href="cv.url" download="CV - Nguyễn Gia Phú.pdf" data-site-download="cv.downloadName">Tải CV ↓</a>
       </section>
     </div>
   </main>
   <footer>
-    <span>© 2026 NGUYỄN GIA PHÚ</span>
-    <span>NHÀ PHÁT TRIỂN GAME · LẬP TRÌNH VIÊN UNITY</span>
+    <span>© 2026 <span data-site-text="nameUpper">NGUYỄN GIA PHÚ</span></span>
+    <span data-site-text="roleUpper">NHÀ PHÁT TRIỂN GAME · LẬP TRÌNH VIÊN UNITY</span>
     <span>PORTFOLIO</span>
   </footer>
   <div class="cursor-glow">
   </div>
+  <script src="site-info.js?v=20261001-2310"></script>
+  <script src="site-info-bind.js?v=20261001-2310"></script>
   <script src="dark-ui.js?v=20260930-0242">
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
