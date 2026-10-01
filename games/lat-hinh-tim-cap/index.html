@@ -55,10 +55,10 @@
       #web-exit-blocker{
         position:absolute;
         z-index:100;
-        left:58.2%;
-        top:63.5%;
-        width:9.5%;
-        height:15%;
+        left:57%;
+        top:70%;
+        width:12%;
+        height:21%;
         border:0;
         padding:0;
         margin:0;
@@ -77,10 +77,10 @@
 
       @media(max-width:700px){
         #web-exit-blocker{
-          left:57.2%;
-          top:62.5%;
-          width:11%;
-          height:17%;
+          left:56%;
+          top:69%;
+          width:14%;
+          height:23%;
         }
       }
 
@@ -117,6 +117,54 @@
     </div>
     <script>
       var canvas = document.querySelector("#unity-canvas");
+
+      // Web build only: block the in-game red Exit button before Unity receives input.
+      // Region is normalized to the canvas, so it keeps working when the game resizes.
+      function isWebExitButtonEvent(event) {
+        var point = event.touches && event.touches[0]
+          ? event.touches[0]
+          : event.changedTouches && event.changedTouches[0]
+            ? event.changedTouches[0]
+            : event;
+
+        if (
+          typeof point.clientX !== "number" ||
+          typeof point.clientY !== "number"
+        ) {
+          return false;
+        }
+
+        var rect = canvas.getBoundingClientRect();
+        if (!rect.width || !rect.height) return false;
+
+        var x = (point.clientX - rect.left) / rect.width;
+        var y = (point.clientY - rect.top) / rect.height;
+
+        // Red X button area on the main menu.
+        return x >= 0.57 && x <= 0.69 && y >= 0.70 && y <= 0.91;
+      }
+
+      function blockWebExitButton(event) {
+        if (!isWebExitButtonEvent(event)) return;
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+      }
+
+      [
+        "pointerdown",
+        "pointerup",
+        "mousedown",
+        "mouseup",
+        "click",
+        "touchstart",
+        "touchend"
+      ].forEach(function(type) {
+        document.addEventListener(type, blockWebExitButton, {
+          capture: true,
+          passive: false
+        });
+      });
       var webExitBlocker = document.querySelector("#web-exit-blocker");
 
       function blockWebExitEvent(event) {
