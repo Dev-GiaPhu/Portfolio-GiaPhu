@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#07090d">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <title>Portfolio Admin — Nguyễn Gia Phú</title>
-  <link rel="stylesheet" href="admin.css?v=20261004-auth-3">
+  <link rel="stylesheet" href="admin.css?v=20261004-editor-5">
 </head>
 <body>
   <div class="admin-shell" id="adminShell" hidden>
@@ -60,6 +60,68 @@
           <p>Ảnh upload sẽ được lưu trong Supabase Storage.</p>
         </div>
 
+        <div id="layoutTools" class="tool-group" hidden>
+          <p class="tool-title">KÍCH THƯỚC & KIỂU</p>
+          <div class="field-grid">
+            <label>Rộng
+              <input id="boxWidth" type="text" placeholder="auto / 100% / 420px">
+            </label>
+            <label>Cao tối thiểu
+              <input id="boxMinHeight" type="text" placeholder="auto / 220px">
+            </label>
+            <label>Padding
+              <input id="boxPadding" type="text" placeholder="24px">
+            </label>
+            <label>Bo góc
+              <input id="boxRadius" type="text" placeholder="18px">
+            </label>
+            <label>Cỡ chữ
+              <input id="textSize" type="text" placeholder="16px">
+            </label>
+            <label>Màu chữ
+              <input id="textColor" type="color">
+            </label>
+            <label>Màu nền
+              <input id="boxColor" type="color">
+            </label>
+            <label>Màu viền
+              <input id="borderColor" type="color">
+            </label>
+          </div>
+        </div>
+
+        <div id="tagTools" class="tool-group" hidden>
+          <p class="tool-title">TAG CỦA THẺ</p>
+          <div id="tagList" class="tag-editor-list"></div>
+          <div class="tag-add-row">
+            <input id="tagInput" type="text" placeholder="Ví dụ: UNITY">
+            <button id="addTagBtn" type="button">THÊM</button>
+          </div>
+        </div>
+
+        <div class="tool-group">
+          <p class="tool-title">MÀU GIAO DIỆN</p>
+          <div class="field-grid">
+            <label>Nền chính
+              <input id="themeBg" type="color" value="#07090d">
+            </label>
+            <label>Màu nhấn
+              <input id="themeMint" type="color" value="#8ff5d0">
+            </label>
+            <label>Màu phụ
+              <input id="themeBlue" type="color" value="#7ca7ff">
+            </label>
+          </div>
+        </div>
+
+        <div id="structureTools" class="tool-group" hidden>
+          <p class="tool-title">BOX / THÀNH PHẦN</p>
+          <div class="structure-actions">
+            <button id="duplicateBoxBtn" type="button">NHÂN ĐÔI BOX</button>
+            <button id="deleteBoxBtn" class="danger" type="button">XÓA BOX</button>
+          </div>
+        </div>
+
         <div class="inspector-footer">
           <button id="resetSelected" type="button">KHÔI PHỤC DỮ LIỆU ĐÃ LƯU</button>
         </div>
@@ -86,6 +148,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../supabase-config.js?v=20260930-0122"></script>
-  <script src="admin.js?v=20261004-auth-3"></script>
+  <script src="admin.js?v=20261004-editor-5"></script>
 </body>
 </html>
