@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Geologica:wght@600;700;800&family=Space+Mono:wght@400;700&display=swap');
+
+:root{
+  --bg:#07090d;
+  --panel:#0e141d;
+  --line:#ffffff18;
+  --ink:#f3f7f4;
+  --muted:#8995a6;
+  --mint:#8ff5d0;
+}
+
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:'Be Vietnam Pro',sans-serif;overflow:hidden}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+.admin-shell{width:100%;height:100%;display:grid;grid-template-rows:58px 1fr}
+.admin-toolbar{z-index:20;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:8px 14px;border-bottom:1px solid var(--line);background:#07090df2;backdrop-filter:blur(18px)}
+.admin-brand{display:flex;align-items:center;gap:10px}
+.admin-mark{display:grid;place-items:center;width:34px;height:34px;border:1px solid #8ff5d055;color:var(--mint);font:700 11px 'Space Mono',monospace}
+.admin-brand strong{display:block;font:700 11px 'Space Mono',monospace;letter-spacing:.08em}
+.admin-brand small{display:block;color:var(--muted);font-size:9px}
+.admin-actions{display:flex;align-items:center;gap:7px}
+.admin-actions button{height:34px;padding:0 11px;border:1px solid var(--line);border-radius:9px;background:#ffffff06;color:var(--ink);font:700 9px 'Space Mono',monospace}
+.admin-actions button:hover{background:#ffffff0c}
+.admin-actions .primary{border:0;background:linear-gradient(135deg,var(--mint),#9ecbff);color:#07110e}
+.save-status{margin-right:6px;color:var(--muted);font:9px 'Space Mono',monospace}
+.save-status.is-dirty{color:#ffd39a}
+.save-status.is-saved{color:var(--mint)}
+.editor-stage{position:relative;min-height:0;background:#05070a}
+#previewFrame{display:block;width:100%;height:100%;border:0;background:#05070a}
+.inspector{position:absolute;z-index:30;right:18px;top:18px;width:min(350px,calc(100% - 36px));max-height:calc(100% - 36px);overflow:auto;padding:16px;border:1px solid #ffffff18;border-radius:16px;background:#0a0f16ee;backdrop-filter:blur(18px);box-shadow:0 22px 70px #000a}
+.inspector-head{display:flex;justify-content:space-between;gap:12px;align-items:start;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.inspector-head small{display:block;color:var(--mint);font:9px 'Space Mono',monospace;letter-spacing:.1em}
+.inspector-head strong{display:block;margin-top:4px;font-size:14px}
+.inspector-head button{width:28px;height:28px;border:1px solid var(--line);border-radius:8px;background:#ffffff06;color:var(--ink)}
+.tool-group{display:grid;gap:12px;padding-top:14px}
+.tool-group label{display:grid;gap:7px;color:#b5c0ce;font-size:11px}
+.tool-group textarea,.tool-group input[type="text"]{width:100%;border:1px solid #ffffff18;border-radius:10px;background:#05080d;color:var(--ink);padding:10px;outline:0}
+.tool-group textarea:focus,.tool-group input[type="text"]:focus{border-color:#8ff5d055}
+.tool-group p{margin:0;color:var(--muted);font-size:10px;line-height:1.5}
+.upload-btn{position:relative;place-items:center;padding:11px;border:1px dashed #8ff5d044;border-radius:10px;color:var(--mint)!important;font:700 9px 'Space Mono',monospace;cursor:pointer}
+.upload-btn input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.inspector-footer{padding-top:14px;margin-top:14px;border-top:1px solid var(--line)}
+.inspector-footer button{width:100%;padding:10px;border:1px solid #ffbd7a2e;border-radius:9px;background:#ffbd7a08;color:#ffd39a;font:700 9px 'Space Mono',monospace}
+.login-gate{position:fixed;z-index:100;inset:0;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at 50% 20%,#14362d55,transparent 34%),#07090df7;backdrop-filter:blur(16px)}
+.login-gate[hidden]{display:none}
+.login-card{width:min(440px,100%);padding:28px;border:1px solid var(--line);border-radius:20px;background:#0b1017;box-shadow:0 30px 100px #000b}
+.login-card .eyebrow{margin:0;color:var(--mint);font:10px 'Space Mono',monospace;letter-spacing:.13em}
+.login-card h1{margin:12px 0;font:800 38px/1 'Geologica',sans-serif}
+.login-card>p:not(.eyebrow){color:var(--muted);font-size:12px;line-height:1.6}
+.login-card label{display:grid;gap:7px;margin-top:14px;color:#b5c0ce;font-size:11px}
+.login-card input{height:42px;border:1px solid #ffffff18;border-radius:10px;background:#05080d;color:var(--ink);padding:0 11px;outline:0}
+.login-card input:focus{border-color:#8ff5d055}
+.login-card button{width:100%;margin-top:18px;padding:12px;border:0;border-radius:10px;background:linear-gradient(135deg,var(--mint),#9ecbff);color:#07110e;font-weight:800}
+#loginMessage{display:block;min-height:16px;margin-top:10px;color:#ff9c9c;font-size:10px}
+@media(max-width:720px){
+  .save-status{display:none}
+  .admin-brand div{display:none}
+  .admin-actions button{padding:0 8px}
+  #logoutBtn{font-size:0}
+  #logoutBtn::after{content:"↪";font-size:14px}
+}
