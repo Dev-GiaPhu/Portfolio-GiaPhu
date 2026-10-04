@@ -23,14 +23,13 @@ window.SITE_INFO = {
   email: "giaphufpt1@gmail.com",
 
   education: {
-    school: "FPT Polytechnic",
+    school: "FPT Polytechnic HCM",
     field: "Công nghệ thông tin",
     major: "Lập trình Game",
     period: "2025 - 2027",
     status: "Đang học · Học kỳ 5/6",
     classification: "Xuất Sắc",
-    gpa: "3.73/4.0",
-    activity: "Phó Câu lạc bộ Poly Coder · Chuyên ngành Game"
+    gpa: "3.73/4.0"
   },
 
   github: {
