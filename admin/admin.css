@@ -61,3 +61,36 @@ button{cursor:pointer}
   #logoutBtn{font-size:0}
   #logoutBtn::after{content:"↪";font-size:14px}
 }
+
+
+.admin-login-options{
+  display:grid;
+  gap:10px;
+  margin-top:18px;
+}
+
+.admin-login-options button{
+  margin-top:0;
+}
+
+.admin-login-options .secondary{
+  border:1px solid #ffffff18;
+  background:#ffffff07;
+  color:var(--ink);
+}
+
+.admin-login-options .ghost{
+  border:1px solid #ffffff10;
+  background:transparent;
+  color:var(--muted);
+}
+
+.current-session-info{
+  margin-top:14px;
+  padding:10px 12px;
+  border:1px solid #ffffff12;
+  border-radius:10px;
+  background:#ffffff04;
+  color:#aeb8c6;
+  font:9px/1.5 'Space Mono',monospace;
+}
