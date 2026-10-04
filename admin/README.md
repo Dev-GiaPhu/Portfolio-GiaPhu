@@ -35,3 +35,12 @@ Supabase RLS chỉ cho tài khoản có email
 ghi/xóa nội dung và upload media.
 
 Người khác có thể biết URL `/admin/` vì website/repository là public, nhưng không thể ghi dữ liệu nếu không đăng nhập đúng tài khoản.
+
+
+## Redirect URL bắt buộc cho admin
+
+Trong Supabase vào **Authentication → URL Configuration → Redirect URLs** và thêm:
+
+`https://dev-giaphu.github.io/Portfolio-GiaPhu/admin/`
+
+Nếu URL này chưa được allowlist, GitHub OAuth có thể đăng nhập xong nhưng không quay lại đúng trang admin.
