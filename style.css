@@ -4687,3 +4687,196 @@ main{
     padding:16px;
   }
 }
+
+
+/* ============================================================
+   LIQUID RAIL V2 — ONE CONNECTED ORGANIC MASS
+   ============================================================ */
+.side-rail{
+  width:54px!important;
+  padding:7px 6px!important;
+  gap:0!important;
+  border:1px solid #ffffff10!important;
+  border-radius:27px!important;
+  background:
+    radial-gradient(circle at 50% 10%,#8ff5d00d,transparent 28%),
+    linear-gradient(180deg,#0b1119f0,#080c12f2)!important;
+  overflow:visible!important;
+}
+
+.rail-nav{
+  width:42px!important;
+  gap:0!important;
+  overflow:visible!important;
+}
+
+.rail-nav a{
+  position:relative!important;
+  width:42px!important;
+  min-width:42px!important;
+  height:42px!important;
+  margin:-1px 0!important;
+  padding:0 11px!important;
+  border-radius:0!important;
+  overflow:visible!important;
+  background:transparent!important;
+  transform:none!important;
+}
+
+.rail-nav a:first-child{
+  margin-top:0!important;
+}
+
+.rail-nav a:last-child{
+  margin-bottom:0!important;
+}
+
+.rail-nav a::before{
+  content:""!important;
+  position:absolute!important;
+  z-index:-2!important;
+  top:3px!important;
+  right:2px!important;
+  bottom:3px!important;
+  left:2px!important;
+  border-radius:18px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  transition:
+    left .34s cubic-bezier(.18,.85,.25,1),
+    border-radius .34s cubic-bezier(.18,.85,.25,1),
+    background .24s ease,
+    box-shadow .24s ease!important;
+}
+
+.rail-nav a::after{
+  content:""!important;
+  position:absolute!important;
+  z-index:-1!important;
+  top:50%!important;
+  right:-9px!important;
+  width:30px!important;
+  height:30px!important;
+  border-radius:50%!important;
+  transform:translateY(-50%) scale(.45)!important;
+  opacity:0!important;
+  background:#101c1a!important;
+  box-shadow:
+    0 -14px 0 -8px #101c1a,
+    0 14px 0 -8px #101c1a!important;
+  transition:
+    transform .34s cubic-bezier(.18,.85,.25,1),
+    opacity .18s ease!important;
+}
+
+.rail-nav a:hover::before{
+  background:#ffffff07!important;
+}
+
+.rail-nav a.is-active,
+.rail-nav a[aria-current="page"]{
+  width:42px!important;
+  min-width:42px!important;
+  color:var(--mint)!important;
+}
+
+.rail-nav a.is-active::before,
+.rail-nav a[aria-current="page"]::before{
+  left:-82px!important;
+  right:-7px!important;
+  border-radius:30px 13px 13px 30px / 54% 28% 28% 54%!important;
+  background:
+    radial-gradient(circle at 82% 50%,#8ff5d024 0 21%,transparent 48%),
+    linear-gradient(90deg,#0c1715fa 0%,#10201cf8 72%,#0d1715f5 100%)!important;
+  box-shadow:
+    inset 0 0 0 1px #8ff5d020,
+    -8px 0 30px #8ff5d00a!important;
+}
+
+.rail-nav a.is-active::after,
+.rail-nav a[aria-current="page"]::after{
+  opacity:1!important;
+  transform:translateY(-50%) scale(1)!important;
+}
+
+.rail-nav a.is-active svg,
+.rail-nav a[aria-current="page"] svg{
+  transform:scale(1.18)!important;
+}
+
+.rail-nav a span{
+  position:absolute!important;
+  right:37px!important;
+  top:50%!important;
+  width:auto!important;
+  max-width:0!important;
+  margin:0!important;
+  padding:0!important;
+  transform:translateY(-50%) translateX(8px)!important;
+  opacity:0!important;
+  overflow:hidden!important;
+  white-space:nowrap!important;
+  pointer-events:none!important;
+  transition:
+    max-width .3s ease,
+    opacity .2s ease,
+    transform .3s ease!important;
+}
+
+.rail-nav a.is-active span,
+.rail-nav a[aria-current="page"] span{
+  max-width:92px!important;
+  opacity:1!important;
+  transform:translateY(-50%) translateX(0)!important;
+}
+
+.rail-like{
+  width:42px!important;
+  min-width:42px!important;
+  height:40px!important;
+  margin:2px 0 0!important;
+  border:0!important;
+  border-radius:0 0 20px 20px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+
+.rail-like:hover{
+  background:#ffffff06!important;
+}
+
+@media(max-width:900px){
+  .side-rail{
+    width:48px!important;
+    padding:6px 5px!important;
+    border-radius:24px!important;
+  }
+
+  .rail-nav{
+    width:38px!important;
+  }
+
+  .rail-nav a,
+  .rail-nav a.is-active,
+  .rail-nav a[aria-current="page"]{
+    width:38px!important;
+    min-width:38px!important;
+    height:38px!important;
+  }
+
+  .rail-nav a.is-active::before,
+  .rail-nav a[aria-current="page"]::before{
+    left:-58px!important;
+  }
+
+  .rail-nav a span,
+  .rail-nav a.is-active span,
+  .rail-nav a[aria-current="page"] span{
+    right:34px!important;
+  }
+
+  .rail-like{
+    width:38px!important;
+    min-width:38px!important;
+  }
+}
