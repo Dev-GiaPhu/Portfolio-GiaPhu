@@ -498,6 +498,192 @@
     });
   }
 
+  function normalizeGallery(gallery) {
+    if (!gallery) return;
+
+    const items = [...gallery.querySelectorAll('.project-gallery-item')];
+    gallery.querySelectorAll('.project-gallery-empty').forEach((node) => node.remove());
+
+    if (!items.length) {
+      const empty = previewDocument.createElement('p');
+      empty.className = 'project-gallery-empty';
+      empty.textContent = 'Chưa có ảnh dự án.';
+      gallery.appendChild(empty);
+    }
+  }
+
+  function commitGalleryHtml(gallery, before) {
+    normalizeGallery(gallery);
+    const selector = structuralSelector(gallery);
+    const after = gallery.innerHTML;
+    pushChange(selector, 'innerHTML', before, after);
+    renderGalleryEditor(gallery);
+  }
+
+  function renderGalleryEditor(gallery) {
+    galleryEditorList.innerHTML = '';
+
+    if (!gallery?.matches?.('[data-project-gallery]')) {
+      galleryTools.hidden = true;
+      return;
+    }
+
+    galleryTools.hidden = false;
+    const items = [...gallery.querySelectorAll('.project-gallery-item')];
+
+    if (!items.length) {
+      const empty = document.createElement('p');
+      empty.textContent = 'Chưa có ảnh. Bấm “THÊM ẢNH TỪ MÁY” để tải ảnh lên.';
+      empty.className = 'gallery-editor-empty';
+      galleryEditorList.appendChild(empty);
+      return;
+    }
+
+    items.forEach((item, index) => {
+      const image = item.querySelector('img');
+      if (!image) return;
+
+      const row = document.createElement('div');
+      row.className = 'gallery-editor-item';
+
+      const thumb = document.createElement('img');
+      thumb.src = image.getAttribute('src') || '';
+      thumb.alt = '';
+
+      const label = document.createElement('strong');
+      label.textContent =
+        (gallery.dataset.galleryLabel || 'Ảnh dự án') +
+        ' · ' +
+        String(index + 1).padStart(2, '0');
+
+      const actions = document.createElement('div');
+      actions.className = 'gallery-editor-actions';
+
+      const up = document.createElement('button');
+      up.type = 'button';
+      up.textContent = '↑';
+      up.title = 'Đưa ảnh lên trước';
+      up.disabled = index === 0;
+      up.addEventListener('click', () => {
+        if (index === 0) return;
+        const before = gallery.innerHTML;
+        gallery.insertBefore(item, items[index - 1]);
+        commitGalleryHtml(gallery, before);
+      });
+
+      const down = document.createElement('button');
+      down.type = 'button';
+      down.textContent = '↓';
+      down.title = 'Đưa ảnh xuống sau';
+      down.disabled = index === items.length - 1;
+      down.addEventListener('click', () => {
+        if (index === items.length - 1) return;
+        const before = gallery.innerHTML;
+        const next = items[index + 1];
+        gallery.insertBefore(next, item);
+        commitGalleryHtml(gallery, before);
+      });
+
+      const remove = document.createElement('button');
+      remove.type = 'button';
+      remove.textContent = '×';
+      remove.title = 'Xóa ảnh';
+      remove.className = 'danger';
+      remove.addEventListener('click', () => {
+        const before = gallery.innerHTML;
+        item.remove();
+        commitGalleryHtml(gallery, before);
+      });
+
+      actions.append(up, down, remove);
+      row.append(thumb, label, actions);
+      galleryEditorList.appendChild(row);
+    });
+  }
+
+  async function uploadGalleryFiles(files) {
+    const gallery = selected?.matches?.('[data-project-gallery]')
+      ? selected
+      : selected?.closest?.('[data-project-gallery]');
+
+    if (!gallery || !files?.length) return;
+
+    setStatus('ĐANG KIỂM TRA QUYỀN...');
+
+    const { data: allowed, error: permissionError } = await client
+      .rpc('is_portfolio_admin');
+
+    if (permissionError || allowed !== true) {
+      setStatus('CHƯA CÓ QUYỀN UPLOAD');
+      alert(
+        'Supabase chưa nhận tài khoản hiện tại là admin.\n\n' +
+        'Hãy chạy lại TOÀN BỘ file admin/supabase-cms.sql mới nhất trong Supabase SQL Editor, ' +
+        'sau đó đăng xuất và đăng nhập lại admin một lần.\n\n' +
+        (permissionError?.message || 'is_portfolio_admin() đang trả về false.')
+      );
+      return;
+    }
+
+    const before = gallery.innerHTML;
+    gallery.querySelectorAll('.project-gallery-empty').forEach((node) => node.remove());
+
+    let uploaded = 0;
+    const errors = [];
+
+    for (const file of files) {
+      const safeName = file.name.replace(/[^a-z0-9._-]+/gi, '-').toLowerCase();
+      const path = Date.now() + '-' + uploaded + '-' + safeName;
+
+      setStatus('ĐANG UPLOAD ẢNH ' + (uploaded + 1) + '/' + files.length + '...');
+
+      const { error } = await client.storage
+        .from('portfolio-media')
+        .upload(path, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (error) {
+        errors.push(file.name + ': ' + error.message);
+        continue;
+      }
+
+      const { data } = client.storage.from('portfolio-media').getPublicUrl(path);
+      const url = data.publicUrl;
+
+      const button = previewDocument.createElement('button');
+      button.type = 'button';
+      button.className = 'project-gallery-item';
+      button.dataset.galleryItem = '';
+
+      const image = previewDocument.createElement('img');
+      image.src = url;
+      image.alt =
+        (gallery.dataset.galleryLabel || 'Hình ảnh dự án') +
+        ' ' +
+        String(gallery.querySelectorAll('.project-gallery-item').length + 1).padStart(2, '0');
+      image.loading = 'lazy';
+
+      button.appendChild(image);
+      gallery.appendChild(button);
+      uploaded += 1;
+    }
+
+    if (uploaded) {
+      commitGalleryHtml(gallery, before);
+      decoratePreviewContent();
+      selectElement(gallery);
+      setStatus('ĐÃ THÊM ' + uploaded + ' ẢNH · CTRL+S ĐỂ LƯU', 'is-dirty');
+    } else {
+      normalizeGallery(gallery);
+      setStatus('KHÔNG UPLOAD ĐƯỢC ẢNH');
+    }
+
+    if (errors.length) {
+      alert('Một số ảnh không upload được:\n\n' + errors.join('\n'));
+    }
+  }
+
   function selectElement(element) {
     if (!element || element.closest?.('.admin-project-image-handle')) return;
 
@@ -513,7 +699,15 @@
     const selector = structuralSelector(element);
     selectedLabel.textContent = element.tagName.toLowerCase() + ' · ' + selector;
 
-    if (property === 'src') {
+    const isGallery = element.matches?.('[data-project-gallery]');
+
+    galleryTools.hidden = !isGallery;
+
+    if (isGallery) {
+      textTools.hidden = true;
+      imageTools.hidden = true;
+      renderGalleryEditor(element);
+    } else if (property === 'src') {
       textTools.hidden = true;
       imageTools.hidden = false;
       imageUrl.value = valueFor(element, 'src');
