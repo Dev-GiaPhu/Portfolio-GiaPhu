@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#07090d">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <title>Portfolio Admin — Nguyễn Gia Phú</title>
-  <link rel="stylesheet" href="admin.css?v=20261004-editor-5">
+  <link rel="stylesheet" href="admin.css?v=20261004-dragpanel-10">
 </head>
 <body>
   <div class="admin-shell" id="adminShell" hidden>
@@ -32,9 +32,9 @@
       <iframe id="previewFrame" src="about:blank" data-src="../index.html?admin-preview=1" title="Portfolio preview"></iframe>
 
       <aside id="inspector" class="inspector" hidden>
-        <div class="inspector-head">
+        <div class="inspector-head" id="inspectorDragHandle" title="Giữ và kéo để di chuyển bảng điều chỉnh">
           <div>
-            <small>ĐANG CHỌN</small>
+            <small>ĐANG CHỌN · KÉO ĐỂ DI CHUYỂN</small>
             <strong id="selectedLabel">Phần tử</strong>
           </div>
           <button id="closeInspector" type="button" aria-label="Đóng">×</button>
@@ -148,6 +148,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../supabase-config.js?v=20260930-0122"></script>
-  <script src="admin.js?v=20261004-sync-9"></script>
+  <script src="admin.js?v=20261004-dragpanel-10"></script>
 </body>
 </html>
