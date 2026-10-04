@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#07090d">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <title>Portfolio Admin — Nguyễn Gia Phú</title>
-  <link rel="stylesheet" href="admin.css?v=20261004-login-2">
+  <link rel="stylesheet" href="admin.css?v=20261004-auth-3">
 </head>
 <body>
   <div class="admin-shell" id="adminShell" hidden>
@@ -71,15 +71,21 @@
     <div class="login-card">
       <p class="eyebrow">SECURE ADMIN / SUPABASE AUTH</p>
       <h1>ĐĂNG NHẬP.</h1>
-      <p>Đăng nhập bằng tài khoản GitHub đã liên kết với Supabase. Portfolio chỉ được tải sau khi xác thực thành công.</p>
+      <p>Chọn tài khoản dùng để vào trang chỉnh sửa. Chỉ tài khoản của tôi mới có quyền lưu thay đổi.</p>
 
-      <button id="githubLoginBtn" type="button">ĐĂNG NHẬP BẰNG GITHUB ↗</button>
+      <div class="admin-login-options">
+        <button id="githubLoginBtn" type="button">ĐĂNG NHẬP BẰNG GITHUB ↗</button>
+        <button id="googleLoginBtn" type="button" class="secondary">ĐĂNG NHẬP BẰNG GOOGLE ↗</button>
+        <button id="clearSessionBtn" type="button" class="ghost">ĐĂNG XUẤT PHIÊN HIỆN TẠI</button>
+      </div>
+
+      <div id="currentSessionInfo" class="current-session-info" hidden></div>
       <small id="loginMessage"></small>
     </div>
   </section>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../supabase-config.js?v=20260930-0122"></script>
-  <script src="admin.js?v=20261004-admin-final-1"></script>
+  <script src="admin.js?v=20261004-auth-3"></script>
 </body>
 </html>
