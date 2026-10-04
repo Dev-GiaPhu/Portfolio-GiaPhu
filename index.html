@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#07090d">
     <meta name="description" content="Portfolio Nguyễn Gia Phú — Game Developer, Unity Developer, C#, gameplay và UI.">
     <title>Nguyễn Gia Phú — Portfolio Game Developer</title>
-    <link rel="stylesheet" href="style.css?v=20261004-cv-activities-28">
+    <link rel="stylesheet" href="style.css?v=20261004-gallery-29">
   </head>
   <body>
     <aside class="side-rail" data-scroll-rail aria-label="Điều hướng trang">
@@ -214,7 +214,7 @@
               <span>DỰ ÁN / 02</span>
             </div>
             <div class="console-body project-card-core">
-              <h3>LẬT HÌNH<br>TÌM CẶP</h3>
+              <h3>LẬT ẢNH<br>TÌM CẶP</h3>
               <div class="project-hover-summary">
                 <strong>Dự án nhóm - Lật Ảnh Tìm Cặp</strong>
                 <span>Vị trí: Lập trình viên</span>
@@ -228,13 +228,7 @@
             </div>
           </article>
 
-          <article class="hero-console terminal-project-card project-pixel" data-reveal>
-            <img class="project-card-bg" data-project-card-image src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="" aria-hidden="true">
-            <div class="scan"></div>
-            <div class="console-top">
-              <div class="dots"><i></i><i></i><i></i></div>
-              <span>DỰ ÁN / 03</span>
-            </div>
+        </div>
             <div class="console-body project-card-core">
               <h3>PIXEL<br>SURVIVOR</h3>
               <div class="project-hover-summary">
@@ -267,14 +261,11 @@
               <p>
                 Ở Oops Brake, tôi tham gia xây dựng trải nghiệm phương tiện, hệ thống giao thông, tương tác trên đường và các công cụ hỗ trợ trong quá trình phát triển.
               </p>
-              <figure class="project-detail-media" data-project-detail-media>
-                <img
-                  data-project-detail-image
-                  src="assets/world.png"
-                  alt="Hình ảnh dự án Oops Brake"
-                  loading="lazy"
-                >
-              </figure>
+              <div class="project-gallery" id="oops-gallery" data-project-gallery data-gallery-label="Oops Brake">
+                <button class="project-gallery-item" type="button" data-gallery-item>
+                  <img src="assets/world.png" alt="Hình ảnh Oops Brake 01" loading="lazy">
+                </button>
+              </div>
               <div class="project-info-grid">
                 <div>
                   <span>VAI TRÒ</span>
@@ -336,14 +327,9 @@
               <p>
                 Ở Lật Ảnh Tìm Cặp, tôi tham gia với vai trò lập trình viên, tập trung vào luồng chơi, tương tác lật thẻ và giao diện phục vụ trải nghiệm người chơi.
               </p>
-              <figure class="project-detail-media" data-project-detail-media>
-                <img
-                  data-project-detail-image
-                  src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
-                  alt="Hình ảnh dự án Lật Ảnh Tìm Cặp"
-                  loading="lazy"
-                >
-              </figure>
+              <div class="project-gallery is-empty" id="lat-gallery" data-project-gallery data-gallery-label="Lật Ảnh Tìm Cặp">
+                <p class="project-gallery-empty">Chưa có ảnh dự án.</p>
+              </div>
               <div class="project-info-grid">
                 <div>
                   <span>VAI TRÒ</span>
@@ -390,55 +376,6 @@
           </div>
         </article>
 
-        <article class="one-project project-info-only onepage-anchor" id="pixel-survivor-info" data-reveal>
-          <div class="play-only-heading">
-            <p class="eyebrow">Thông tin dự án</p>
-            <h3>PIXEL SURVIVOR</h3>
-          </div>
-
-          <details class="project-info-accordion">
-            <summary>
-              <span>Xem chi tiết dự án</span>
-              <i>+</i>
-            </summary>
-            <div class="project-info-content">
-              <p>
-                Pixel Survivor là dự án cá nhân tôi đang phát triển, tập trung vào trải nghiệm chiến đấu, hệ thống nâng cấp và cách người chơi phản ứng với các mối đe dọa trong từng lượt chơi.
-              </p>
-              <figure class="project-detail-media" data-project-detail-media>
-                <img
-                  data-project-detail-image
-                  src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
-                  alt="Hình ảnh dự án Pixel Survivor"
-                  loading="lazy"
-                >
-              </figure>
-              <div class="project-info-grid">
-                <div>
-                  <span>THỜI GIAN</span>
-                  <strong>07/2026 - Đang phát triển</strong>
-                </div>
-                <div>
-                  <span>VAI TRÒ</span>
-                  <strong>Lập trình viên</strong>
-                </div>
-              </div>
-              <ul>
-                <li>Phát triển hệ thống thẻ nâng cấp và kỹ năng.</li>
-                <li>Xây dựng AI cho enemy trong game.</li>
-                <li>Quản lý và xây dựng đồ họa, hiệu ứng game và trải nghiệm người chơi.</li>
-                <li>Phát triển hệ thống ngắm bắn, vũ khí, sát thương, máu, camera và điều khiển nhân vật.</li>
-              </ul>
-              <div class="stack-list">
-                <span class="chip">UNITY</span>
-                <span class="chip">C#</span>
-                <span class="chip">GAMEPLAY</span>
-                <span class="chip">AI</span>
-              </div>
-              <a class="project-info-link" href="https://github.com/Dev-GiaPhu/Pixel-Survivor" target="_blank" rel="noopener">Xem dự án trên GitHub ↗</a>
-            </div>
-          </details>
-        </article>
       </section>
 
       <section class="section onepage-anchor skills-deep-section" id="skills">
@@ -635,10 +572,10 @@
     <script src="site-info.js?v=20261004-cv-activities-28"></script>
     <script src="site-info-bind.js?v=20261004-onepage-1"></script>
     <script src="dark-ui.js?v=20261004-onepage-1"></script>
-    <script src="one-page.js?v=20261004-education-27"></script>
+    <script src="one-page.js?v=20261004-gallery-29"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js?v=20260930-0122"></script>
     <script src="likes.js?v=20261004-likeoauth-1"></script>
-    <script src="cms.js?v=20261004-organic-14"></script>
+    <script src="cms.js?v=20261004-gallery-29"></script>
   </body>
 </html>
