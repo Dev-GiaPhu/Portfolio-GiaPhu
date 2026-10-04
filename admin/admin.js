@@ -804,6 +804,23 @@
       return;
     }
 
+    setStatus('ĐANG KIỂM TRA QUYỀN...');
+
+    const { data: allowed, error: permissionError } = await client
+      .rpc('is_portfolio_admin');
+
+    if (permissionError || allowed !== true) {
+      setStatus('CHƯA CÓ QUYỀN LƯU');
+
+      alert(
+        'Supabase chưa nhận tài khoản hiện tại là admin.\n\n' +
+        'Hãy chạy lại TOÀN BỘ file admin/supabase-cms.sql mới nhất trong Supabase SQL Editor, ' +
+        'sau đó đăng xuất và đăng nhập lại admin một lần.\n\n' +
+        (permissionError?.message || 'is_portfolio_admin() đang trả về false.')
+      );
+      return;
+    }
+
     setStatus('ĐANG LƯU...');
 
     const now = new Date().toISOString();
