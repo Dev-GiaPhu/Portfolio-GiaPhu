@@ -4880,3 +4880,242 @@ main{
     min-width:38px!important;
   }
 }
+
+
+/* ============================================================
+   TRUE GOOEY LIQUID RAIL
+   ============================================================ */
+.side-rail{
+  position:fixed!important;
+  z-index:60!important;
+  top:50%!important;
+  right:14px!important;
+  transform:translateY(-50%)!important;
+  width:54px!important;
+  min-height:0!important;
+  padding:7px 6px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  backdrop-filter:none!important;
+  box-shadow:none!important;
+  overflow:visible!important;
+  isolation:isolate!important;
+}
+
+.rail-liquid-defs{
+  position:absolute!important;
+  width:0!important;
+  height:0!important;
+  pointer-events:none!important;
+}
+
+.rail-liquid-layer{
+  position:absolute!important;
+  z-index:0!important;
+  top:0!important;
+  right:0!important;
+  bottom:0!important;
+  width:160px!important;
+  overflow:visible!important;
+  pointer-events:none!important;
+  filter:url("#rail-liquid-goo") drop-shadow(0 18px 42px #0007)!important;
+}
+
+.rail-liquid-column{
+  position:absolute!important;
+  top:0!important;
+  right:0!important;
+  bottom:0!important;
+  width:54px!important;
+  border-radius:27px!important;
+  background:linear-gradient(180deg,#101720 0%,#0a1017 100%)!important;
+}
+
+.rail-liquid-blob{
+  position:absolute!important;
+  z-index:1!important;
+  top:7px!important;
+  right:10px!important;
+  width:122px!important;
+  height:42px!important;
+  border-radius:999px!important;
+  background:
+    radial-gradient(circle at 78% 50%,#21453b 0 23%,transparent 52%),
+    linear-gradient(90deg,#123129 0%,#163a31 55%,#173d33 100%)!important;
+  transform:translate3d(0,0,0)!important;
+  transform-origin:right center!important;
+  transition:
+    top .46s cubic-bezier(.2,.82,.2,1),
+    width .38s cubic-bezier(.2,.82,.2,1),
+    height .32s ease!important;
+  will-change:top,width!important;
+}
+
+/* small satellites make the junction swell and merge more organically */
+.rail-liquid-blob::before,
+.rail-liquid-blob::after{
+  content:"";
+  position:absolute;
+  right:-10px;
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  background:#173a31;
+}
+
+.rail-liquid-blob::before{
+  top:-8px;
+}
+
+.rail-liquid-blob::after{
+  bottom:-8px;
+}
+
+.rail-nav,
+.rail-like{
+  position:relative!important;
+  z-index:2!important;
+}
+
+.rail-nav{
+  width:42px!important;
+  gap:0!important;
+  overflow:visible!important;
+}
+
+.rail-nav a,
+.rail-nav a.is-active,
+.rail-nav a[aria-current="page"]{
+  position:relative!important;
+  z-index:2!important;
+  width:42px!important;
+  min-width:42px!important;
+  height:42px!important;
+  margin:-1px 0!important;
+  padding:0 11px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  transform:none!important;
+  overflow:visible!important;
+  color:#7f8b9a!important;
+}
+
+.rail-nav a::before,
+.rail-nav a::after{
+  display:none!important;
+}
+
+.rail-nav a:hover{
+  color:#dce5ef!important;
+  background:transparent!important;
+}
+
+.rail-nav a.is-active,
+.rail-nav a[aria-current="page"]{
+  color:var(--mint)!important;
+}
+
+.rail-nav a svg{
+  width:17px!important;
+  height:17px!important;
+  transform:none!important;
+  transition:transform .22s ease!important;
+}
+
+.rail-nav a.is-active svg,
+.rail-nav a[aria-current="page"] svg{
+  transform:scale(1.16)!important;
+}
+
+.rail-nav a span{
+  position:absolute!important;
+  top:50%!important;
+  right:34px!important;
+  width:auto!important;
+  max-width:0!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:hidden!important;
+  opacity:0!important;
+  white-space:nowrap!important;
+  pointer-events:none!important;
+  transform:translateY(-50%) translateX(9px)!important;
+  color:#afffe2!important;
+  text-shadow:0 1px 10px #07110e!important;
+  font:700 9px 'Space Mono',monospace!important;
+  letter-spacing:.055em!important;
+  transition:
+    max-width .32s ease,
+    opacity .18s ease,
+    transform .32s ease!important;
+}
+
+.rail-nav a.is-active span,
+.rail-nav a[aria-current="page"] span{
+  max-width:86px!important;
+  opacity:1!important;
+  transform:translateY(-50%) translateX(0)!important;
+}
+
+.rail-like{
+  width:42px!important;
+  min-width:42px!important;
+  height:40px!important;
+  margin-top:2px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+
+.rail-like:hover{
+  background:transparent!important;
+}
+
+@media(max-width:900px){
+  .side-rail{
+    right:8px!important;
+    width:48px!important;
+    padding:6px 5px!important;
+  }
+
+  .rail-liquid-layer{
+    width:138px!important;
+  }
+
+  .rail-liquid-column{
+    width:48px!important;
+    border-radius:24px!important;
+  }
+
+  .rail-liquid-blob{
+    right:8px!important;
+    width:100px!important;
+    height:38px!important;
+  }
+
+  .rail-nav{
+    width:38px!important;
+  }
+
+  .rail-nav a,
+  .rail-nav a.is-active,
+  .rail-nav a[aria-current="page"]{
+    width:38px!important;
+    min-width:38px!important;
+    height:38px!important;
+    padding:0 10px!important;
+  }
+
+  .rail-nav a span{
+    right:31px!important;
+  }
+
+  .rail-like{
+    width:38px!important;
+    min-width:38px!important;
+  }
+}
