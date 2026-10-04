@@ -28,6 +28,9 @@
   const imageTools = document.getElementById('imageTools');
   const imageUrl = document.getElementById('imageUrl');
   const imageFile = document.getElementById('imageFile');
+  const galleryTools = document.getElementById('galleryTools');
+  const galleryFiles = document.getElementById('galleryFiles');
+  const galleryEditorList = document.getElementById('galleryEditorList');
 
   const layoutTools = document.getElementById('layoutTools');
   const boxWidth = document.getElementById('boxWidth');
@@ -75,6 +78,7 @@
     '.panel','.skill-card','.terminal-project-card','.contact-line',
     '.skill-story','.one-project-game','.hero-terminal-card',
     '.project-info-accordion','.project-info-content','.project-info-grid > div',
+    '.project-gallery',
     '.education-card','.education-stat','.education-program',
     '.education-head','.education-card-top',
     '.activity-card','.activities-head',
