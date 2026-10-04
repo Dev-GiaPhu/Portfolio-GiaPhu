@@ -4,13 +4,9 @@
   const thumb = document.querySelector('[data-scroll-thumb]');
   const links = [...document.querySelectorAll('[data-rail-link]')];
   const railNav = rail?.querySelector('.rail-nav');
-  const liquidSvg = rail?.querySelector('[data-rail-liquid-svg]');
-  const waterColumn = rail?.querySelector('[data-rail-water-column]');
-  const waterLobe = rail?.querySelector('[data-rail-water-lobe]');
-  const waterBridge = rail?.querySelector('[data-rail-water-bridge]');
-  const waterNeckTop = rail?.querySelector('[data-rail-water-neck-top]');
-  const waterNeckBottom = rail?.querySelector('[data-rail-water-neck-bottom]');
-  const waterHighlight = rail?.querySelector('[data-rail-water-highlight]');
+  const glassSvg = rail?.querySelector('[data-rail-glass-svg]');
+  const glassShape = rail?.querySelector('[data-rail-glass-shape]');
+  const glassHighlight = rail?.querySelector('[data-rail-glass-highlight]');
   const sections = links
     .map((link) => document.querySelector(link.getAttribute('href')))
     .filter(Boolean);
@@ -99,33 +95,82 @@
     });
   });
 
-  let waterCurrentY = null;
-  let waterTargetY = null;
-  let waterCurrentWidth = null;
-  let waterTargetWidth = null;
-  let waterFrame = null;
+  let glassCurrentY = null;
+  let glassTargetY = null;
+  let glassCurrentWidth = null;
+  let glassTargetWidth = null;
+  let glassFrame = null;
 
-  function renderLiquidRail() {
-    waterFrame = null;
+  function buildGlassRailPath(height, centerY, extensionWidth) {
+    const right = 184;
+    const columnLeft = 142;
+    const columnRadius = 21;
+    const top = 0;
+    const bottom = Math.max(80, height);
+    const center = clamp(centerY, 28, bottom - 28);
+
+    const halfHeight = 23;
+    const lobeLeft = right - extensionWidth;
+    const capRadius = halfHeight;
+    const capRight = lobeLeft + capRadius;
+    const lowerNeckY = center + 48;
+    const upperNeckY = center - 48;
+
+    return [
+      `M ${columnLeft + columnRadius} ${top}`,
+      `H ${right - columnRadius}`,
+      `Q ${right} ${top} ${right} ${columnRadius}`,
+      `V ${bottom - columnRadius}`,
+      `Q ${right} ${bottom} ${right - columnRadius} ${bottom}`,
+      `H ${columnLeft + columnRadius}`,
+      `Q ${columnLeft} ${bottom} ${columnLeft} ${bottom - columnRadius}`,
+      `V ${lowerNeckY}`,
+
+      // Soft lower shoulder: it eases outward before reaching the rounded cap.
+      `C ${columnLeft} ${center + 40}, ${columnLeft - 4} ${center + 34}, ${columnLeft - 12} ${center + 29}`,
+      `C ${columnLeft - 22} ${center + 23}, ${capRight + 26} ${center + halfHeight}, ${capRight} ${center + halfHeight}`,
+
+      // Fully rounded left cap. No cusp / no leaf-like point.
+      `C ${lobeLeft + 10} ${center + halfHeight}, ${lobeLeft} ${center + 13}, ${lobeLeft} ${center}`,
+      `C ${lobeLeft} ${center - 13}, ${lobeLeft + 10} ${center - halfHeight}, ${capRight} ${center - halfHeight}`,
+
+      // Upper shoulder returns to the column with the same smooth tangent.
+      `C ${capRight + 26} ${center - halfHeight}, ${columnLeft - 22} ${center - 23}, ${columnLeft - 12} ${center - 29}`,
+      `C ${columnLeft - 4} ${center - 34}, ${columnLeft} ${center - 40}, ${columnLeft} ${upperNeckY}`,
+      `V ${columnRadius}`,
+      `Q ${columnLeft} ${top} ${columnLeft + columnRadius} ${top}`,
+      'Z'
+    ].join(' ');
+  }
+
+  function buildGlassHighlightPath(centerY, extensionWidth) {
+    const right = 184;
+    const lobeLeft = right - extensionWidth;
+    const center = centerY;
+
+    return [
+      `M ${lobeLeft + 16} ${center - 12}`,
+      `C ${lobeLeft + 32} ${center - 21}, ${right - 72} ${center - 24}, ${right - 48} ${center - 17}`
+    ].join(' ');
+  }
+
+  function renderGlassRail() {
+    glassFrame = null;
 
     if (
-      !liquidSvg ||
-      !waterColumn ||
-      !waterLobe ||
-      !waterBridge ||
-      !waterNeckTop ||
-      !waterNeckBottom ||
-      waterTargetY == null ||
-      waterTargetWidth == null
+      !glassSvg ||
+      !glassShape ||
+      glassTargetY == null ||
+      glassTargetWidth == null
     ) {
       return;
     }
 
-    if (waterCurrentY == null) waterCurrentY = waterTargetY;
-    if (waterCurrentWidth == null) waterCurrentWidth = waterTargetWidth;
+    if (glassCurrentY == null) glassCurrentY = glassTargetY;
+    if (glassCurrentWidth == null) glassCurrentWidth = glassTargetWidth;
 
-    waterCurrentY += (waterTargetY - waterCurrentY) * 0.18;
-    waterCurrentWidth += (waterTargetWidth - waterCurrentWidth) * 0.16;
+    glassCurrentY += (glassTargetY - glassCurrentY) * 0.17;
+    glassCurrentWidth += (glassTargetWidth - glassCurrentWidth) * 0.15;
 
     const height = Math.max(
       1,
@@ -134,86 +179,51 @@
       220
     );
 
-    liquidSvg.setAttribute('viewBox', `0 0 190 ${height}`);
-    waterColumn.setAttribute('height', String(height));
+    glassSvg.setAttribute('viewBox', `0 0 190 ${height}`);
+    glassShape.setAttribute(
+      'd',
+      buildGlassRailPath(height, glassCurrentY, glassCurrentWidth)
+    );
 
-    const compact = window.matchMedia('(max-width: 900px)').matches;
-    const rightEdge = compact ? 158 : 160;
-    const rx = Math.max(38, waterCurrentWidth / 2);
-    const centerX = rightEdge - rx;
-    const centerY = clamp(waterCurrentY, 24, height - 24);
-    const lobeRy = compact ? 20 : 23;
-
-    waterLobe.setAttribute('cx', centerX.toFixed(2));
-    waterLobe.setAttribute('cy', centerY.toFixed(2));
-    waterLobe.setAttribute('rx', rx.toFixed(2));
-    waterLobe.setAttribute('ry', String(lobeRy));
-
-    // The bridge and two neck metaballs overlap both the active lobe and
-    // the vertical body. The shared goo filter fuses them into one liquid mass.
-    waterBridge.setAttribute('cx', compact ? '138' : '140');
-    waterBridge.setAttribute('cy', centerY.toFixed(2));
-    waterBridge.setAttribute('r', compact ? '20' : '22');
-
-    waterNeckTop.setAttribute('cx', compact ? '145' : '147');
-    waterNeckTop.setAttribute('cy', (centerY - 12).toFixed(2));
-    waterNeckTop.setAttribute('r', compact ? '16' : '18');
-
-    waterNeckBottom.setAttribute('cx', compact ? '145' : '147');
-    waterNeckBottom.setAttribute('cy', (centerY + 12).toFixed(2));
-    waterNeckBottom.setAttribute('r', compact ? '16' : '18');
-
-    if (waterHighlight) {
-      waterHighlight.setAttribute(
-        'cx',
-        (centerX - rx * 0.18).toFixed(2)
-      );
-      waterHighlight.setAttribute(
-        'cy',
-        (centerY - lobeRy * 0.42).toFixed(2)
-      );
-      waterHighlight.setAttribute(
-        'rx',
-        Math.max(14, rx * 0.38).toFixed(2)
-      );
-      waterHighlight.setAttribute(
-        'ry',
-        compact ? '4.5' : '5.5'
+    if (glassHighlight) {
+      glassHighlight.setAttribute(
+        'd',
+        buildGlassHighlightPath(glassCurrentY, glassCurrentWidth)
       );
     }
 
     const moving =
-      Math.abs(waterTargetY - waterCurrentY) > 0.25 ||
-      Math.abs(waterTargetWidth - waterCurrentWidth) > 0.25;
+      Math.abs(glassTargetY - glassCurrentY) > 0.25 ||
+      Math.abs(glassTargetWidth - glassCurrentWidth) > 0.25;
 
     if (moving) {
-      waterFrame = requestAnimationFrame(renderLiquidRail);
+      glassFrame = requestAnimationFrame(renderGlassRail);
     } else {
-      waterCurrentY = waterTargetY;
-      waterCurrentWidth = waterTargetWidth;
+      glassCurrentY = glassTargetY;
+      glassCurrentWidth = glassTargetWidth;
     }
   }
 
-  function syncLiquidRail(activeLink) {
-    if (!liquidSvg || !railNav || !activeLink) return;
+  function syncGlassRail(activeLink) {
+    if (!glassSvg || !railNav || !activeLink) return;
 
     const label = activeLink.querySelector('span');
     const labelWidth = label?.scrollWidth || 52;
     const compact = window.matchMedia('(max-width: 900px)').matches;
 
-    waterTargetWidth = clamp(
-      labelWidth + (compact ? 64 : 74),
-      compact ? 94 : 108,
-      compact ? 132 : 150
+    glassTargetWidth = clamp(
+      labelWidth + (compact ? 66 : 76),
+      compact ? 98 : 112,
+      compact ? 134 : 150
     );
 
-    waterTargetY =
+    glassTargetY =
       railNav.offsetTop +
       activeLink.offsetTop +
       activeLink.offsetHeight / 2;
 
-    if (!waterFrame) {
-      waterFrame = requestAnimationFrame(renderLiquidRail);
+    if (!glassFrame) {
+      glassFrame = requestAnimationFrame(renderGlassRail);
     }
   }
 
@@ -241,7 +251,7 @@
       }
     });
 
-    syncLiquidRail(activeLink);
+    syncGlassRail(activeLink);
   }
 
   let ticking = false;
