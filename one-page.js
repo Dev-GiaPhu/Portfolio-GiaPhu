@@ -109,8 +109,10 @@
     const center = clamp(centerY, 30, bottom - 30);
 
     const lobeLeft = right - extensionWidth;
-    const outer = 23;
-    const neck = 37;
+    const lobeRadius = 22;
+    const neck = 38;
+    const shoulderX = columnLeft - 18;
+    const capJoinX = lobeLeft + lobeRadius;
 
     return [
       `M ${columnLeft + radius} ${top}`,
@@ -121,10 +123,19 @@
       `H ${columnLeft + radius}`,
       `Q ${columnLeft} ${bottom} ${columnLeft} ${bottom - radius}`,
       `V ${center + neck}`,
-      `C ${columnLeft - 1} ${center + 31}, ${columnLeft - 8} ${center + 27}, ${columnLeft - 18} ${center + 20}`,
-      `C ${columnLeft - 31} ${center + 11}, ${lobeLeft + 24} ${center + outer}, ${lobeLeft} ${center}`,
-      `C ${lobeLeft + 24} ${center - outer}, ${columnLeft - 31} ${center - 11}, ${columnLeft - 18} ${center - 20}`,
-      `C ${columnLeft - 8} ${center - 27}, ${columnLeft - 1} ${center - 31}, ${columnLeft} ${center - neck}`,
+
+      // Lower neck stretches outward like liquid pulled from the main column.
+      `C ${columnLeft - 1} ${center + 32}, ${columnLeft - 7} ${center + 27}, ${shoulderX} ${center + 20}`,
+      `C ${columnLeft - 31} ${center + 12}, ${capJoinX + 22} ${center + lobeRadius}, ${capJoinX} ${center + lobeRadius}`,
+
+      // Rounded left cap. Both cubic tangents are vertical at the leftmost point,
+      // so the lobe stays soft instead of forming a leaf/arrow tip.
+      `C ${lobeLeft + 10} ${center + lobeRadius}, ${lobeLeft} ${center + 12}, ${lobeLeft} ${center}`,
+      `C ${lobeLeft} ${center - 12}, ${lobeLeft + 10} ${center - lobeRadius}, ${capJoinX} ${center - lobeRadius}`,
+
+      // Upper shoulder flows back into the same vertical liquid body.
+      `C ${capJoinX + 22} ${center - lobeRadius}, ${columnLeft - 31} ${center - 12}, ${shoulderX} ${center - 20}`,
+      `C ${columnLeft - 7} ${center - 27}, ${columnLeft - 1} ${center - 32}, ${columnLeft} ${center - neck}`,
       `V ${radius}`,
       `Q ${columnLeft} ${top} ${columnLeft + radius} ${top}`,
       'Z'
