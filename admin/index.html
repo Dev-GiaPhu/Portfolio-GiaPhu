@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#07090d">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <title>Portfolio Admin — Nguyễn Gia Phú</title>
-  <link rel="stylesheet" href="admin.css?v=20261004-dragpanel-11">
+  <link rel="stylesheet" href="admin.css?v=20261004-gallery-30">
 </head>
 <body>
   <div class="admin-shell" id="adminShell" hidden>
@@ -58,6 +58,16 @@
             <input id="imageFile" type="file" accept="image/*">
           </label>
           <p>Ảnh upload sẽ được lưu trong Supabase Storage.</p>
+        </div>
+
+        <div id="galleryTools" class="tool-group" hidden>
+          <p class="tool-title">THƯ VIỆN ẢNH DỰ ÁN</p>
+          <label class="upload-btn">
+            THÊM ẢNH TỪ MÁY
+            <input id="galleryFiles" type="file" accept="image/*" multiple>
+          </label>
+          <p>Có thể chọn nhiều ảnh cùng lúc. Ảnh được lưu trong Supabase Storage.</p>
+          <div id="galleryEditorList" class="gallery-editor-list"></div>
         </div>
 
         <div id="layoutTools" class="tool-group" hidden>
@@ -148,6 +158,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../supabase-config.js?v=20260930-0122"></script>
-  <script src="admin.js?v=20261004-cv-activities-28"></script>
+  <script src="admin.js?v=20261004-gallery-30"></script>
 </body>
 </html>
