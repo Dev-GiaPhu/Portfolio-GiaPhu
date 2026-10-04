@@ -6,59 +6,6 @@
     <title>Unity Web Player | LatHinh2D</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
-      <!-- PORTFOLIO_WEBGL_FIT -->
-    <style>
-      html,
-      body {
-        width:100%;
-        height:100%;
-        margin:0;
-        overflow:hidden;
-        background:#07090d;
-      }
-
-      #unity-container,
-      #unity-container.unity-desktop,
-      #unity-container.unity-mobile {
-        position:absolute !important;
-        inset:0 !important;
-        left:0 !important;
-        top:0 !important;
-        width:100% !important;
-        height:100% !important;
-        transform:none !important;
-        margin:0 !important;
-      }
-
-      #unity-canvas,
-      #unity-canvas.unity-mobile {
-        display:block;
-        width:100% !important;
-        height:100% !important;
-        max-width:none !important;
-        max-height:none !important;
-        margin:0 !important;
-        background:#07090d;
-      }
-
-      #unity-footer {
-        display:none !important;
-      }
-
-      #unity-loading-bar {
-        left:50% !important;
-        top:50% !important;
-        transform:translate(-50%,-50%) !important;
-      }
-
-      #unity-warning {
-        left:50% !important;
-        top:16px !important;
-        transform:translateX(-50%) !important;
-        width:min(760px,calc(100% - 32px)) !important;
-        z-index:30 !important;
-      }
-    </style>
   </head>
   <body>
     <div id="unity-container" class="unity-desktop">
@@ -105,27 +52,17 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/Web.loader.js?v=20261001-2218";
+      var loaderUrl = buildUrl + "/Build Web.loader.js";
       var config = {
         arguments: [],
-        dataUrl: buildUrl + "/Web.data",
-        frameworkUrl: buildUrl + "/Web.framework.js",
-        codeUrl: buildUrl + "/Web.wasm",
+        dataUrl: buildUrl + "/Build Web.data.br",
+        frameworkUrl: buildUrl + "/Build Web.framework.js.br",
+        codeUrl: buildUrl + "/Build Web.wasm.br",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
         productName: "LatHinh2D",
         productVersion: "1.0",
         showBanner: unityShowBanner,
-        cacheControl: function(url) {
-          if (
-            url.endsWith(".data") ||
-            url.endsWith(".wasm") ||
-            url.endsWith(".framework.js")
-          ) {
-            return "immutable";
-          }
-          return "must-revalidate";
-        },
         // errorHandler: function(err, url, line) {
         //    alert("error " + err + " occurred at line " + line);
         //    // Return 'true' if you handled this error and don't want Unity
@@ -167,8 +104,8 @@
 
       } else {
         // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
-        canvas.style.width = "100%";
-        canvas.style.height = "100%";
+        canvas.style.width = "960px";
+        canvas.style.height = "600px";
       }
 
       document.querySelector("#unity-loading-bar").style.display = "block";
