@@ -119,8 +119,14 @@
     // A short, broad neck reads as stretched liquid.
     // The old 48px neck caused a cusp when the first item was active.
     const neck = 30;
-    const lowerNeckY = center + neck;
-    const upperNeckY = center - neck;
+    const lowerNeckY = Math.min(
+      bottom - columnRadius,
+      center + neck
+    );
+    const upperNeckY = Math.max(
+      top + columnRadius,
+      center - neck
+    );
 
     return [
       `M ${columnLeft + columnRadius} ${top}`,
