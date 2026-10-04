@@ -63,7 +63,7 @@
 
   const TEXT_SELECTOR = [
     'main h1','main h2','main h3','main h4','main h5','main h6',
-    'main p','main span','main strong','main small','main a','main li',
+    'main p','main span','main strong','main small','main a','main li','main summary',
     '.rail-nav span','.project-terminal-link','.btn',
     '.contact-line span','.contact-line strong',
     'footer span'
@@ -72,6 +72,7 @@
   const BOX_SELECTOR = [
     '.panel','.skill-card','.terminal-project-card','.contact-line',
     '.skill-story','.one-project-game','.hero-terminal-card',
+    '.project-info-accordion','.project-info-content','.project-info-grid > div',
     '.section-head','.contact-compact-head'
   ].join(',');
 
@@ -335,8 +336,14 @@
     borderColor.value = rgbToHex(computed.borderTopColor, '#20252d');
   }
 
-  function renderTags(card) {
-    const stack = card?.querySelector('.stack-list');
+  function renderTags(context) {
+    const stack =
+      context?.matches?.('.stack-list')
+        ? context
+        : context?.querySelector?.('.stack-list') ||
+          context?.closest?.('.project-info-content')?.querySelector('.stack-list') ||
+          context?.closest?.('.terminal-project-card')?.querySelector('.stack-list');
+
     if (!stack) {
       tagTools.hidden = true;
       tagList.innerHTML = '';
@@ -363,7 +370,7 @@
         chip.remove();
         const after = stack.innerHTML;
         pushChange(selector, 'innerHTML', before, after);
-        renderTags(card);
+        renderTags(stack);
       });
 
       item.append(label, remove);
@@ -399,7 +406,7 @@
 
     const box = element.matches(BOX_SELECTOR) ? element : element.closest(BOX_SELECTOR);
     structureTools.hidden = !box;
-    renderTags(element.closest('.terminal-project-card'));
+    renderTags(element);
   }
 
   function sanitizeClone(root) {
@@ -814,10 +821,14 @@
   addTagBtn.addEventListener('click', () => {
     if (!selected) return;
 
-    const card = selected.closest('.terminal-project-card');
-    const stack = card?.querySelector('.stack-list');
-    const value = tagInput.value.trim().toUpperCase();
+    const stack =
+      selected.matches?.('.stack-list')
+        ? selected
+        : selected.closest?.('.project-info-content')?.querySelector('.stack-list') ||
+          selected.closest?.('.terminal-project-card')?.querySelector('.stack-list') ||
+          selected.querySelector?.('.stack-list');
 
+    const value = tagInput.value.trim().toUpperCase();
     if (!stack || !value) return;
 
     const selector = structuralSelector(stack);
@@ -833,7 +844,7 @@
 
     tagInput.value = '';
     decoratePreviewContent();
-    renderTags(card);
+    renderTags(stack);
   });
 
   duplicateBoxBtn.addEventListener('click', () => {
