@@ -19,30 +19,32 @@
     }
 
     (data || []).forEach((item) => {
-      let element;
+      let elements;
       try {
-        element = document.querySelector(item.selector);
+        elements = [...document.querySelectorAll(item.selector)];
       } catch {
         return;
       }
-      if (!element) return;
+      if (!elements.length) return;
 
-      if (item.property === 'src') {
-        element.setAttribute('src', item.value);
-        return;
-      }
+      elements.forEach((element) => {
+        if (item.property === 'src') {
+          element.setAttribute('src', item.value);
+          return;
+        }
 
-      if (item.property === 'href') {
-        element.setAttribute('href', item.value);
-        return;
-      }
+        if (item.property === 'href') {
+          element.setAttribute('href', item.value);
+          return;
+        }
 
-      if (item.property === 'textContent') {
-        element.textContent = item.value;
-        return;
-      }
+        if (item.property === 'textContent') {
+          element.textContent = item.value;
+          return;
+        }
 
-      element.innerHTML = item.value;
+        element.innerHTML = item.value;
+      });
     });
   }
 
