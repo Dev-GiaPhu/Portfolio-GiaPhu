@@ -68,24 +68,14 @@
   </div>
 
   <section id="loginGate" class="login-gate">
-    <form id="loginForm" class="login-card">
+    <div class="login-card">
       <p class="eyebrow">SECURE ADMIN / SUPABASE AUTH</p>
       <h1>ĐĂNG NHẬP.</h1>
       <p>Mật khẩu được xác thực bởi Supabase và không được lưu trong mã nguồn GitHub.</p>
 
-      <label>
-        Email
-        <input id="loginEmail" type="email" value="giaphufpt1@gmail.com" autocomplete="username" required>
-      </label>
-
-      <label>
-        Password
-        <input id="loginPassword" type="password" autocomplete="current-password" required>
-      </label>
-
-      <button type="submit">VÀO TRANG CHỈNH SỬA ↗</button>
+      <button id="githubLoginBtn" type="button">ĐĂNG NHẬP BẰNG GITHUB ↗</button>
       <small id="loginMessage"></small>
-    </form>
+    </div>
   </section>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
