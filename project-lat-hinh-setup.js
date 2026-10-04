@@ -1,6 +1,6 @@
 /*
   ============================================================
-  LẬT HÌNH TÌM CẶP — FILE DUY NHẤT CẦN SỬA
+  LẬT ẢNH TÌM CẶP — FILE DUY NHẤT CẦN SỬA
   ============================================================
 
   - Đổi text, tên ảnh, mô tả, link GitHub, đường dẫn WebGL tại đây.
@@ -12,17 +12,17 @@
 */
 
 window.PROJECT_SETUP = {
-  pageTitle: "Lật Hình Tìm Cặp — Nguyễn Gia Phú",
+  pageTitle: "Lật Ảnh Tìm Cặp — Nguyễn Gia Phú",
   metaDescription:
-    "Lật Hình Tìm Cặp — dự án Unity của Nguyễn Gia Phú với vai trò lập trình viên.",
+    "Lật Ảnh Tìm Cặp — dự án Unity của Nguyễn Gia Phú với vai trò lập trình viên.",
 
   indexLabel: "Dự án nổi bật / 02",
   nameLines: ["LẬT HÌNH", "TÌM CẶP."],
   introduction:
-    "Tôi tham gia dự án Lật Hình Tìm Cặp với vai trò lập trình viên, tập trung vào luồng chơi, xử lý tương tác lật thẻ và giao diện trong Unity.",
+    "Tôi tham gia dự án Lật Ảnh Tìm Cặp với vai trò lập trình viên, tập trung vào luồng chơi, xử lý tương tác lật thẻ và giao diện trong Unity.",
 
   heroImage: "assets/projects/lat-hinh-tim-cap/hero.jpg",
-  heroAlt: "Lật Hình Tìm Cặp",
+  heroAlt: "Lật Ảnh Tìm Cặp",
   tags: ["UNITY", "C#", "2D", "UI", "MEMORY GAME"],
 
   playable: {
@@ -30,19 +30,19 @@ window.PROJECT_SETUP = {
     eyebrow: "PLAYABLE BUILD / WEBGL",
     titleLines: ["CHƠI LẬT HÌNH", "TÌM CẶP TRÊN WEB."],
     description:
-      "Bản WebGL của Lật Hình Tìm Cặp sẽ chạy trực tiếp trong portfolio khi build được upload vào đúng thư mục.",
+      "Bản WebGL của Lật Ảnh Tìm Cặp sẽ chạy trực tiếp trong portfolio khi build được upload vào đúng thư mục.",
     playerPage: "play-lat-hinh.html",
-    label: "LẬT HÌNH TÌM CẶP / WEBGL"
+    label: "LẬT ẢNH TÌM CẶP / WEBGL"
   },
 
   galleryTitle: "HÌNH ẢNH & GAMEPLAY.",
   galleryIntro:
-    "Một số hình ảnh thể hiện giao diện, cơ chế lật thẻ và quá trình hoàn thiện gameplay của Lật Hình Tìm Cặp.",
+    "Một số hình ảnh thể hiện giao diện, cơ chế lật thẻ và quá trình hoàn thiện gameplay của Lật Ảnh Tìm Cặp.",
 
   gallery: [
     {
       src: "assets/projects/lat-hinh-tim-cap/gameplay-01.jpg",
-      alt: "Gameplay Lật Hình Tìm Cặp",
+      alt: "Gameplay Lật Ảnh Tìm Cặp",
       label: "GAMEPLAY / 01",
       title: "Cơ chế lật và ghép cặp",
       description:
@@ -51,7 +51,7 @@ window.PROJECT_SETUP = {
     },
     {
       src: "assets/projects/lat-hinh-tim-cap/gameplay-02.jpg",
-      alt: "Giao diện Lật Hình Tìm Cặp",
+      alt: "Giao diện Lật Ảnh Tìm Cặp",
       label: "UI / 02",
       title: "Giao diện tương tác",
       description:
@@ -60,7 +60,7 @@ window.PROJECT_SETUP = {
     },
     {
       src: "assets/projects/lat-hinh-tim-cap/gameplay-03.jpg",
-      alt: "Quá trình phát triển Lật Hình Tìm Cặp",
+      alt: "Quá trình phát triển Lật Ảnh Tìm Cặp",
       label: "DEVELOPMENT / 03",
       title: "Quá trình phát triển",
       description:
