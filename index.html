@@ -6,16 +6,12 @@
     <meta name="theme-color" content="#07090d">
     <meta name="description" content="Portfolio Nguyễn Gia Phú — Game Developer, Unity Developer, C#, gameplay và UI.">
     <title>Nguyễn Gia Phú — Portfolio Game Developer</title>
-    <link rel="stylesheet" href="style.css?v=20261004-projectcards-2">
+    <link rel="stylesheet" href="style.css?v=20261004-layout-3">
   </head>
   <body>
     <aside class="side-rail" data-scroll-rail aria-label="Điều hướng trang">
       <nav class="rail-nav" aria-label="Menu chính">
-        <a href="#home" aria-current="page" data-rail-link="home">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.2 12 3l9 8.2V21h-6v-6H9v6H3v-9.8Z"/></svg>
-          <span>Trang chủ</span>
-        </a>
-        <a href="#about" data-rail-link="about">
+        <a href="#about" aria-current="page" data-rail-link="about">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm-8 19c.4-4.3 3.5-7 8-7s7.6 2.7 8 7H4Z"/></svg>
           <span>Giới thiệu</span>
         </a>
@@ -41,7 +37,7 @@
 
 
     <main>
-      <section class="hero onepage-anchor" id="home">
+      <section class="hero onepage-anchor" id="about">
         <div data-reveal>
           <p class="eyebrow" data-site-text="role">Nhà phát triển game · Lập trình viên Unity</p>
           <h1 class="portfolio-title">PORTFOLIO</h1>
@@ -51,7 +47,7 @@
 
           <div class="hero-actions">
             <a class="primary-btn" href="#projects">Xem dự án ↘</a>
-            <a class="ghost-btn" href="#about">Giới thiệu về tôi</a>
+            <a class="ghost-btn" href="#skills">Kỹ năng của tôi</a>
           </div>
 
           <div class="hero-meta">
@@ -108,37 +104,6 @@
         </aside>
       </section>
 
-      <section class="section onepage-anchor" id="about">
-        <div class="section-head" data-reveal>
-          <div>
-            <p class="eyebrow">Giới thiệu</p>
-            <h2>GAMEPLAY.<br>HỆ THỐNG.<br>TRẢI NGHIỆM.</h2>
-          </div>
-          <p>
-            Tôi tập trung vào việc xây dựng gameplay system, triển khai logic bằng C# và hoàn thiện trải nghiệm qua UI cũng như phản hồi trực quan trong game.
-          </p>
-        </div>
-
-        <div class="info-grid onepage-info-grid">
-          <section class="panel" data-reveal>
-            <div class="profile-avatar">GP</div>
-            <p class="eyebrow">VAI TRÒ</p>
-            <h2 data-site-text="role">Nhà phát triển game · Lập trình viên Unity</h2>
-            <p>
-              Tôi là một nhà phát triển game với chuyên môn về Unity và C#, kết hợp cùng kỹ năng thiết kế đồ họa game. Tôi thích chia gameplay thành các hệ thống rõ ràng và liên tục tinh chỉnh trải nghiệm.
-            </p>
-          </section>
-
-          <section class="panel" data-reveal>
-            <p class="eyebrow">CÁCH TÔI LÀM VIỆC</p>
-            <h2>Tư duy hệ thống, chú trọng chi tiết.</h2>
-            <p>
-              Tôi ưu tiên cấu trúc rõ ràng, kiểm soát từng phần nhỏ và tối ưu phản hồi cho người chơi. Với dự án nhóm, tôi cũng có kinh nghiệm đảm nhiệm vai trò trưởng nhóm song song với lập trình.
-            </p>
-          </section>
-        </div>
-      </section>
-
       <section class="section projects-section onepage-anchor" id="projects">
         <div class="section-head" data-reveal>
           <div>
@@ -151,7 +116,7 @@
         </div>
 
         <div class="terminal-project-grid">
-          <article class="hero-console terminal-project-card" data-reveal>
+          <article class="hero-console terminal-project-card project-oops" data-reveal>
             <img class="project-card-bg" data-project-card-image src="assets/world.png" alt="" aria-hidden="true">
             <div class="scan"></div>
             <div class="console-top">
@@ -172,8 +137,8 @@
             </div>
           </article>
 
-          <article class="hero-console terminal-project-card" data-reveal>
-            <img class="project-card-bg" data-project-card-image src="assets/player.png" alt="" aria-hidden="true">
+          <article class="hero-console terminal-project-card project-lat-hinh" data-reveal>
+            <img class="project-card-bg" data-project-card-image src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="" aria-hidden="true">
             <div class="scan"></div>
             <div class="console-top">
               <div class="dots"><i></i><i></i><i></i></div>
@@ -192,8 +157,8 @@
             </div>
           </article>
 
-          <article class="hero-console terminal-project-card" data-reveal>
-            <img class="project-card-bg" data-project-card-image src="assets/GiaPhu_Avatar_transparent.png" alt="" aria-hidden="true">
+          <article class="hero-console terminal-project-card project-pixel" data-reveal>
+            <img class="project-card-bg" data-project-card-image src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="" aria-hidden="true">
             <div class="scan"></div>
             <div class="console-top">
               <div class="dots"><i></i><i></i><i></i></div>
@@ -214,18 +179,21 @@
         </div>
 
         <article class="one-project play-only-section onepage-anchor" id="oops-brake" data-reveal>
+          <div class="play-only-heading">
+            <p class="eyebrow">Trải nghiệm dự án</p>
+            <h3>OOPS BRAKE</h3>
+          </div>
           <div class="one-project-game play-only-game">
             <div class="game-floating-actions">
               <button class="game-audio-toggle" type="button" data-game-audio="game-oops-brake" aria-pressed="false" title="Bật âm thanh">
                 <svg class="icon-volume-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Zm12.5.1 1.4 1.4L19.4 9l1.4 1.4-1.5 1.5 1.5 1.5-1.4 1.4-1.5-1.5-1.5 1.5-1.4-1.4 1.5-1.5-1.5-1.5 1.5-1.3Z"/></svg>
                 <svg class="icon-volume-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Zm11.5.2 1.4-1.4a6 6 0 0 1 0 8.4l-1.4-1.4a4 4 0 0 0 0-5.6Zm2.8-2.8 1.4-1.4a10 10 0 0 1 0 14l-1.4-1.4a8 8 0 0 0 0-11.2Z"/></svg>
               </button>
-              <a class="game-source-link" href="https://github.com/Dev-GiaPhu/Oops-Brake" target="_blank" rel="noopener" aria-label="Xem dự án Oops Brake trên GitHub">↗</a>
             </div>
             <iframe
               class="onepage-game-frame"
               id="game-oops-brake"
-              src="webgl-host.html?game=oops-brake&v=20261004-muted-2"
+              src="webgl-host.html?game=oops-brake&v=20261004-muted-3"
               title="Oops Brake"
               loading="lazy"
               allow="fullscreen; gamepad"
@@ -235,18 +203,21 @@
         </article>
 
         <article class="one-project play-only-section onepage-anchor" id="lat-hinh" data-reveal>
+          <div class="play-only-heading">
+            <p class="eyebrow">Trải nghiệm dự án</p>
+            <h3>LẬT HÌNH TÌM CẶP</h3>
+          </div>
           <div class="one-project-game play-only-game">
             <div class="game-floating-actions">
               <button class="game-audio-toggle" type="button" data-game-audio="game-lat-hinh" aria-pressed="false" title="Bật âm thanh">
                 <svg class="icon-volume-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Zm12.5.1 1.4 1.4L19.4 9l1.4 1.4-1.5 1.5 1.5 1.5-1.4 1.4-1.5-1.5-1.5 1.5-1.4-1.4 1.5-1.5-1.5-1.5 1.5-1.3Z"/></svg>
                 <svg class="icon-volume-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Zm11.5.2 1.4-1.4a6 6 0 0 1 0 8.4l-1.4-1.4a4 4 0 0 0 0-5.6Zm2.8-2.8 1.4-1.4a10 10 0 0 1 0 14l-1.4-1.4a8 8 0 0 0 0-11.2Z"/></svg>
               </button>
-              <a class="game-source-link" href="https://github.com/XTH-CNTT-FPOLY-HCM/GameBooth_LatHinh" target="_blank" rel="noopener" aria-label="Xem dự án Lật Hình Tìm Cặp trên GitHub">↗</a>
             </div>
             <iframe
               class="onepage-game-frame"
               id="game-lat-hinh"
-              src="webgl-host.html?game=lat-hinh-tim-cap&v=20261004-muted-2"
+              src="webgl-host.html?game=lat-hinh-tim-cap&v=20261004-muted-3"
               title="Lật Hình Tìm Cặp"
               loading="lazy"
               allow="fullscreen; gamepad"
@@ -256,76 +227,103 @@
         </article>
       </section>
 
-      <section class="section onepage-anchor" id="skills">
+      <section class="section onepage-anchor skills-deep-section" id="skills">
         <div class="section-head" data-reveal>
           <div>
-            <p class="eyebrow">Kỹ năng chính</p>
-            <h2>CÔNG CỤ &<br>CHUYÊN MÔN.</h2>
+            <p class="eyebrow">Kỹ năng & cách tôi làm việc</p>
+            <h2>GAMEPLAY.<br>HỆ THỐNG.<br>TRẢI NGHIỆM.</h2>
           </div>
           <p>
-            Tôi tập trung vào gameplay rõ ràng, giao diện dễ sử dụng và những phản hồi trực quan giúp trải nghiệm game tốt hơn.
+            Tôi tập trung vào cách mọi phần trong game kết nối với nhau: từ cảm giác điều khiển, phản hồi của người chơi đến cách giao diện hỗ trợ trải nghiệm.
           </p>
         </div>
 
-        <div class="skills">
-          <div class="skill" data-reveal>
+        <div class="skills-overview">
+          <section class="panel skill-story" data-reveal>
+            <div class="profile-avatar">GP</div>
+            <p class="eyebrow">VAI TRÒ</p>
+            <h3 data-site-text="role">Nhà phát triển game · Lập trình viên Unity</h3>
+            <p>
+              Tôi làm việc với Unity và C# để biến ý tưởng gameplay thành trải nghiệm có thể chơi được, đồng thời chú ý đến hình ảnh, nhịp độ và cảm giác khi người chơi tương tác.
+            </p>
+          </section>
+
+          <section class="panel skill-story" data-reveal>
+            <p class="eyebrow">CÁCH TÔI LÀM VIỆC</p>
+            <h3>Tư duy hệ thống, chú trọng chi tiết.</h3>
+            <p>
+              Tôi thường chia một vấn đề lớn thành những phần nhỏ, thử từng thay đổi trong game và tinh chỉnh dựa trên cảm giác thực tế. Khi làm việc nhóm, tôi ưu tiên trao đổi rõ ràng và giữ tiến độ giữa các phần liên quan.
+            </p>
+          </section>
+        </div>
+
+        <div class="skill-matrix">
+          <article class="skill-card" data-reveal>
+            <span>01</span>
             <strong>Unity</strong>
-            <span>Phát triển game 2D/3D và triển khai gameplay.</span>
-          </div>
-          <div class="skill" data-reveal>
+            <p>Tôi sử dụng Unity để xây dựng và hoàn thiện game 2D/3D, từ scene, nhân vật, camera đến các tương tác xuất hiện xuyên suốt trải nghiệm.</p>
+          </article>
+          <article class="skill-card" data-reveal>
+            <span>02</span>
             <strong>C#</strong>
-            <span>Logic gameplay, hệ thống và công cụ hỗ trợ.</span>
-          </div>
-          <div class="skill" data-reveal>
-            <strong>Hệ thống gameplay</strong>
-            <span>Điều khiển, tương tác, chiến đấu, trạng thái và tiến trình.</span>
-          </div>
-          <div class="skill" data-reveal>
-            <strong>UI</strong>
-            <span>Thiết kế và triển khai giao diện phục vụ trải nghiệm game.</span>
-          </div>
+            <p>Tôi dùng C# để tổ chức hành vi trong game theo cách dễ kiểm soát, dễ mở rộng và thuận tiện khi cần điều chỉnh trong quá trình phát triển.</p>
+          </article>
+          <article class="skill-card" data-reveal>
+            <span>03</span>
+            <strong>Gameplay</strong>
+            <p>Tôi quan tâm đến cảm giác điều khiển, tương tác, chiến đấu, trạng thái và nhịp độ để mỗi hành động của người chơi có phản hồi rõ ràng.</p>
+          </article>
+          <article class="skill-card" data-reveal>
+            <span>04</span>
+            <strong>UI & phản hồi</strong>
+            <p>Tôi xây dựng giao diện theo hướng dễ hiểu và hỗ trợ người chơi nhận biết trạng thái, mục tiêu và kết quả của hành động mà không làm gián đoạn trải nghiệm.</p>
+          </article>
+          <article class="skill-card" data-reveal>
+            <span>05</span>
+            <strong>Làm việc nhóm</strong>
+            <p>Tôi từng đảm nhiệm vai trò trưởng nhóm, theo dõi đầu việc, phối hợp giữa các thành viên và giữ cho các phần của dự án đi cùng một hướng.</p>
+          </article>
+          <article class="skill-card" data-reveal>
+            <span>06</span>
+            <strong>Hoàn thiện trải nghiệm</strong>
+            <p>Tôi thường kiểm tra lại những chi tiết nhỏ như chuyển động, thời điểm phản hồi, bố cục và cảm giác sử dụng để sản phẩm cuối nhất quán hơn.</p>
+          </article>
         </div>
       </section>
 
-      <section class="section onepage-anchor" id="contact">
-        <div class="section-head" data-reveal>
+      <section class="section onepage-anchor contact-compact-section" id="contact">
+        <div class="contact-compact-head" data-reveal>
           <div>
             <p class="eyebrow">Liên hệ</p>
-            <h2>CÙNG KẾT NỐI<br>VÀ TRAO ĐỔI.</h2>
+            <h2>KẾT NỐI VỚI TÔI.</h2>
           </div>
-          <p>
-            Nếu bạn muốn trao đổi về game, Unity, một dự án mới hoặc cơ hội hợp tác, bạn có thể liên hệ với tôi qua các kênh bên dưới.
-          </p>
+          <p>Nếu bạn muốn trao đổi về một dự án, cơ hội hợp tác hoặc công việc liên quan đến game, bạn có thể liên hệ với tôi qua các kênh dưới đây.</p>
         </div>
 
-        <div class="info-grid contact-grid-onepage">
-          <section class="panel" data-reveal>
-            <p class="eyebrow">GITHUB</p>
-            <h2 data-site-text="github.label">Dev-GiaPhu</h2>
-            <p>Bạn có thể xem repository và các dự án game của tôi tại đây.</p>
-            <a class="btn" href="https://github.com/Dev-GiaPhu" data-site-href="github.url" target="_blank" rel="noopener">Mở GitHub ↗</a>
-          </section>
+        <div class="contact-lines">
+          <a class="contact-line" href="mailto:giaphufpt1@gmail.com" data-site-mailto="email" data-reveal>
+            <span>EMAIL</span>
+            <strong data-site-text="email">giaphufpt1@gmail.com</strong>
+            <i>↗</i>
+          </a>
 
-          <section class="panel" data-reveal>
-            <p class="eyebrow">EMAIL</p>
-            <h2 data-site-text="email">giaphufpt1@gmail.com</h2>
-            <p>Kênh liên hệ trực tiếp cho công việc và dự án.</p>
-            <a class="btn" href="mailto:giaphufpt1@gmail.com" data-site-mailto="email">Gửi email ↗</a>
-          </section>
+          <a class="contact-line" href="https://github.com/Dev-GiaPhu" data-site-href="github.url" target="_blank" rel="noopener" data-reveal>
+            <span>GITHUB</span>
+            <strong data-site-text="github.label">Dev-GiaPhu</strong>
+            <i>↗</i>
+          </a>
 
-          <section class="panel" data-reveal>
-            <p class="eyebrow">FACEBOOK</p>
-            <h2 data-site-text="facebook.label">Nguyễn Gia Phú</h2>
-            <p>Bạn có thể kết nối và trao đổi với tôi qua Facebook.</p>
-            <a class="btn" href="https://www.facebook.com/JemNaNa" data-site-href="facebook.url" target="_blank" rel="noopener">Mở Facebook ↗</a>
-          </section>
+          <a class="contact-line" href="https://www.facebook.com/JemNaNa" data-site-href="facebook.url" target="_blank" rel="noopener" data-reveal>
+            <span>FACEBOOK</span>
+            <strong data-site-text="facebook.label">Nguyễn Gia Phú</strong>
+            <i>↗</i>
+          </a>
 
-          <section class="panel" data-reveal>
-            <p class="eyebrow">CV</p>
-            <h2 data-site-text="cv.label">CV - Nguyễn Gia Phú</h2>
-            <p>Tải CV của tôi để xem chi tiết kinh nghiệm, kỹ năng, học vấn và hoạt động.</p>
-            <a class="btn" href="CV%20-%20Nguy%E1%BB%85n%20Gia%20Ph%C3%BA.pdf" data-site-href="cv.url" download="CV - Nguyễn Gia Phú.pdf" data-site-download="cv.downloadName">Tải CV ↓</a>
-          </section>
+          <a class="contact-line" href="CV%20-%20Nguy%E1%BB%85n%20Gia%20Ph%C3%BA.pdf" data-site-href="cv.url" download="CV - Nguyễn Gia Phú.pdf" data-site-download="cv.downloadName" data-reveal>
+            <span>CV</span>
+            <strong>Xem CV của tôi</strong>
+            <i>↓</i>
+          </a>
         </div>
       </section>
     </main>
@@ -341,10 +339,10 @@
     <script src="site-info.js?v=20261004-onepage-1"></script>
     <script src="site-info-bind.js?v=20261004-onepage-1"></script>
     <script src="dark-ui.js?v=20261004-onepage-1"></script>
-    <script src="one-page.js?v=20261004-projectcards-2"></script>
+    <script src="one-page.js?v=20261004-layout-3"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js?v=20260930-0122"></script>
     <script src="likes.js?v=20261004-likeoauth-1"></script>
-    <script src="cms.js?v=20261004-projectcards-2"></script>
+    <script src="cms.js?v=20261004-layout-3"></script>
   </body>
 </html>
