@@ -206,6 +206,33 @@
       img[data-admin-editable]{
         cursor:pointer!important;
       }
+
+      .admin-project-image-handle{
+        position:absolute!important;
+        z-index:50!important;
+        left:12px!important;
+        bottom:12px!important;
+        display:flex!important;
+        align-items:center!important;
+        gap:6px!important;
+        width:auto!important;
+        height:30px!important;
+        padding:0 9px!important;
+        border:1px solid #8ff5d055!important;
+        border-radius:9px!important;
+        background:#07110ee8!important;
+        color:#8ff5d0!important;
+        font:700 8px/1 'Space Mono',monospace!important;
+        letter-spacing:.08em!important;
+        cursor:pointer!important;
+        opacity:1!important;
+        transform:none!important;
+      }
+
+      .admin-project-image-handle:hover{
+        background:#0b1a16!important;
+        border-color:#8ff5d099!important;
+      }
     `;
     doc.head.appendChild(style);
   }
@@ -236,6 +263,23 @@
         element.contentEditable = 'true';
         element.spellcheck = false;
       }
+    });
+
+    previewDocument.querySelectorAll('[data-project-card-image]').forEach((image, index) => {
+      const card = image.closest('.terminal-project-card');
+      if (!card || card.querySelector('.admin-project-image-handle')) return;
+
+      const handle = previewDocument.createElement('button');
+      handle.type = 'button';
+      handle.className = 'admin-project-image-handle';
+      handle.textContent = 'ẢNH NỀN ' + String(index + 1).padStart(2, '0');
+      handle.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        selectElement(image);
+      });
+
+      card.appendChild(handle);
     });
 
     previewDocument.addEventListener('click', (event) => {
