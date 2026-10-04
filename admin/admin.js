@@ -652,6 +652,19 @@
       img[data-admin-editable]{
         cursor:pointer!important;
       }
+      [data-project-detail-media]{
+        position:relative!important;
+      }
+      [data-project-detail-media] img[src^="data:image/gif"]{
+        display:none!important;
+      }
+      [data-project-detail-media]:has(.admin-project-detail-image-handle){
+        display:block!important;
+        min-height:86px!important;
+        border:1px dashed #8ff5d044!important;
+        border-radius:14px!important;
+        background:#07110e44!important;
+      }
       .admin-project-image-handle{
         position:absolute!important;
         z-index:50!important;
@@ -671,6 +684,11 @@
         cursor:pointer!important;
         opacity:1!important;
         transform:none!important;
+      }
+      .admin-project-detail-image-handle{
+        left:50%!important;
+        bottom:50%!important;
+        transform:translate(-50%,50%)!important;
       }
     `;
 
