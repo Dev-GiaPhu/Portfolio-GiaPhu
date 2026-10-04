@@ -43,6 +43,11 @@
           return;
         }
 
+        if (item.property === 'style') {
+          element.setAttribute('style', item.value);
+          return;
+        }
+
         element.innerHTML = item.value;
       });
     });
