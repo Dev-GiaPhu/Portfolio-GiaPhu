@@ -4475,3 +4475,215 @@ main{
     background:#080c12ef!important;
   }
 }
+
+
+/* ============================================================
+   PROJECT HOVER SUMMARY + EXPANDABLE PROJECT INFO
+   ============================================================ */
+.project-card-core{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  min-height:330px;
+}
+
+.project-card-core > h3{
+  margin-bottom:auto;
+  transition:
+    transform .34s cubic-bezier(.2,.8,.2,1),
+    opacity .24s ease;
+}
+
+.project-hover-summary{
+  display:grid;
+  gap:7px;
+  margin-top:18px;
+  padding:14px 0 2px;
+  border-top:1px solid #ffffff20;
+  opacity:0;
+  transform:translateY(16px);
+  pointer-events:none;
+  transition:
+    opacity .28s ease,
+    transform .34s cubic-bezier(.2,.8,.2,1);
+}
+
+.project-hover-summary > strong{
+  color:#f3f7f4;
+  font:700 12px/1.4 'Be Vietnam Pro',sans-serif;
+}
+
+.project-hover-summary > span{
+  color:#a4afbd;
+  font:500 10px/1.45 'Space Mono',monospace;
+}
+
+.project-hover-summary ul{
+  display:grid;
+  gap:5px;
+  margin:4px 0 0;
+  padding-left:16px;
+}
+
+.project-hover-summary li{
+  color:#c1cad6;
+  font-size:10px;
+  line-height:1.5;
+}
+
+.terminal-project-card .project-terminal-link{
+  margin-top:14px;
+}
+
+.terminal-project-card:hover .project-hover-summary,
+.terminal-project-card:focus-within .project-hover-summary{
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:auto;
+}
+
+.terminal-project-card:hover .project-card-core > h3,
+.terminal-project-card:focus-within .project-card-core > h3{
+  transform:translateY(-4px);
+}
+
+.project-info-accordion{
+  margin:0 0 16px;
+  border:1px solid #ffffff14;
+  border-radius:18px;
+  background:
+    linear-gradient(180deg,#101722d9,#0a0f16e8);
+  overflow:hidden;
+  box-shadow:0 14px 40px #0003;
+}
+
+.project-info-accordion summary{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  min-height:56px;
+  padding:0 18px;
+  cursor:pointer;
+  list-style:none;
+  color:#dfe6ee;
+  font:700 11px/1.4 'Space Mono',monospace;
+  letter-spacing:.06em;
+  user-select:none;
+}
+
+.project-info-accordion summary::-webkit-details-marker{
+  display:none;
+}
+
+.project-info-accordion summary:hover{
+  background:#ffffff04;
+}
+
+.project-info-accordion summary i{
+  display:grid;
+  place-items:center;
+  width:28px;
+  height:28px;
+  border:1px solid #ffffff18;
+  border-radius:50%;
+  color:var(--mint);
+  font:400 18px/1 'Space Mono',monospace;
+  font-style:normal;
+  transition:transform .25s ease;
+}
+
+.project-info-accordion[open] summary{
+  border-bottom:1px solid #ffffff12;
+}
+
+.project-info-accordion[open] summary i{
+  transform:rotate(45deg);
+}
+
+.project-info-content{
+  display:grid;
+  gap:18px;
+  padding:20px;
+}
+
+.project-info-content > p{
+  max-width:840px;
+  margin:0;
+  color:#a4afbd;
+  font-size:13px;
+  line-height:1.75;
+}
+
+.project-info-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+
+.project-info-grid > div{
+  display:grid;
+  gap:6px;
+  padding:14px;
+  border:1px solid #ffffff10;
+  border-radius:12px;
+  background:#ffffff03;
+}
+
+.project-info-grid span{
+  color:var(--mint);
+  font:700 8px/1.4 'Space Mono',monospace;
+  letter-spacing:.11em;
+}
+
+.project-info-grid strong{
+  color:#eef3f7;
+  font-size:12px;
+  line-height:1.5;
+}
+
+.project-info-content > ul{
+  display:grid;
+  gap:8px;
+  margin:0;
+  padding-left:20px;
+}
+
+.project-info-content > ul li{
+  color:#bdc6d2;
+  font-size:12px;
+  line-height:1.65;
+}
+
+.project-info-link{
+  width:max-content;
+  color:var(--mint);
+  font:700 10px 'Space Mono',monospace;
+  letter-spacing:.06em;
+}
+
+.project-info-only{
+  margin-top:72px;
+  padding-top:0;
+  border-top:0;
+}
+
+@media(max-width:680px){
+  .project-card-core{
+    min-height:300px;
+  }
+
+  .project-hover-summary{
+    opacity:1;
+    transform:none;
+    pointer-events:auto;
+  }
+
+  .project-info-grid{
+    grid-template-columns:1fr;
+  }
+
+  .project-info-content{
+    padding:16px;
+  }
+}
