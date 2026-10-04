@@ -563,13 +563,17 @@
   }
 
   function addProjectImageHandles() {
-    previewDocument.querySelectorAll('[data-project-card-image]').forEach((image, index) => {
+    const cardImages = [...previewDocument.querySelectorAll('[data-project-card-image]')];
+    const detailImages = [...previewDocument.querySelectorAll('[data-project-detail-image]')];
+
+    cardImages.forEach((image, index) => {
       const card = image.closest('.terminal-project-card');
-      if (!card || card.querySelector('.admin-project-image-handle')) return;
+      if (!card || card.querySelector('.admin-project-image-handle[data-image-kind="card"]')) return;
 
       const handle = previewDocument.createElement('button');
       handle.type = 'button';
       handle.className = 'admin-project-image-handle';
+      handle.dataset.imageKind = 'card';
       handle.textContent = 'ẢNH NỀN ' + String(index + 1).padStart(2, '0');
 
       handle.addEventListener('click', (event) => {
@@ -579,6 +583,25 @@
       });
 
       card.appendChild(handle);
+    });
+
+    detailImages.forEach((image, index) => {
+      const media = image.closest('[data-project-detail-media]');
+      if (!media || media.querySelector('.admin-project-image-handle[data-image-kind="detail"]')) return;
+
+      const handle = previewDocument.createElement('button');
+      handle.type = 'button';
+      handle.className = 'admin-project-image-handle admin-project-detail-image-handle';
+      handle.dataset.imageKind = 'detail';
+      handle.textContent = 'ẢNH MÔ TẢ ' + String(index + 1).padStart(2, '0');
+
+      handle.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        selectElement(image);
+      });
+
+      media.appendChild(handle);
     });
   }
 
