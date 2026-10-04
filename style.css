@@ -6017,3 +6017,76 @@ main{
     min-height:0;
   }
 }
+
+
+/* ============================================================
+   CV-LIKE ACTIVITIES
+   ============================================================ */
+.activities-section{
+  padding-top:34px;
+}
+
+.activities-head{
+  margin-bottom:20px;
+}
+
+.activities-head h2{
+  margin:8px 0 0;
+  font:700 clamp(36px,5.4vw,66px)/1 var(--display,'Geologica','Be Vietnam Pro',sans-serif);
+  letter-spacing:-.04em;
+}
+
+.activities-list{
+  border-top:1px solid var(--line);
+}
+
+.activity-card{
+  display:grid;
+  grid-template-columns:72px minmax(0,1fr);
+  gap:18px;
+  padding:22px 4px;
+  border-bottom:1px solid var(--line);
+}
+
+.activity-index{
+  color:var(--mint);
+  font:700 9px/1.4 'Space Mono',monospace;
+  letter-spacing:.12em;
+}
+
+.activity-card h3{
+  margin:0 0 10px;
+  font:700 16px/1.35 var(--display,'Geologica','Be Vietnam Pro',sans-serif);
+  letter-spacing:-.015em;
+}
+
+.activity-card ul{
+  display:grid;
+  gap:6px;
+  margin:0;
+  padding-left:18px;
+}
+
+.activity-card li,
+.activity-card p{
+  margin:0;
+  color:#aeb8c6;
+  font-size:12px;
+  line-height:1.7;
+}
+
+.education-section + .activities-section{
+  margin-top:-54px;
+}
+
+@media(max-width:620px){
+  .activity-card{
+    grid-template-columns:42px minmax(0,1fr);
+    gap:12px;
+    padding:18px 0;
+  }
+
+  .education-section + .activities-section{
+    margin-top:-34px;
+  }
+}
