@@ -3,6 +3,8 @@
   const track = document.querySelector('[data-rail-track]');
   const thumb = document.querySelector('[data-scroll-thumb]');
   const links = [...document.querySelectorAll('[data-rail-link]')];
+  const railNav = rail?.querySelector('.rail-nav');
+  const liquidBlob = rail?.querySelector('[data-rail-liquid-blob]');
   const sections = links
     .map((link) => document.querySelector(link.getAttribute('href')))
     .filter(Boolean);
@@ -91,11 +93,32 @@
     });
   });
 
+  function syncLiquidBlob(activeLink) {
+    if (!liquidBlob || !railNav || !activeLink) return;
+
+    const label = activeLink.querySelector('span');
+    const labelWidth = label?.scrollWidth || 52;
+    const compact = window.matchMedia('(max-width: 900px)').matches;
+    const blobHeight = compact ? 38 : 42;
+    const minWidth = compact ? 96 : 110;
+    const maxWidth = compact ? 126 : 154;
+    const desiredWidth = clamp(labelWidth + (compact ? 55 : 68), minWidth, maxWidth);
+
+    const top =
+      railNav.offsetTop +
+      activeLink.offsetTop +
+      (activeLink.offsetHeight - blobHeight) / 2;
+
+    liquidBlob.style.top = top + 'px';
+    liquidBlob.style.width = desiredWidth + 'px';
+  }
+
   function updateActiveSection() {
     if (!sections.length) return;
 
     const marker = window.innerHeight * 0.42;
     let active = sections[0];
+    let activeLink = links[0] || null;
 
     sections.forEach((section) => {
       const rect = section.getBoundingClientRect();
@@ -105,9 +128,16 @@
     links.forEach((link) => {
       const isActive = link.getAttribute('href') === '#' + active.id;
       link.classList.toggle('is-active', isActive);
-      if (isActive) link.setAttribute('aria-current', 'page');
-      else link.removeAttribute('aria-current');
+
+      if (isActive) {
+        link.setAttribute('aria-current', 'page');
+        activeLink = link;
+      } else {
+        link.removeAttribute('aria-current');
+      }
     });
+
+    syncLiquidBlob(activeLink);
   }
 
   let ticking = false;
