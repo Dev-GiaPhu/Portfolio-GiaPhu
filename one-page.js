@@ -418,4 +418,89 @@
     });
   });
 
+
+  // Project gallery / lightbox.
+  let galleryLightbox = null;
+  let galleryImages = [];
+  let galleryIndex = 0;
+
+  function ensureGalleryLightbox() {
+    if (galleryLightbox) return galleryLightbox;
+
+    const modal = document.createElement('div');
+    modal.className = 'project-gallery-lightbox';
+    modal.hidden = true;
+    modal.innerHTML = `
+      <button class="project-gallery-lightbox-close" type="button" aria-label="Đóng">×</button>
+      <button class="project-gallery-lightbox-prev" type="button" aria-label="Ảnh trước">‹</button>
+      <div class="project-gallery-lightbox-stage">
+        <img alt="">
+        <span class="project-gallery-lightbox-count"></span>
+      </div>
+      <button class="project-gallery-lightbox-next" type="button" aria-label="Ảnh tiếp theo">›</button>
+    `;
+
+    document.body.appendChild(modal);
+
+    const close = () => {
+      modal.hidden = true;
+      document.body.style.removeProperty('overflow');
+    };
+
+    const show = (nextIndex) => {
+      if (!galleryImages.length) return;
+      galleryIndex = (nextIndex + galleryImages.length) % galleryImages.length;
+
+      const source = galleryImages[galleryIndex];
+      const image = modal.querySelector('.project-gallery-lightbox-stage img');
+      const count = modal.querySelector('.project-gallery-lightbox-count');
+
+      image.src = source.src;
+      image.alt = source.alt || 'Hình ảnh dự án';
+      count.textContent = (galleryIndex + 1) + ' / ' + galleryImages.length;
+    };
+
+    modal.querySelector('.project-gallery-lightbox-close').addEventListener('click', close);
+    modal.querySelector('.project-gallery-lightbox-prev').addEventListener('click', () => show(galleryIndex - 1));
+    modal.querySelector('.project-gallery-lightbox-next').addEventListener('click', () => show(galleryIndex + 1));
+
+    modal.addEventListener('click', (event) => {
+      if (event.target === modal) close();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (modal.hidden) return;
+
+      if (event.key === 'Escape') close();
+      if (event.key === 'ArrowLeft') show(galleryIndex - 1);
+      if (event.key === 'ArrowRight') show(galleryIndex + 1);
+    });
+
+    modal.openGallery = (images, index) => {
+      galleryImages = images;
+      galleryIndex = index;
+      modal.hidden = false;
+      document.body.style.overflow = 'hidden';
+      show(index);
+    };
+
+    galleryLightbox = modal;
+    return modal;
+  }
+
+  document.addEventListener('click', (event) => {
+    const item = event.target.closest?.('.project-gallery-item');
+    if (!item) return;
+
+    const gallery = item.closest('[data-project-gallery]');
+    if (!gallery) return;
+
+    const images = [...gallery.querySelectorAll('.project-gallery-item img')];
+    const clickedImage = item.querySelector('img');
+    const index = Math.max(0, images.indexOf(clickedImage));
+
+    event.preventDefault();
+    ensureGalleryLightbox().openGallery(images, index);
+  });
+
 })();
