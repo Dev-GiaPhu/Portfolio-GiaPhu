@@ -189,4 +189,43 @@
     if (!state) return;
     sendAudio(state.iframe, state.userMuted || !state.inView);
   });
+
+  // Game fullscreen controls.
+  document.querySelectorAll('[data-game-fullscreen]').forEach((button) => {
+    button.addEventListener('click', async () => {
+      const iframe = document.getElementById(button.dataset.gameFullscreen);
+      const game = iframe?.closest('.one-project-game');
+      if (!game) return;
+
+      try {
+        if (document.fullscreenElement === game) {
+          await document.exitFullscreen();
+          return;
+        }
+
+        if (game.requestFullscreen) {
+          await game.requestFullscreen();
+        } else if (iframe?.requestFullscreen) {
+          await iframe.requestFullscreen();
+        }
+      } catch (error) {
+        console.error('Không thể mở toàn màn hình:', error);
+      }
+    });
+  });
+
+  document.addEventListener('fullscreenchange', () => {
+    document.querySelectorAll('[data-game-fullscreen]').forEach((button) => {
+      const iframe = document.getElementById(button.dataset.gameFullscreen);
+      const game = iframe?.closest('.one-project-game');
+      const active = Boolean(game && document.fullscreenElement === game);
+      button.classList.toggle('is-active', active);
+      button.title = active ? 'Thoát toàn màn hình' : 'Toàn màn hình';
+      button.setAttribute(
+        'aria-label',
+        active ? 'Thoát chế độ toàn màn hình' : 'Mở trò chơi toàn màn hình'
+      );
+    });
+  });
+
 })();
