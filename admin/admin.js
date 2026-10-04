@@ -2,9 +2,7 @@
   const ADMIN_EMAIL = 'giaphufpt1@gmail.com';
 
   const gate = document.getElementById('loginGate');
-  const form = document.getElementById('loginForm');
-  const loginEmail = document.getElementById('loginEmail');
-  const loginPassword = document.getElementById('loginPassword');
+  const githubLoginBtn = document.getElementById('githubLoginBtn');
   const loginMessage = document.getElementById('loginMessage');
   const frame = document.getElementById('previewFrame');
   const saveButton = document.getElementById('saveBtn');
@@ -461,38 +459,23 @@
     if (sessionUser) preparePreview();
   });
 
-  form.addEventListener('submit', async (event) => {
-    event.preventDefault();
+  githubLoginBtn.addEventListener('click', async () => {
     loginMessage.textContent = '';
 
-    const email = loginEmail.value.trim().toLowerCase();
-    const password = loginPassword.value;
+    const redirectTo =
+      window.location.origin +
+      window.location.pathname;
 
-    if (email !== ADMIN_EMAIL) {
-      loginMessage.textContent = 'Email này không có quyền admin.';
-      return;
-    }
-
-    const { data, error } = await client.auth.signInWithPassword({
-      email,
-      password
+    const { error } = await client.auth.signInWithOAuth({
+      provider: 'github',
+      options: {
+        redirectTo
+      }
     });
 
     if (error) {
-      loginMessage.textContent =
-        'Đăng nhập thất bại. Kiểm tra password hoặc tạo user này trong Supabase Auth.';
-      return;
+      loginMessage.textContent = 'Không thể mở đăng nhập GitHub: ' + error.message;
     }
-
-    if (data.user?.email?.toLowerCase() !== ADMIN_EMAIL) {
-      await client.auth.signOut();
-      loginMessage.textContent = 'Tài khoản không có quyền admin.';
-      return;
-    }
-
-    sessionUser = data.user;
-    gate.hidden = true;
-    preparePreview();
   });
 
   async function init() {
