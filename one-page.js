@@ -105,39 +105,45 @@
     const right = 184;
     const columnLeft = 142;
     const columnRadius = 21;
-    const top = 0;
-    const bottom = Math.max(80, height);
-    const center = clamp(centerY, 28, bottom - 28);
+    const top = 2;
+    const bottom = Math.max(82, height - 2);
 
-    const halfHeight = 23;
+    // Keep enough room above and below the active lobe.
+    // This prevents the first/last item from producing a spike outside the body.
+    const center = clamp(centerY, 34, bottom - 34);
+
+    const halfHeight = 22;
     const lobeLeft = right - extensionWidth;
-    const capRadius = halfHeight;
-    const capRight = lobeLeft + capRadius;
-    const lowerNeckY = center + 48;
-    const upperNeckY = center - 48;
+    const capRight = lobeLeft + halfHeight;
+
+    // A short, broad neck reads as stretched liquid.
+    // The old 48px neck caused a cusp when the first item was active.
+    const neck = 30;
+    const lowerNeckY = center + neck;
+    const upperNeckY = center - neck;
 
     return [
       `M ${columnLeft + columnRadius} ${top}`,
       `H ${right - columnRadius}`,
-      `Q ${right} ${top} ${right} ${columnRadius}`,
+      `Q ${right} ${top} ${right} ${top + columnRadius}`,
       `V ${bottom - columnRadius}`,
       `Q ${right} ${bottom} ${right - columnRadius} ${bottom}`,
       `H ${columnLeft + columnRadius}`,
       `Q ${columnLeft} ${bottom} ${columnLeft} ${bottom - columnRadius}`,
       `V ${lowerNeckY}`,
 
-      // Soft lower shoulder: it eases outward before reaching the rounded cap.
-      `C ${columnLeft} ${center + 40}, ${columnLeft - 4} ${center + 34}, ${columnLeft - 12} ${center + 29}`,
-      `C ${columnLeft - 22} ${center + 23}, ${capRight + 26} ${center + halfHeight}, ${capRight} ${center + halfHeight}`,
+      // Wide lower shoulder.
+      `C ${columnLeft} ${center + 27}, ${columnLeft - 5} ${center + 25}, ${columnLeft - 14} ${center + 22}`,
+      `C ${columnLeft - 25} ${center + 18}, ${capRight + 22} ${center + halfHeight}, ${capRight} ${center + halfHeight}`,
 
-      // Fully rounded left cap. No cusp / no leaf-like point.
-      `C ${lobeLeft + 10} ${center + halfHeight}, ${lobeLeft} ${center + 13}, ${lobeLeft} ${center}`,
-      `C ${lobeLeft} ${center - 13}, ${lobeLeft + 10} ${center - halfHeight}, ${capRight} ${center - halfHeight}`,
+      // Fully rounded cap; the tangent stays vertical at the far-left edge.
+      `C ${lobeLeft + 9} ${center + halfHeight}, ${lobeLeft} ${center + 12}, ${lobeLeft} ${center}`,
+      `C ${lobeLeft} ${center - 12}, ${lobeLeft + 9} ${center - halfHeight}, ${capRight} ${center - halfHeight}`,
 
-      // Upper shoulder returns to the column with the same smooth tangent.
-      `C ${capRight + 26} ${center - halfHeight}, ${columnLeft - 22} ${center - 23}, ${columnLeft - 12} ${center - 29}`,
-      `C ${columnLeft - 4} ${center - 34}, ${columnLeft} ${center - 40}, ${columnLeft} ${upperNeckY}`,
-      `V ${columnRadius}`,
+      // Mirrored upper shoulder flows back into the body without a cusp.
+      `C ${capRight + 22} ${center - halfHeight}, ${columnLeft - 25} ${center - 18}, ${columnLeft - 14} ${center - 22}`,
+      `C ${columnLeft - 5} ${center - 25}, ${columnLeft} ${center - 27}, ${columnLeft} ${upperNeckY}`,
+      `V ${top + columnRadius}`,
       `Q ${columnLeft} ${top} ${columnLeft + columnRadius} ${top}`,
       'Z'
     ].join(' ');
