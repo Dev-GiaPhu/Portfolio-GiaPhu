@@ -5540,3 +5540,209 @@ main{
     min-width:38px!important;
   }
 }
+
+
+/* ============================================================
+   LIQUID GLASS RAIL — FINAL OVERRIDE
+   ============================================================ */
+.rail-organic-bg,
+.rail-liquid-svg,
+.rail-liquid-defs,
+.rail-liquid-layer,
+.rail-liquid-column,
+.rail-liquid-blob{
+  display:none!important;
+}
+
+.side-rail{
+  position:fixed!important;
+  z-index:60!important;
+  top:50%!important;
+  right:14px!important;
+  transform:translateY(-50%)!important;
+  width:58px!important;
+  padding:8px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  backdrop-filter:none!important;
+  box-shadow:none!important;
+  overflow:visible!important;
+  isolation:isolate!important;
+}
+
+.rail-glass-svg{
+  position:absolute!important;
+  z-index:0!important;
+  top:0!important;
+  right:-2px!important;
+  width:190px!important;
+  height:100%!important;
+  overflow:visible!important;
+  pointer-events:none!important;
+  filter:
+    drop-shadow(0 14px 34px rgba(0,0,0,.22))
+    drop-shadow(0 0 16px rgba(144,255,224,.035))!important;
+}
+
+.rail-glass-svg [data-rail-glass-shape]{
+  opacity:.92!important;
+}
+
+.rail-glass-highlight{
+  opacity:.55!important;
+  filter:blur(.45px)!important;
+}
+
+.rail-nav,
+.rail-like{
+  position:relative!important;
+  z-index:2!important;
+}
+
+.rail-nav{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-end!important;
+  width:42px!important;
+  gap:0!important;
+  overflow:visible!important;
+}
+
+.rail-nav a,
+.rail-nav a.is-active,
+.rail-nav a[aria-current="page"]{
+  position:relative!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  width:42px!important;
+  min-width:42px!important;
+  height:42px!important;
+  margin:0!important;
+  padding:0 11px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  transform:none!important;
+  overflow:visible!important;
+  color:#82949a!important;
+}
+
+.rail-nav a::before,
+.rail-nav a::after{
+  display:none!important;
+}
+
+.rail-nav a:hover{
+  color:#dce9e5!important;
+  background:transparent!important;
+}
+
+.rail-nav a.is-active,
+.rail-nav a[aria-current="page"]{
+  color:#d6fff3!important;
+}
+
+.rail-nav a svg{
+  width:17px!important;
+  height:17px!important;
+  fill:currentColor!important;
+  filter:none!important;
+  transition:
+    transform .22s ease,
+    color .22s ease!important;
+}
+
+.rail-nav a.is-active svg,
+.rail-nav a[aria-current="page"] svg{
+  transform:scale(1.16)!important;
+  filter:
+    drop-shadow(0 0 6px rgba(190,255,237,.22))
+    drop-shadow(0 1px 4px rgba(0,0,0,.18))!important;
+}
+
+.rail-nav a span{
+  position:absolute!important;
+  z-index:3!important;
+  top:50%!important;
+  right:34px!important;
+  width:auto!important;
+  max-width:0!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:hidden!important;
+  opacity:0!important;
+  white-space:nowrap!important;
+  pointer-events:none!important;
+  transform:translateY(-50%) translateX(8px)!important;
+  color:#e1fff6!important;
+  text-shadow:
+    0 1px 7px rgba(0,0,0,.5),
+    0 0 5px rgba(180,255,234,.08)!important;
+  font:700 9px 'Space Mono',monospace!important;
+  letter-spacing:.055em!important;
+  transition:
+    max-width .26s ease,
+    opacity .15s ease,
+    transform .26s ease!important;
+}
+
+.rail-nav a.is-active span,
+.rail-nav a[aria-current="page"] span{
+  max-width:96px!important;
+  opacity:1!important;
+  transform:translateY(-50%) translateX(0)!important;
+}
+
+.rail-like{
+  width:42px!important;
+  min-width:42px!important;
+  height:40px!important;
+  margin:1px 0 0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+
+.rail-like:hover{
+  background:transparent!important;
+}
+
+@media(max-width:900px){
+  .side-rail{
+    right:8px!important;
+    width:52px!important;
+    padding:7px!important;
+  }
+
+  .rail-glass-svg{
+    right:-3px!important;
+    width:170px!important;
+  }
+
+  .rail-nav{
+    width:38px!important;
+  }
+
+  .rail-nav a,
+  .rail-nav a.is-active,
+  .rail-nav a[aria-current="page"]{
+    width:38px!important;
+    min-width:38px!important;
+    height:38px!important;
+    padding:0 10px!important;
+  }
+
+  .rail-nav a span{
+    right:31px!important;
+  }
+
+  .rail-like{
+    width:38px!important;
+    min-width:38px!important;
+  }
+}
