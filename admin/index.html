@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#07090d">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Portfolio Admin — Nguyễn Gia Phú</title>
+  <link rel="stylesheet" href="admin.css?v=20261004-1">
+</head>
+<body>
+  <div class="admin-shell">
+    <header class="admin-toolbar">
+      <div class="admin-brand">
+        <span class="admin-mark">GP</span>
+        <div>
+          <strong>PORTFOLIO ADMIN</strong>
+          <small>Visual editor</small>
+        </div>
+      </div>
+
+      <div class="admin-actions">
+        <span id="saveStatus" class="save-status">CHƯA CÓ THAY ĐỔI</span>
+        <button id="undoBtn" type="button" title="Hoàn tác · Ctrl+Z">↶</button>
+        <button id="redoBtn" type="button" title="Làm lại · Ctrl+Shift+Z">↷</button>
+        <button id="saveBtn" class="primary" type="button" title="Lưu · Ctrl+S">LƯU</button>
+        <button id="logoutBtn" type="button">ĐĂNG XUẤT</button>
+      </div>
+    </header>
+
+    <main class="editor-stage">
+      <iframe id="previewFrame" src="../index.html?admin-preview=1" title="Portfolio preview"></iframe>
+
+      <aside id="inspector" class="inspector" hidden>
+        <div class="inspector-head">
+          <div>
+            <small>ĐANG CHỌN</small>
+            <strong id="selectedLabel">Phần tử</strong>
+          </div>
+          <button id="closeInspector" type="button" aria-label="Đóng">×</button>
+        </div>
+
+        <div id="textTools" class="tool-group" hidden>
+          <label>
+            Nội dung
+            <textarea id="textValue" rows="7"></textarea>
+          </label>
+          <p>Text cũng có thể sửa trực tiếp ngay trên preview.</p>
+        </div>
+
+        <div id="imageTools" class="tool-group" hidden>
+          <label>
+            URL ảnh
+            <input id="imageUrl" type="text" autocomplete="off">
+          </label>
+          <label class="upload-btn">
+            CHỌN ẢNH ĐỂ UPLOAD
+            <input id="imageFile" type="file" accept="image/*">
+          </label>
+          <p>Ảnh upload sẽ được lưu trong Supabase Storage.</p>
+        </div>
+
+        <div class="inspector-footer">
+          <button id="resetSelected" type="button">KHÔI PHỤC DỮ LIỆU ĐÃ LƯU</button>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <section id="loginGate" class="login-gate">
+    <form id="loginForm" class="login-card">
+      <p class="eyebrow">SECURE ADMIN / SUPABASE AUTH</p>
+      <h1>ĐĂNG NHẬP.</h1>
+      <p>Mật khẩu được xác thực bởi Supabase và không được lưu trong mã nguồn GitHub.</p>
+
+      <label>
+        Email
+        <input id="loginEmail" type="email" value="giaphufpt1@gmail.com" autocomplete="username" required>
+      </label>
+
+      <label>
+        Password
+        <input id="loginPassword" type="password" autocomplete="current-password" required>
+      </label>
+
+      <button type="submit">VÀO TRANG CHỈNH SỬA ↗</button>
+      <small id="loginMessage"></small>
+    </form>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase-config.js?v=20260930-0122"></script>
+  <script src="admin.js?v=20261004-1"></script>
+</body>
+</html>
