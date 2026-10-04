@@ -3685,3 +3685,58 @@ main{
     display:none;
   }
 }
+
+
+/* Frameless side navigation */
+.side-rail{
+  grid-template-columns:1fr!important;
+  gap:7px!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  backdrop-filter:none!important;
+  box-shadow:none!important;
+}
+
+.rail-progress,
+.rail-thumb{
+  display:none!important;
+}
+
+.rail-nav{
+  gap:8px;
+}
+
+.rail-nav a{
+  background:transparent;
+  box-shadow:none;
+}
+
+.rail-nav a:hover{
+  background:#07090d99;
+}
+
+.rail-nav a.is-active,
+.rail-nav a[aria-current="page"]{
+  background:#07090dba;
+}
+
+.rail-like{
+  grid-column:auto!important;
+  justify-self:end;
+}
+
+@media(max-width:900px){
+  .side-rail{
+    grid-template-columns:1fr!important;
+    padding:0!important;
+    gap:6px!important;
+  }
+}
+
+@media(max-width:560px){
+  .side-rail{
+    border-radius:0!important;
+  }
+}
