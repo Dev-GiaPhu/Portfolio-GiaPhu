@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#07090d">
     <meta name="description" content="Portfolio Nguyễn Gia Phú — Game Developer, Unity Developer, C#, gameplay và UI.">
     <title>Nguyễn Gia Phú — Portfolio Game Developer</title>
-    <link rel="stylesheet" href="style.css?v=20261004-likeoauth-1">
+    <link rel="stylesheet" href="style.css?v=20261004-projectcards-2">
   </head>
   <body>
     <aside class="side-rail" data-scroll-rail aria-label="Điều hướng trang">
@@ -152,6 +152,7 @@
 
         <div class="terminal-project-grid">
           <article class="hero-console terminal-project-card" data-reveal>
+            <img class="project-card-bg" data-project-card-image src="assets/world.png" alt="" aria-hidden="true">
             <div class="scan"></div>
             <div class="console-top">
               <div class="dots"><i></i><i></i><i></i></div>
@@ -172,6 +173,7 @@
           </article>
 
           <article class="hero-console terminal-project-card" data-reveal>
+            <img class="project-card-bg" data-project-card-image src="assets/player.png" alt="" aria-hidden="true">
             <div class="scan"></div>
             <div class="console-top">
               <div class="dots"><i></i><i></i><i></i></div>
@@ -191,6 +193,7 @@
           </article>
 
           <article class="hero-console terminal-project-card" data-reveal>
+            <img class="project-card-bg" data-project-card-image src="assets/GiaPhu_Avatar_transparent.png" alt="" aria-hidden="true">
             <div class="scan"></div>
             <div class="console-top">
               <div class="dots"><i></i><i></i><i></i></div>
@@ -210,136 +213,45 @@
           </article>
         </div>
 
-        <article class="one-project onepage-anchor" id="oops-brake" data-reveal>
-          <div class="one-project-head">
-            <div>
-              <p class="eyebrow">Dự án / 01 · Trưởng nhóm · Lập trình viên</p>
-              <h2>OOPS<br>BRAKE.</h2>
-            </div>
-            <p>
-              Tôi tham gia Oops Brake với vai trò trưởng nhóm và lập trình viên. Trong quá trình phát triển, tôi cùng nhóm xây dựng gameplay xe 3D, các thành phần giao thông, hiệu ứng và công cụ hỗ trợ làm việc trong Unity.
-            </p>
-          </div>
-
-          <div class="stack-list one-project-tags">
-            <span class="chip">UNITY</span>
-            <span class="chip">C#</span>
-            <span class="chip">3D</span>
-            <span class="chip">TRƯỞNG NHÓM</span>
-          </div>
-
-          <div class="one-project-game">
-            <div class="one-project-game-head">
-              <div>
-                <p class="eyebrow">PLAYABLE BUILD / WEBGL</p>
-                <h3>CHƠI OOPS BRAKE NGAY TRÊN WEB.</h3>
-              </div>
-              <div class="game-head-actions">
-                <button class="game-audio-toggle" type="button" data-game-audio="game-oops-brake" aria-pressed="false" title="Bật âm thanh">
-                  <svg class="icon-volume-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Zm12.5.1 1.4 1.4L19.4 9l1.4 1.4-1.5 1.5 1.5 1.5-1.4 1.4-1.5-1.5-1.5 1.5-1.4-1.4 1.5-1.5-1.5-1.5 1.5-1.3Z"/></svg>
-                  <svg class="icon-volume-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Zm11.5.2 1.4-1.4a6 6 0 0 1 0 8.4l-1.4-1.4a4 4 0 0 0 0-5.6Zm2.8-2.8 1.4-1.4a10 10 0 0 1 0 14l-1.4-1.4a8 8 0 0 0 0-11.2Z"/></svg>
-                </button>
-                <a href="https://github.com/Dev-GiaPhu/Oops-Brake" target="_blank" rel="noopener">GITHUB ↗</a>
-              </div>
+        <article class="one-project play-only-section onepage-anchor" id="oops-brake" data-reveal>
+          <div class="one-project-game play-only-game">
+            <div class="game-floating-actions">
+              <button class="game-audio-toggle" type="button" data-game-audio="game-oops-brake" aria-pressed="false" title="Bật âm thanh">
+                <svg class="icon-volume-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Zm12.5.1 1.4 1.4L19.4 9l1.4 1.4-1.5 1.5 1.5 1.5-1.4 1.4-1.5-1.5-1.5 1.5-1.4-1.4 1.5-1.5-1.5-1.5 1.5-1.3Z"/></svg>
+                <svg class="icon-volume-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Zm11.5.2 1.4-1.4a6 6 0 0 1 0 8.4l-1.4-1.4a4 4 0 0 0 0-5.6Zm2.8-2.8 1.4-1.4a10 10 0 0 1 0 14l-1.4-1.4a8 8 0 0 0 0-11.2Z"/></svg>
+              </button>
+              <a class="game-source-link" href="https://github.com/Dev-GiaPhu/Oops-Brake" target="_blank" rel="noopener" aria-label="Xem dự án Oops Brake trên GitHub">↗</a>
             </div>
             <iframe
               class="onepage-game-frame"
-              id="game-oops-brake" src="webgl-host.html?game=oops-brake&v=20261004-rail-1"
-              title="Oops Brake WebGL"
+              id="game-oops-brake"
+              src="webgl-host.html?game=oops-brake&v=20261004-muted-2"
+              title="Oops Brake"
               loading="lazy"
-              allow="fullscreen; autoplay; gamepad"
+              allow="fullscreen; gamepad"
               allowfullscreen
             ></iframe>
-          </div>
-
-          <div class="one-project-details">
-            <section class="panel">
-              <p class="eyebrow">01 / GAMEPLAY</p>
-              <h3>Hệ thống phương tiện</h3>
-              <p>Tôi làm việc với các thành phần gameplay liên quan đến phương tiện, vehicle catalog và gameplay settings phục vụ trải nghiệm điều khiển xe.</p>
-            </section>
-            <section class="panel">
-              <p class="eyebrow">02 / GIAO THÔNG</p>
-              <h3>Traffic & môi trường đường</h3>
-              <p>Tôi cùng nhóm triển khai các thành phần traffic, road dust, mesh và logic phục vụ bối cảnh giao thông.</p>
-            </section>
-            <section class="panel">
-              <p class="eyebrow">03 / TOOLING</p>
-              <h3>Công cụ hỗ trợ Unity</h3>
-              <p>Nhóm sử dụng các công cụ Editor như Scene Switcher, Vehicle Catalog Editor và Project Builder để hỗ trợ quy trình phát triển.</p>
-            </section>
-            <section class="panel">
-              <p class="eyebrow">04 / VAI TRÒ</p>
-              <h3>Trưởng nhóm & lập trình viên</h3>
-              <p>Ngoài lập trình, tôi còn đảm nhiệm việc tổ chức công việc và phối hợp quá trình phát triển giữa các thành viên.</p>
-            </section>
           </div>
         </article>
 
-        <article class="one-project onepage-anchor" id="lat-hinh" data-reveal>
-          <div class="one-project-head">
-            <div>
-              <p class="eyebrow">Dự án / 02 · Lập trình viên</p>
-              <h2>LẬT HÌNH<br>TÌM CẶP.</h2>
-            </div>
-            <p>
-              Tôi tham gia dự án Lật Hình Tìm Cặp với vai trò lập trình viên, tập trung vào luồng chơi, xử lý tương tác lật thẻ và giao diện trong Unity.
-            </p>
-          </div>
-
-          <div class="stack-list one-project-tags">
-            <span class="chip">UNITY</span>
-            <span class="chip">C#</span>
-            <span class="chip">2D</span>
-            <span class="chip">UI</span>
-            <span class="chip">MEMORY GAME</span>
-          </div>
-
-          <div class="one-project-game">
-            <div class="one-project-game-head">
-              <div>
-                <p class="eyebrow">PLAYABLE BUILD / WEBGL</p>
-                <h3>CHƠI LẬT HÌNH TÌM CẶP TRÊN WEB.</h3>
-              </div>
-              <div class="game-head-actions">
-                <button class="game-audio-toggle" type="button" data-game-audio="game-lat-hinh" aria-pressed="false" title="Bật âm thanh">
-                  <svg class="icon-volume-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Zm12.5.1 1.4 1.4L19.4 9l1.4 1.4-1.5 1.5 1.5 1.5-1.4 1.4-1.5-1.5-1.5 1.5-1.4-1.4 1.5-1.5-1.5-1.5 1.5-1.3Z"/></svg>
-                  <svg class="icon-volume-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Zm11.5.2 1.4-1.4a6 6 0 0 1 0 8.4l-1.4-1.4a4 4 0 0 0 0-5.6Zm2.8-2.8 1.4-1.4a10 10 0 0 1 0 14l-1.4-1.4a8 8 0 0 0 0-11.2Z"/></svg>
-                </button>
-                <a href="https://github.com/XTH-CNTT-FPOLY-HCM/GameBooth_LatHinh" target="_blank" rel="noopener">GITHUB ↗</a>
-              </div>
+        <article class="one-project play-only-section onepage-anchor" id="lat-hinh" data-reveal>
+          <div class="one-project-game play-only-game">
+            <div class="game-floating-actions">
+              <button class="game-audio-toggle" type="button" data-game-audio="game-lat-hinh" aria-pressed="false" title="Bật âm thanh">
+                <svg class="icon-volume-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Zm12.5.1 1.4 1.4L19.4 9l1.4 1.4-1.5 1.5 1.5 1.5-1.4 1.4-1.5-1.5-1.5 1.5-1.4-1.4 1.5-1.5-1.5-1.5 1.5-1.3Z"/></svg>
+                <svg class="icon-volume-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Zm11.5.2 1.4-1.4a6 6 0 0 1 0 8.4l-1.4-1.4a4 4 0 0 0 0-5.6Zm2.8-2.8 1.4-1.4a10 10 0 0 1 0 14l-1.4-1.4a8 8 0 0 0 0-11.2Z"/></svg>
+              </button>
+              <a class="game-source-link" href="https://github.com/XTH-CNTT-FPOLY-HCM/GameBooth_LatHinh" target="_blank" rel="noopener" aria-label="Xem dự án Lật Hình Tìm Cặp trên GitHub">↗</a>
             </div>
             <iframe
               class="onepage-game-frame"
-              id="game-lat-hinh" src="webgl-host.html?game=lat-hinh-tim-cap&v=20261004-rail-1"
-              title="Lật Hình Tìm Cặp WebGL"
+              id="game-lat-hinh"
+              src="webgl-host.html?game=lat-hinh-tim-cap&v=20261004-muted-2"
+              title="Lật Hình Tìm Cặp"
               loading="lazy"
-              allow="fullscreen; autoplay; gamepad"
+              allow="fullscreen; gamepad"
               allowfullscreen
             ></iframe>
-          </div>
-
-          <div class="one-project-details">
-            <section class="panel">
-              <p class="eyebrow">01 / GAMEPLAY</p>
-              <h3>Luồng chơi lật hình</h3>
-              <p>Tôi tham gia xây dựng luồng tương tác lật thẻ, xử lý trạng thái các thẻ và kiểm tra khi người chơi tìm được một cặp phù hợp.</p>
-            </section>
-            <section class="panel">
-              <p class="eyebrow">02 / LOGIC</p>
-              <h3>Kiểm tra & quản lý trạng thái</h3>
-              <p>Gameplay cần quản lý thẻ đang mở, khóa tương tác khi cần và đưa thẻ về trạng thái phù hợp sau mỗi lượt chơi.</p>
-            </section>
-            <section class="panel">
-              <p class="eyebrow">03 / UI</p>
-              <h3>Giao diện tương tác</h3>
-              <p>Tôi tham gia triển khai giao diện phục vụ thao tác của người chơi và phản hồi trực quan trong quá trình chơi.</p>
-            </section>
-            <section class="panel">
-              <p class="eyebrow">04 / VAI TRÒ</p>
-              <h3>Lập trình viên</h3>
-              <p>Tôi tập trung vào việc hiện thực hóa luồng chơi và các tương tác chính trong Unity.</p>
-            </section>
           </div>
         </article>
       </section>
@@ -429,10 +341,10 @@
     <script src="site-info.js?v=20261004-onepage-1"></script>
     <script src="site-info-bind.js?v=20261004-onepage-1"></script>
     <script src="dark-ui.js?v=20261004-onepage-1"></script>
-    <script src="one-page.js?v=20261004-rail-1"></script>
+    <script src="one-page.js?v=20261004-projectcards-2"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js?v=20260930-0122"></script>
     <script src="likes.js?v=20261004-likeoauth-1"></script>
-    <script src="cms.js?v=20261004-admin-1"></script>
+    <script src="cms.js?v=20261004-projectcards-2"></script>
   </body>
 </html>
