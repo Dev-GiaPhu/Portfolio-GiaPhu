@@ -6,10 +6,34 @@
     <meta name="theme-color" content="#07090d">
     <meta name="description" content="Portfolio Nguyễn Gia Phú — Game Developer, Unity Developer, C#, gameplay và UI.">
     <title>Nguyễn Gia Phú — Portfolio Game Developer</title>
-    <link rel="stylesheet" href="style.css?v=20261004-liquid-11">
+    <link rel="stylesheet" href="style.css?v=20261004-goo-13">
   </head>
   <body>
     <aside class="side-rail" data-scroll-rail aria-label="Điều hướng trang">
+      <svg class="rail-liquid-defs" width="0" height="0" aria-hidden="true" focusable="false">
+        <defs>
+          <filter id="rail-liquid-goo" x="-220%" y="-80%" width="520%" height="260%" color-interpolation-filters="sRGB">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="8.5" result="blur"/>
+            <feColorMatrix
+              in="blur"
+              mode="matrix"
+              values="
+                1 0 0 0 0
+                0 1 0 0 0
+                0 0 1 0 0
+                0 0 0 24 -10"
+              result="goo"
+            />
+            <feComposite in="SourceGraphic" in2="goo" operator="atop"/>
+          </filter>
+        </defs>
+      </svg>
+
+      <div class="rail-liquid-layer" aria-hidden="true">
+        <span class="rail-liquid-column"></span>
+        <span class="rail-liquid-blob" data-rail-liquid-blob></span>
+      </div>
+
       <nav class="rail-nav" aria-label="Menu chính">
         <a href="#about" aria-current="page" data-rail-link="about">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm-8 19c.4-4.3 3.5-7 8-7s7.6 2.7 8 7H4Z"/></svg>
@@ -460,7 +484,7 @@
     <script src="site-info.js?v=20261004-onepage-1"></script>
     <script src="site-info-bind.js?v=20261004-onepage-1"></script>
     <script src="dark-ui.js?v=20261004-onepage-1"></script>
-    <script src="one-page.js?v=20261004-editor-4"></script>
+    <script src="one-page.js?v=20261004-goo-13"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js?v=20260930-0122"></script>
     <script src="likes.js?v=20261004-likeoauth-1"></script>
