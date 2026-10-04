@@ -208,3 +208,47 @@ button{cursor:pointer}
     grid-template-columns:1fr;
   }
 }
+
+
+/* ============================================================
+   DRAGGABLE INSPECTOR
+   ============================================================ */
+.inspector{
+  left:18px!important;
+  right:auto!important;
+  top:18px;
+  resize:none;
+  will-change:left,top;
+}
+
+.inspector-head{
+  cursor:grab;
+  user-select:none;
+  touch-action:none;
+}
+
+.inspector-head:active,
+.inspector.is-dragging .inspector-head{
+  cursor:grabbing;
+}
+
+.inspector.is-dragging{
+  transition:none!important;
+  box-shadow:
+    0 28px 90px #000c,
+    0 0 0 1px #8ff5d024!important;
+}
+
+.inspector-head button{
+  cursor:pointer;
+  touch-action:auto;
+}
+
+@media(max-width:720px){
+  .inspector{
+    width:min(330px,calc(100% - 20px));
+    left:10px!important;
+    top:10px;
+    max-height:calc(100% - 20px);
+  }
+}
