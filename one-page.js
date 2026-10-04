@@ -6,7 +6,6 @@
   const railNav = rail?.querySelector('.rail-nav');
   const glassSvg = rail?.querySelector('[data-rail-glass-svg]');
   const glassShape = rail?.querySelector('[data-rail-glass-shape]');
-  const glassHighlight = rail?.querySelector('[data-rail-glass-highlight]');
   const sections = links
     .map((link) => document.querySelector(link.getAttribute('href')))
     .filter(Boolean);
@@ -99,34 +98,78 @@
   let glassTargetY = null;
   let glassCurrentWidth = null;
   let glassTargetWidth = null;
+  let glassTargetIndex = 0;
   let glassFrame = null;
 
-  function buildGlassRailPath(height, centerY, extensionWidth) {
+  function buildGlassRailPath(height, centerY, extensionWidth, activeIndex, itemCount) {
     const right = 184;
     const columnLeft = 142;
     const columnRadius = 21;
     const top = 2;
     const bottom = Math.max(82, height - 2);
-
-    // Keep enough room above and below the active lobe.
-    // This prevents the first/last item from producing a spike outside the body.
-    const center = clamp(centerY, 34, bottom - 34);
-
-    const halfHeight = 22;
+    const halfHeight = 21;
     const lobeLeft = right - extensionWidth;
     const capRight = lobeLeft + halfHeight;
+    const isFirst = activeIndex === 0;
+    const isLast = activeIndex === itemCount - 1;
 
-    // A short, broad neck reads as stretched liquid.
-    // The old 48px neck caused a cusp when the first item was active.
-    const neck = 30;
-    const lowerNeckY = Math.min(
-      bottom - columnRadius,
-      center + neck
-    );
-    const upperNeckY = Math.max(
-      top + columnRadius,
-      center - neck
-    );
+    const center = isFirst
+      ? top + halfHeight
+      : isLast
+        ? bottom - halfHeight
+        : clamp(centerY, top + 44, bottom - 44);
+
+    const shoulder = 34;
+
+    // FIRST ITEM:
+    // the top edge itself stretches left; nothing grows above the rail.
+    if (isFirst) {
+      const lowerJoin = Math.min(bottom - columnRadius, center + shoulder);
+
+      return [
+        `M ${capRight} ${top}`,
+        `C ${lobeLeft + 8} ${top}, ${lobeLeft} ${top + 9}, ${lobeLeft} ${center}`,
+        `C ${lobeLeft} ${center + 12}, ${lobeLeft + 9} ${center + halfHeight}, ${capRight} ${center + halfHeight}`,
+        `C ${capRight + 28} ${center + halfHeight}, ${columnLeft - 26} ${center + 19}, ${columnLeft - 13} ${center + 23}`,
+        `C ${columnLeft - 4} ${center + 26}, ${columnLeft} ${center + 29}, ${columnLeft} ${lowerJoin}`,
+        `V ${bottom - columnRadius}`,
+        `Q ${columnLeft} ${bottom} ${columnLeft + columnRadius} ${bottom}`,
+        `H ${right - columnRadius}`,
+        `Q ${right} ${bottom} ${right} ${bottom - columnRadius}`,
+        `V ${top + columnRadius}`,
+        `Q ${right} ${top} ${right - columnRadius} ${top}`,
+        `H ${capRight}`,
+        'Z'
+      ].join(' ');
+    }
+
+    // LAST ITEM:
+    // mirror of the first item; the bottom edge stretches left without
+    // growing below the rail.
+    if (isLast) {
+      const upperJoin = Math.max(top + columnRadius, center - shoulder);
+
+      return [
+        `M ${columnLeft + columnRadius} ${top}`,
+        `H ${right - columnRadius}`,
+        `Q ${right} ${top} ${right} ${top + columnRadius}`,
+        `V ${bottom - columnRadius}`,
+        `Q ${right} ${bottom} ${right - columnRadius} ${bottom}`,
+        `H ${capRight}`,
+        `C ${lobeLeft + 9} ${bottom}, ${lobeLeft} ${bottom - 9}, ${lobeLeft} ${center}`,
+        `C ${lobeLeft} ${center - 12}, ${lobeLeft + 9} ${center - halfHeight}, ${capRight} ${center - halfHeight}`,
+        `C ${capRight + 28} ${center - halfHeight}, ${columnLeft - 26} ${center - 19}, ${columnLeft - 13} ${center - 23}`,
+        `C ${columnLeft - 4} ${center - 26}, ${columnLeft} ${center - 29}, ${columnLeft} ${upperJoin}`,
+        `V ${top + columnRadius}`,
+        `Q ${columnLeft} ${top} ${columnLeft + columnRadius} ${top}`,
+        'Z'
+      ].join(' ');
+    }
+
+    // MIDDLE ITEMS:
+    // a single broad extrusion from the left wall, not a separate bubble.
+    const upperJoin = center - shoulder;
+    const lowerJoin = center + shoulder;
 
     return [
       `M ${columnLeft + columnRadius} ${top}`,
@@ -136,33 +179,16 @@
       `Q ${right} ${bottom} ${right - columnRadius} ${bottom}`,
       `H ${columnLeft + columnRadius}`,
       `Q ${columnLeft} ${bottom} ${columnLeft} ${bottom - columnRadius}`,
-      `V ${lowerNeckY}`,
-
-      // Wide lower shoulder.
-      `C ${columnLeft} ${center + 27}, ${columnLeft - 5} ${center + 25}, ${columnLeft - 14} ${center + 22}`,
-      `C ${columnLeft - 25} ${center + 18}, ${capRight + 22} ${center + halfHeight}, ${capRight} ${center + halfHeight}`,
-
-      // Fully rounded cap; the tangent stays vertical at the far-left edge.
+      `V ${lowerJoin}`,
+      `C ${columnLeft} ${center + 29}, ${columnLeft - 5} ${center + 26}, ${columnLeft - 15} ${center + 22}`,
+      `C ${columnLeft - 28} ${center + 17}, ${capRight + 27} ${center + halfHeight}, ${capRight} ${center + halfHeight}`,
       `C ${lobeLeft + 9} ${center + halfHeight}, ${lobeLeft} ${center + 12}, ${lobeLeft} ${center}`,
       `C ${lobeLeft} ${center - 12}, ${lobeLeft + 9} ${center - halfHeight}, ${capRight} ${center - halfHeight}`,
-
-      // Mirrored upper shoulder flows back into the body without a cusp.
-      `C ${capRight + 22} ${center - halfHeight}, ${columnLeft - 25} ${center - 18}, ${columnLeft - 14} ${center - 22}`,
-      `C ${columnLeft - 5} ${center - 25}, ${columnLeft} ${center - 27}, ${columnLeft} ${upperNeckY}`,
+      `C ${capRight + 27} ${center - halfHeight}, ${columnLeft - 28} ${center - 17}, ${columnLeft - 15} ${center - 22}`,
+      `C ${columnLeft - 5} ${center - 26}, ${columnLeft} ${center - 29}, ${columnLeft} ${upperJoin}`,
       `V ${top + columnRadius}`,
       `Q ${columnLeft} ${top} ${columnLeft + columnRadius} ${top}`,
       'Z'
-    ].join(' ');
-  }
-
-  function buildGlassHighlightPath(centerY, extensionWidth) {
-    const right = 184;
-    const lobeLeft = right - extensionWidth;
-    const center = centerY;
-
-    return [
-      `M ${lobeLeft + 16} ${center - 12}`,
-      `C ${lobeLeft + 32} ${center - 21}, ${right - 72} ${center - 24}, ${right - 48} ${center - 17}`
     ].join(' ');
   }
 
@@ -194,15 +220,14 @@
     glassSvg.setAttribute('viewBox', `0 0 190 ${height}`);
     glassShape.setAttribute(
       'd',
-      buildGlassRailPath(height, glassCurrentY, glassCurrentWidth)
+      buildGlassRailPath(
+        height,
+        glassCurrentY,
+        glassCurrentWidth,
+        glassTargetIndex,
+        links.length
+      )
     );
-
-    if (glassHighlight) {
-      glassHighlight.setAttribute(
-        'd',
-        buildGlassHighlightPath(glassCurrentY, glassCurrentWidth)
-      );
-    }
 
     const moving =
       Math.abs(glassTargetY - glassCurrentY) > 0.25 ||
@@ -233,6 +258,8 @@
       railNav.offsetTop +
       activeLink.offsetTop +
       activeLink.offsetHeight / 2;
+
+    glassTargetIndex = Math.max(0, links.indexOf(activeLink));
 
     if (!glassFrame) {
       glassFrame = requestAnimationFrame(renderGlassRail);
