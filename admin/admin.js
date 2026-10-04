@@ -806,6 +806,29 @@
     });
   }
 
+  function addProjectGalleryHandles() {
+    previewDocument.querySelectorAll('[data-project-gallery]').forEach((gallery, index) => {
+      const content = gallery.closest('.project-info-content');
+      if (!content || content.querySelector('.admin-project-gallery-handle[data-gallery-index="' + index + '"]')) {
+        return;
+      }
+
+      const handle = previewDocument.createElement('button');
+      handle.type = 'button';
+      handle.className = 'admin-project-gallery-handle';
+      handle.dataset.galleryIndex = String(index);
+      handle.textContent = 'QUẢN LÝ ẢNH';
+
+      handle.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        selectElement(gallery);
+      });
+
+      gallery.insertAdjacentElement('beforebegin', handle);
+    });
+  }
+
   function decoratePreviewContent() {
     if (!previewDocument) return;
 
@@ -828,6 +851,7 @@
     });
 
     addProjectImageHandles();
+    addProjectGalleryHandles();
   }
 
   function injectEditorStyles(doc) {
@@ -895,6 +919,29 @@
         bottom:50%!important;
         transform:translate(-50%,50%)!important;
       }
+      [data-project-gallery]{
+        display:grid!important;
+        min-height:82px!important;
+        border:1px dashed #8ff5d038!important;
+        border-radius:14px!important;
+        background:#07110e22!important;
+      }
+      .admin-project-gallery-handle{
+        display:inline-flex!important;
+        align-items:center!important;
+        justify-content:center!important;
+        width:max-content!important;
+        min-height:30px!important;
+        margin:0 0 8px!important;
+        padding:0 10px!important;
+        border:1px solid #8ff5d055!important;
+        border-radius:9px!important;
+        background:#07110ee8!important;
+        color:#8ff5d0!important;
+        font:700 8px/1 'Space Mono',monospace!important;
+        letter-spacing:.07em!important;
+        cursor:pointer!important;
+      }
     `;
 
     doc.head.appendChild(style);
@@ -905,7 +952,10 @@
     listenersBound = true;
 
     previewDocument.addEventListener('click', (event) => {
-      if (event.target.closest?.('.admin-project-image-handle')) return;
+      if (
+        event.target.closest?.('.admin-project-image-handle') ||
+        event.target.closest?.('.admin-project-gallery-handle')
+      ) return;
 
       const editable = event.target.closest?.('[data-admin-editable]');
       if (editable) {
@@ -1186,6 +1236,12 @@
     const file = imageFile.files?.[0];
     if (file) uploadImage(file);
     imageFile.value = '';
+  });
+
+  galleryFiles.addEventListener('change', () => {
+    const files = [...(galleryFiles.files || [])];
+    if (files.length) uploadGalleryFiles(files);
+    galleryFiles.value = '';
   });
 
   [
