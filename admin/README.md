@@ -11,13 +11,13 @@ Trang quản trị:
 2. Vào **SQL Editor**.
 3. Chạy toàn bộ file:
    `admin/supabase-cms.sql`
-4. Vào **Authentication → Users**.
-5. Tạo user:
-   - Email: `giaphufpt1@gmail.com`
-   - Password: tự đặt password riêng của bạn.
-6. Mở trang `/admin/` và đăng nhập.
+4. Đảm bảo GitHub provider trong **Authentication → Providers** đang bật.
+5. Mở trang `/admin/`.
+6. Bấm **Đăng nhập bằng GitHub**.
 
-Password không nằm trong repository.
+Admin chỉ cho phép tài khoản OAuth có email
+`giaphufpt1@gmail.com`
+được quyền chỉnh sửa. Không cần password Supabase riêng.
 
 ## Điều khiển editor
 
