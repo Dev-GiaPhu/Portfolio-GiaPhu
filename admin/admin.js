@@ -82,6 +82,8 @@
   let previewDocument = null;
   let selected = null;
   let listenersBound = false;
+  let editorLoaded = false;
+  let editorLoading = false;
 
   const focusBefore = new WeakMap();
   const dirty = new Map();
@@ -1127,6 +1129,10 @@
   }
 
   frame.addEventListener('load', () => {
+    if (!sessionUser || frame.getAttribute('src') === 'about:blank') return;
+
+    editorLoaded = true;
+    editorLoading = false;
     syncPreviewWithPublicPage();
   });
 
@@ -1134,15 +1140,35 @@
     gate.hidden = true;
     adminShell.hidden = false;
 
+    if (editorLoaded || editorLoading) return;
+
+    const currentSrc = frame.getAttribute('src') || '';
+    if (currentSrc && currentSrc !== 'about:blank') {
+      editorLoaded = true;
+      syncPreviewWithPublicPage();
+      return;
+    }
+
+    editorLoading = true;
+
     const baseSrc = frame.dataset.src || '../index.html?admin-preview=1';
     const separator = baseSrc.includes('?') ? '&' : '?';
-    const previewSrc = baseSrc + separator + 'admin-sync=' + Date.now();
+    const previewSrc = baseSrc + separator + 'admin-editor=1';
 
     frame.setAttribute('src', previewSrc);
   }
 
   function showLogin(message = '') {
     sessionUser = null;
+    editorLoaded = false;
+    editorLoading = false;
+    previewDocument = null;
+    listenersBound = false;
+
+    if (frame.getAttribute('src') !== 'about:blank') {
+      frame.setAttribute('src', 'about:blank');
+    }
+
     adminShell.hidden = true;
     gate.hidden = false;
     if (message) loginMessage.textContent = message;
@@ -1159,15 +1185,27 @@
       'Đã xóa phiên Supabase. Nếu GitHub vẫn tự dùng cùng một tài khoản, hãy đăng xuất GitHub trên github.com rồi thử lại.';
   });
 
-  client.auth.onAuthStateChange((_event, session) => {
+  client.auth.onAuthStateChange((event, session) => {
     const user = session?.user || null;
-    if (!user) return;
+
+    if (!user) {
+      if (event === 'SIGNED_OUT') {
+        sessionUser = null;
+        editorLoaded = false;
+        editorLoading = false;
+      }
+      return;
+    }
 
     describeSession(user);
 
     if (isAllowedAdmin(user)) {
       sessionUser = user;
-      loadEditor();
+
+      if (!editorLoaded && !editorLoading) {
+        loadEditor();
+      }
+
       return;
     }
 
