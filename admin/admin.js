@@ -2,6 +2,7 @@
   const ADMIN_EMAIL = 'giaphufpt1@gmail.com';
 
   const gate = document.getElementById('loginGate');
+  const adminShell = document.getElementById('adminShell');
   const githubLoginBtn = document.getElementById('githubLoginBtn');
   const loginMessage = document.getElementById('loginMessage');
   const frame = document.getElementById('previewFrame');
@@ -456,11 +457,30 @@
   window.addEventListener('keydown', handleShortcut, true);
 
   frame.addEventListener('load', () => {
-    if (sessionUser) preparePreview();
+    if (sessionUser && frame.src !== 'about:blank') preparePreview();
   });
 
+  function loadEditor() {
+    gate.hidden = true;
+    adminShell.hidden = false;
+
+    const previewSrc = frame.dataset.src || '../index.html?admin-preview=1';
+    if (frame.getAttribute('src') === 'about:blank') {
+      frame.setAttribute('src', previewSrc);
+    } else {
+      preparePreview();
+    }
+  }
+
+  function showLogin(message = '') {
+    sessionUser = null;
+    adminShell.hidden = true;
+    gate.hidden = false;
+    if (message) loginMessage.textContent = message;
+  }
+
   githubLoginBtn.addEventListener('click', async () => {
-    loginMessage.textContent = '';
+    loginMessage.textContent = 'Đang chuyển sang GitHub...';
 
     const redirectTo =
       window.location.origin +
@@ -469,7 +489,8 @@
     const { error } = await client.auth.signInWithOAuth({
       provider: 'github',
       options: {
-        redirectTo
+        redirectTo,
+        skipBrowserRedirect: false
       }
     });
 
@@ -478,19 +499,56 @@
     }
   });
 
-  async function init() {
-    const { data } = await client.auth.getSession();
-    const user = data.session?.user || null;
+  client.auth.onAuthStateChange((_event, session) => {
+    const user = session?.user || null;
+    if (!user) return;
 
-    if (user?.email?.toLowerCase() === ADMIN_EMAIL) {
+    if (user.email?.toLowerCase() === ADMIN_EMAIL) {
       sessionUser = user;
-      gate.hidden = true;
-      preparePreview();
+      loadEditor();
       return;
     }
 
-    if (user) await client.auth.signOut();
+    client.auth.signOut().finally(() => {
+      showLogin('Tài khoản này không có quyền admin.');
+    });
+  });
+
+  async function init() {
+    adminShell.hidden = true;
     gate.hidden = false;
+
+    const params = new URLSearchParams(window.location.search);
+    const oauthError =
+      params.get('error_description') ||
+      params.get('error');
+
+    if (oauthError) {
+      loginMessage.textContent = decodeURIComponent(oauthError);
+    }
+
+    const { data, error } = await client.auth.getSession();
+
+    if (error) {
+      showLogin('Không đọc được phiên đăng nhập: ' + error.message);
+      return;
+    }
+
+    const user = data.session?.user || null;
+
+    if (!user) {
+      showLogin();
+      return;
+    }
+
+    if (user.email?.toLowerCase() !== ADMIN_EMAIL) {
+      await client.auth.signOut();
+      showLogin('Tài khoản này không có quyền admin.');
+      return;
+    }
+
+    sessionUser = user;
+    loadEditor();
   }
 
   init();
