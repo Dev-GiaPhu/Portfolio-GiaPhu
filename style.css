@@ -5775,3 +5775,245 @@ main{
 .rail-like:hover{
   background:rgba(255,255,255,.045)!important;
 }
+
+
+/* ============================================================
+   EDUCATION
+   ============================================================ */
+.education-section{
+  padding-top:110px;
+}
+
+.education-head{
+  display:grid;
+  grid-template-columns:minmax(0,.9fr) minmax(320px,1fr);
+  gap:42px;
+  align-items:end;
+  margin-bottom:28px;
+}
+
+.education-head h2{
+  margin:10px 0 0;
+  font:700 clamp(38px,5.7vw,72px)/.98 var(--display,'Geologica','Be Vietnam Pro',sans-serif);
+  letter-spacing:-.04em;
+}
+
+.education-head > p{
+  margin:0;
+  max-width:580px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.8;
+}
+
+.education-layout{
+  display:grid;
+  grid-template-columns:minmax(0,1.55fr) minmax(260px,.65fr);
+  gap:16px;
+}
+
+.education-card,
+.education-activity{
+  position:relative;
+  overflow:hidden;
+  border:1px solid #ffffff13;
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 90% 0%,#8ff5d00e,transparent 32%),
+    linear-gradient(155deg,#111923dc,#090e15ee);
+  box-shadow:0 18px 54px #0003;
+}
+
+.education-card{
+  padding:28px;
+}
+
+.education-card::after{
+  content:"";
+  position:absolute;
+  right:-80px;
+  bottom:-100px;
+  width:240px;
+  height:240px;
+  border-radius:50%;
+  background:#7ca7ff0a;
+  filter:blur(16px);
+  pointer-events:none;
+}
+
+.education-card-top{
+  position:relative;
+  z-index:1;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:24px;
+  padding-bottom:24px;
+  border-bottom:1px solid #ffffff10;
+}
+
+.education-card-top h3{
+  margin:8px 0 0;
+  font:700 clamp(28px,4vw,48px)/1.05 var(--display,'Geologica','Be Vietnam Pro',sans-serif);
+  letter-spacing:-.035em;
+}
+
+.education-status{
+  flex:0 0 auto;
+  max-width:190px;
+  padding:8px 10px;
+  border:1px solid #8ff5d026;
+  border-radius:999px;
+  background:#8ff5d008;
+  color:var(--mint);
+  font:700 9px/1.4 'Space Mono',monospace;
+  text-align:center;
+}
+
+.education-program{
+  position:relative;
+  z-index:1;
+  display:grid;
+  grid-template-columns:130px minmax(0,1fr);
+  gap:18px;
+  align-items:center;
+  min-height:64px;
+  border-bottom:1px solid #ffffff0d;
+}
+
+.education-program > span,
+.education-stat > span,
+.education-activity-index,
+.education-activity-note > span{
+  color:#82909f;
+  font:700 8px/1.4 'Space Mono',monospace;
+  letter-spacing:.12em;
+}
+
+.education-program > strong{
+  font-size:14px;
+}
+
+.education-stats{
+  position:relative;
+  z-index:1;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  padding-top:18px;
+}
+
+.education-stat{
+  min-height:108px;
+  padding:16px;
+  border:1px solid #ffffff0f;
+  border-radius:14px;
+  background:#ffffff03;
+}
+
+.education-stat > strong{
+  display:block;
+  margin-top:12px;
+  color:#eff7f4;
+  font:700 clamp(18px,2.3vw,28px)/1.08 var(--display,'Geologica','Be Vietnam Pro',sans-serif);
+  letter-spacing:-.025em;
+}
+
+.education-stat:nth-child(2) > strong{
+  color:var(--mint);
+}
+
+.education-activity{
+  display:flex;
+  flex-direction:column;
+  min-height:100%;
+  padding:26px;
+}
+
+.education-activity::before{
+  content:"";
+  position:absolute;
+  width:220px;
+  height:220px;
+  right:-90px;
+  top:-90px;
+  border-radius:50%;
+  border:1px solid #8ff5d010;
+  box-shadow:0 0 0 35px #8ff5d006,0 0 0 70px #7ca7ff04;
+}
+
+.education-activity > *{
+  position:relative;
+  z-index:1;
+}
+
+.education-activity h3{
+  margin:24px 0 10px;
+  font:700 clamp(29px,4vw,46px)/1 var(--display,'Geologica','Be Vietnam Pro',sans-serif);
+  letter-spacing:-.035em;
+}
+
+.education-activity > p{
+  margin:0;
+  color:#a8b3c1;
+  font-size:13px;
+  line-height:1.75;
+}
+
+.education-activity-note{
+  display:grid;
+  gap:6px;
+  margin-top:auto;
+  padding-top:28px;
+  border-top:1px solid #ffffff10;
+}
+
+.education-activity-note > strong{
+  color:#eaf3ef;
+  font-size:13px;
+}
+
+@media(max-width:900px){
+  .education-head,
+  .education-layout{
+    grid-template-columns:1fr;
+  }
+
+  .education-activity{
+    min-height:250px;
+  }
+}
+
+@media(max-width:620px){
+  .education-section{
+    padding-top:78px;
+  }
+
+  .education-card{
+    padding:20px;
+  }
+
+  .education-card-top{
+    display:grid;
+    gap:14px;
+  }
+
+  .education-status{
+    max-width:none;
+    width:max-content;
+  }
+
+  .education-program{
+    grid-template-columns:1fr;
+    gap:4px;
+    padding:13px 0;
+  }
+
+  .education-stats{
+    grid-template-columns:1fr;
+  }
+
+  .education-stat{
+    min-height:0;
+  }
+}
