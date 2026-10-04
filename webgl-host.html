@@ -14,10 +14,10 @@
     #status{position:absolute;inset:0;z-index:20;display:grid;place-items:center;padding:24px;background:#05070a}
     #status[hidden]{display:none}
     .status-card{width:min(520px,100%);padding:24px;border:1px solid #ffffff18;border-radius:18px;background:#0b1017;text-align:center}
-    .eyebrow{margin:0 0 10px;color:#8ff5d0;font:700 10px/1.4 monospace;letter-spacing:.14em}
-    #status-title{margin:0 0 10px;font-size:24px}
+    #status-title{margin:0 0 10px;font:700 clamp(24px,5vw,42px)/1.05 Arial,sans-serif;letter-spacing:-.03em}
     #status-text{margin:0;color:#8995a6;font-size:13px;line-height:1.6}
-    #progress{height:3px;margin-top:18px;background:#ffffff10;overflow:hidden;border-radius:999px}
+    #progress-value{display:block;margin-top:14px;color:#8ff5d0;font:700 12px/1 monospace;letter-spacing:.08em}
+    #progress{height:3px;margin-top:10px;background:#ffffff10;overflow:hidden;border-radius:999px}
     #progress>i{display:block;width:0;height:100%;background:#8ff5d0;transition:width .15s linear}
     #warning{position:absolute;z-index:30;left:50%;top:12px;transform:translateX(-50%);width:min(760px,calc(100% - 24px))}
   </style>
@@ -30,9 +30,9 @@
 
   <div id="status">
     <div class="status-card">
-      <p class="eyebrow">TRẢI NGHIỆM DỰ ÁN</p>
-      <h1 id="status-title">ĐANG MỞ TRÒ CHƠI...</h1>
-      <p id="status-text">Đang chuẩn bị trải nghiệm.</p>
+      <h1 id="status-title">TRÒ CHƠI</h1>
+      <p id="status-text">Đang khởi động trò chơi...</p>
+      <strong id="progress-value">0%</strong>
       <div id="progress"><i></i></div>
     </div>
   </div>
@@ -44,13 +44,24 @@
       const status = document.getElementById('status');
       const statusTitle = document.getElementById('status-title');
       const statusText = document.getElementById('status-text');
+      const progressValue = document.getElementById('progress-value');
       const progress = document.querySelector('#progress > i');
       const canvas = document.getElementById('unity-canvas');
       const warning = document.getElementById('warning');
 
+      const fallbackNames = {
+        'oops-brake': 'OOPS BRAKE',
+        'lat-hinh-tim-cap': 'LẬT HÌNH TÌM CẶP'
+      };
+
+      statusTitle.textContent =
+        fallbackNames[game] ||
+        game.replace(/-/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
+
       if (!game) {
-        statusTitle.textContent = 'THIẾU TÊN GAME';
-        statusText.textContent = 'URL cần có ?game=ten-thu-muc.';
+        statusTitle.textContent = 'KHÔNG TÌM THẤY TRÒ CHƠI';
+        statusText.textContent = 'Không thể xác định trò chơi.';
+        progressValue.textContent = '—';
         return;
       }
 
@@ -145,7 +156,8 @@
 
       async function boot() {
         const pageUrl = new URL('games/' + game + '/index.html', parent.location.href).href;
-        statusText.textContent = 'Đang chuẩn bị trò chơi...';
+        statusText.textContent = 'Đang khởi động trò chơi...';
+        progressValue.textContent = '0%';
 
         const response = await fetch(pageUrl, { cache: 'no-store' });
         if (!response.ok) throw new Error('Không tìm thấy games/' + game + '/index.html');
@@ -184,6 +196,10 @@
         const productName = parseQuoted(source, /productName\s*:\s*["']([^"']*)["']/, game);
         const productVersion = parseQuoted(source, /productVersion\s*:\s*["']([^"']*)["']/, '1.0');
 
+        if (productName && productName.trim()) {
+          statusTitle.textContent = productName.trim().toUpperCase();
+        }
+
         const config = {
           arguments: [],
           dataUrl: assetUrl(base, buildDir, dataFile),
@@ -208,7 +224,9 @@
             const muteGuard = window.setInterval(() => applyAudioState(true), 250);
 
             const instance = await createUnityInstance(canvas, config, (value) => {
-              progress.style.width = Math.round(value * 100) + '%';
+              const percent = Math.max(0, Math.min(100, Math.round(value * 100)));
+              progress.style.width = percent + '%';
+              progressValue.textContent = percent + '%';
             });
 
             window.clearInterval(muteGuard);
@@ -223,15 +241,16 @@
           }
         };
         script.onerror = () => {
-          statusTitle.textContent = 'KHÔNG TẢI ĐƯỢC UNITY LOADER';
-          statusText.textContent = loaderFile;
+          statusTitle.textContent = fallbackNames[game] || statusTitle.textContent;
+          statusText.textContent = 'Không thể khởi động trò chơi.';
+          progressValue.textContent = '—';
         };
         document.body.appendChild(script);
       }
 
       boot().catch((error) => {
-        statusTitle.textContent = 'KHÔNG THỂ KHỞI ĐỘNG GAME';
-        statusText.textContent = error?.message || String(error);
+        statusText.textContent = 'Không thể khởi động trò chơi.';
+        progressValue.textContent = '—';
         console.error(error);
       });
     })();
