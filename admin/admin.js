@@ -911,21 +911,56 @@
 
   window.addEventListener('keydown', handleShortcut, true);
 
+  async function syncPreviewWithPublicPage() {
+    if (!sessionUser || frame.getAttribute('src') === 'about:blank') return;
+
+    const win = frame.contentWindow;
+    if (!win) return;
+
+    setStatus('ĐANG ĐỒNG BỘ TRANG GỐC...');
+
+    try {
+      if (win.PORTFOLIO_CMS_READY) {
+        await Promise.race([
+          win.PORTFOLIO_CMS_READY,
+          new Promise((resolve) => setTimeout(resolve, 8000))
+        ]);
+      } else if (!win.PORTFOLIO_CMS_STATE?.ready) {
+        await new Promise((resolve) => {
+          let finished = false;
+
+          const done = () => {
+            if (finished) return;
+            finished = true;
+            win.removeEventListener('portfolio-cms-ready', done);
+            resolve();
+          };
+
+          win.addEventListener('portfolio-cms-ready', done, { once: true });
+          setTimeout(done, 2500);
+        });
+      }
+    } catch (error) {
+      console.warn('Không thể chờ CMS preview:', error);
+    }
+
+    preparePreview();
+    setStatus('ĐÃ ĐỒNG BỘ VỚI TRANG GỐC', 'is-saved');
+  }
+
   frame.addEventListener('load', () => {
-    if (sessionUser && frame.src !== 'about:blank') preparePreview();
+    syncPreviewWithPublicPage();
   });
 
   function loadEditor() {
     gate.hidden = true;
     adminShell.hidden = false;
 
-    const previewSrc = frame.dataset.src || '../index.html?admin-preview=1';
+    const baseSrc = frame.dataset.src || '../index.html?admin-preview=1';
+    const separator = baseSrc.includes('?') ? '&' : '?';
+    const previewSrc = baseSrc + separator + 'admin-sync=' + Date.now();
 
-    if (frame.getAttribute('src') === 'about:blank') {
-      frame.setAttribute('src', previewSrc);
-    } else {
-      preparePreview();
-    }
+    frame.setAttribute('src', previewSrc);
   }
 
   function showLogin(message = '') {
