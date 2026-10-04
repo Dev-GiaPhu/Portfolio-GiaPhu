@@ -196,9 +196,13 @@
         const productName = parseQuoted(source, /productName\s*:\s*["']([^"']*)["']/, game);
         const productVersion = parseQuoted(source, /productVersion\s*:\s*["']([^"']*)["']/, '1.0');
 
-        if (productName && productName.trim()) {
-          statusTitle.textContent = productName.trim().toUpperCase();
-        }
+        const displayName =
+          fallbackNames[game] ||
+          (productName && productName.trim()
+            ? productName.trim().toUpperCase()
+            : statusTitle.textContent);
+
+        statusTitle.textContent = displayName;
 
         const config = {
           arguments: [],
