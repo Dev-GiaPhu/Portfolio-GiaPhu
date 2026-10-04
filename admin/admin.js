@@ -512,10 +512,27 @@
     }
   }
 
+  function cleanGalleryHtml(gallery) {
+    const clone = gallery.cloneNode(true);
+
+    clone.querySelectorAll('[data-admin-editable],[data-admin-box]').forEach((node) => {
+      node.removeAttribute('data-admin-editable');
+      node.removeAttribute('data-admin-box');
+      node.removeAttribute('contenteditable');
+      node.removeAttribute('spellcheck');
+    });
+
+    clone.querySelectorAll('.admin-project-image-handle,.admin-project-gallery-handle').forEach((node) => {
+      node.remove();
+    });
+
+    return clone.innerHTML;
+  }
+
   function commitGalleryHtml(gallery, before) {
     normalizeGallery(gallery);
     const selector = structuralSelector(gallery);
-    const after = gallery.innerHTML;
+    const after = cleanGalleryHtml(gallery);
     pushChange(selector, 'innerHTML', before, after);
     renderGalleryEditor(gallery);
   }
@@ -566,7 +583,7 @@
       up.disabled = index === 0;
       up.addEventListener('click', () => {
         if (index === 0) return;
-        const before = gallery.innerHTML;
+        const before = cleanGalleryHtml(gallery);
         gallery.insertBefore(item, items[index - 1]);
         commitGalleryHtml(gallery, before);
       });
@@ -578,7 +595,7 @@
       down.disabled = index === items.length - 1;
       down.addEventListener('click', () => {
         if (index === items.length - 1) return;
-        const before = gallery.innerHTML;
+        const before = cleanGalleryHtml(gallery);
         const next = items[index + 1];
         gallery.insertBefore(next, item);
         commitGalleryHtml(gallery, before);
@@ -590,7 +607,7 @@
       remove.title = 'Xóa ảnh';
       remove.className = 'danger';
       remove.addEventListener('click', () => {
-        const before = gallery.innerHTML;
+        const before = cleanGalleryHtml(gallery);
         item.remove();
         commitGalleryHtml(gallery, before);
       });
@@ -624,7 +641,7 @@
       return;
     }
 
-    const before = gallery.innerHTML;
+    const before = cleanGalleryHtml(gallery);
     gallery.querySelectorAll('.project-gallery-empty').forEach((node) => node.remove());
 
     let uploaded = 0;
