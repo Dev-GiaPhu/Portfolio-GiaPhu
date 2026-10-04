@@ -44,3 +44,15 @@ Trong Supabase vào **Authentication → URL Configuration → Redirect URLs** v
 `https://dev-giaphu.github.io/Portfolio-GiaPhu/admin/`
 
 Nếu URL này chưa được allowlist, GitHub OAuth có thể đăng nhập xong nhưng không quay lại đúng trang admin.
+
+
+## Nếu admin báo lỗi RLS khi lưu
+
+Chạy lại **TOÀN BỘ** file `admin/supabase-cms.sql` mới nhất trong Supabase SQL Editor.
+
+Bản policy mới kiểm tra trực tiếp `auth.users` và `auth.identities`, nên hoạt động cả khi GitHub để email ở chế độ private.
+
+Sau khi chạy SQL:
+1. Đăng xuất khỏi `/admin/`.
+2. Đăng nhập lại bằng GitHub `Dev-GiaPhu` hoặc Google/email `giaphufpt1@gmail.com`.
+3. Thử lưu lại.
