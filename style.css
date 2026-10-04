@@ -5746,3 +5746,19 @@ main{
     min-width:38px!important;
   }
 }
+
+
+/* Liquid glass softness refinement */
+.rail-glass-svg [data-rail-glass-shape]{
+  opacity:.78!important;
+}
+
+.rail-glass-highlight{
+  opacity:.28!important;
+}
+
+.rail-glass-svg{
+  filter:
+    drop-shadow(0 12px 28px rgba(0,0,0,.16))
+    drop-shadow(0 0 12px rgba(144,255,224,.02))!important;
+}
