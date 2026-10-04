@@ -5762,3 +5762,16 @@ main{
     drop-shadow(0 12px 28px rgba(0,0,0,.16))
     drop-shadow(0 0 12px rgba(144,255,224,.02))!important;
 }
+
+
+/* Keep the like action outside the liquid navigation body. */
+.rail-like{
+  margin-top:10px!important;
+  border-radius:14px!important;
+  background:rgba(7,9,13,.24)!important;
+  backdrop-filter:blur(8px)!important;
+}
+
+.rail-like:hover{
+  background:rgba(255,255,255,.045)!important;
+}
