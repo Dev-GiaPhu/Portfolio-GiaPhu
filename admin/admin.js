@@ -63,7 +63,7 @@
 
   const TEXT_SELECTOR = [
     'main h1','main h2','main h3','main h4','main h5','main h6',
-    'main p','main span','main strong','main small',
+    'main p','main span','main strong','main small','main a','main li',
     '.rail-nav span','.project-terminal-link','.btn',
     '.contact-line span','.contact-line strong',
     'footer span'
@@ -538,8 +538,11 @@
       const editable = event.target.closest?.('[data-admin-editable]');
       if (editable) {
         selectElement(editable);
-        event.preventDefault();
-        event.stopPropagation();
+
+        if (editable.tagName === 'IMG' || editable.closest('a')) {
+          event.preventDefault();
+        }
+
         return;
       }
 
