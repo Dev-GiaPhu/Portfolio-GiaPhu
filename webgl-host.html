@@ -30,9 +30,9 @@
 
   <div id="status">
     <div class="status-card">
-      <p class="eyebrow">UNITY WEBGL / PORTFOLIO HOST</p>
-      <h1 id="status-title">ĐANG ĐỌC BUILD...</h1>
-      <p id="status-text">Đang chuẩn bị Unity WebGL.</p>
+      <p class="eyebrow">TRẢI NGHIỆM DỰ ÁN</p>
+      <h1 id="status-title">ĐANG MỞ TRÒ CHƠI...</h1>
+      <p id="status-text">Đang chuẩn bị trải nghiệm.</p>
       <div id="progress"><i></i></div>
     </div>
   </div>
@@ -57,28 +57,63 @@
       let muted = true;
       const audioContexts = new Set();
       const NativeAudioContext = window.AudioContext || window.webkitAudioContext;
+      const nativeResume = NativeAudioContext?.prototype?.resume;
+      const nativeSuspend = NativeAudioContext?.prototype?.suspend;
 
-      if (NativeAudioContext) {
+      if (NativeAudioContext && nativeResume && nativeSuspend) {
+        // Unity may call AudioContext.resume() by itself after loading.
+        // While the portfolio is muted we deliberately refuse those resumes.
+        NativeAudioContext.prototype.resume = function() {
+          audioContexts.add(this);
+          if (muted) return Promise.resolve();
+          return nativeResume.call(this);
+        };
+
         const WrappedAudioContext = function(...args) {
           const context = new NativeAudioContext(...args);
           audioContexts.add(context);
-          if (muted) {
-            Promise.resolve().then(() => context.suspend()).catch(() => {});
-          }
+
+          Promise.resolve()
+            .then(() => nativeSuspend.call(context))
+            .catch(() => {});
+
           return context;
         };
 
         WrappedAudioContext.prototype = NativeAudioContext.prototype;
         Object.setPrototypeOf(WrappedAudioContext, NativeAudioContext);
-        window.AudioContext = WrappedAudioContext;
-        if (window.webkitAudioContext) window.webkitAudioContext = WrappedAudioContext;
+
+        try {
+          window.AudioContext = WrappedAudioContext;
+          if (window.webkitAudioContext) {
+            window.webkitAudioContext = WrappedAudioContext;
+          }
+        } catch {
+          // Prototype resume guard above still keeps Unity muted.
+        }
+      }
+
+      const nativeMediaPlay = window.HTMLMediaElement?.prototype?.play;
+      if (nativeMediaPlay) {
+        window.HTMLMediaElement.prototype.play = function(...args) {
+          this.muted = muted;
+          return nativeMediaPlay.apply(this, args);
+        };
       }
 
       function applyAudioState(nextMuted) {
         muted = Boolean(nextMuted);
+
         audioContexts.forEach((context) => {
-          const action = muted ? context.suspend() : context.resume();
+          const action = muted
+            ? nativeSuspend?.call(context)
+            : nativeResume?.call(context);
+
           if (action?.catch) action.catch(() => {});
+        });
+
+        document.querySelectorAll('audio,video').forEach((media) => {
+          media.muted = muted;
         });
       }
 
@@ -110,7 +145,7 @@
 
       async function boot() {
         const pageUrl = new URL('games/' + game + '/index.html', parent.location.href).href;
-        statusText.textContent = 'Đang đọc ' + pageUrl;
+        statusText.textContent = 'Đang chuẩn bị trò chơi...';
 
         const response = await fetch(pageUrl, { cache: 'no-store' });
         if (!response.ok) throw new Error('Không tìm thấy games/' + game + '/index.html');
@@ -169,10 +204,14 @@
         script.src = assetUrl(base, buildDir, loaderFile);
         script.onload = async () => {
           try {
+            applyAudioState(true);
+            const muteGuard = window.setInterval(() => applyAudioState(true), 250);
+
             const instance = await createUnityInstance(canvas, config, (value) => {
               progress.style.width = Math.round(value * 100) + '%';
             });
 
+            window.clearInterval(muteGuard);
             window.__portfolioUnityInstance = instance;
             canvas.style.width = '100%';
             canvas.style.height = '100%';
