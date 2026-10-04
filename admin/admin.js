@@ -18,6 +18,8 @@
   const saveStatus = document.getElementById('saveStatus');
 
   const inspector = document.getElementById('inspector');
+  const inspectorDragHandle = document.getElementById('inspectorDragHandle');
+  const editorStage = frame.parentElement;
   const selectedLabel = document.getElementById('selectedLabel');
   const closeInspector = document.getElementById('closeInspector');
 
@@ -169,6 +171,115 @@
 
   function recordKey(selector, property) {
     return property + ':' + selector;
+  }
+
+  const INSPECTOR_POSITION_KEY = 'portfolio-admin-inspector-position-v1';
+
+  function clampInspectorPosition(left, top) {
+    const margin = 8;
+    const width = inspector.offsetWidth || 350;
+    const height = inspector.offsetHeight || 420;
+    const maxLeft = Math.max(margin, editorStage.clientWidth - width - margin);
+    const maxTop = Math.max(margin, editorStage.clientHeight - height - margin);
+
+    return {
+      left: Math.min(maxLeft, Math.max(margin, Number(left) || margin)),
+      top: Math.min(maxTop, Math.max(margin, Number(top) || margin))
+    };
+  }
+
+  function setInspectorPosition(left, top, persist = false) {
+    const position = clampInspectorPosition(left, top);
+
+    inspector.style.setProperty('left', position.left + 'px', 'important');
+    inspector.style.setProperty('right', 'auto', 'important');
+    inspector.style.setProperty('top', position.top + 'px', 'important');
+
+    if (persist) {
+      try {
+        localStorage.setItem(
+          INSPECTOR_POSITION_KEY,
+          JSON.stringify(position)
+        );
+      } catch {}
+    }
+  }
+
+  function restoreInspectorPosition() {
+    let position = { left: 18, top: 18 };
+
+    try {
+      const saved = JSON.parse(
+        localStorage.getItem(INSPECTOR_POSITION_KEY) || 'null'
+      );
+
+      if (
+        saved &&
+        Number.isFinite(saved.left) &&
+        Number.isFinite(saved.top)
+      ) {
+        position = saved;
+      }
+    } catch {}
+
+    setInspectorPosition(position.left, position.top);
+  }
+
+  function avoidInspectorOverlap(element) {
+    if (!element || inspector.hidden) return;
+
+    requestAnimationFrame(() => {
+      const rect = element.getBoundingClientRect();
+      const panel = {
+        left: inspector.offsetLeft,
+        top: inspector.offsetTop,
+        right: inspector.offsetLeft + inspector.offsetWidth,
+        bottom: inspector.offsetTop + inspector.offsetHeight
+      };
+
+      const gap = 18;
+      const target = {
+        left: rect.left - gap,
+        top: rect.top - gap,
+        right: rect.right + gap,
+        bottom: rect.bottom + gap
+      };
+
+      const overlaps = !(
+        panel.right < target.left ||
+        panel.left > target.right ||
+        panel.bottom < target.top ||
+        panel.top > target.bottom
+      );
+
+      if (!overlaps) return;
+
+      const stageWidth = editorStage.clientWidth;
+      const stageHeight = editorStage.clientHeight;
+      const panelWidth = inspector.offsetWidth;
+      const panelHeight = inspector.offsetHeight;
+
+      let nextLeft =
+        rect.left + rect.width / 2 < stageWidth / 2
+          ? stageWidth - panelWidth - 18
+          : 18;
+
+      let nextTop = inspector.offsetTop;
+
+      const horizontalStillOverlaps = !(
+        nextLeft + panelWidth < target.left ||
+        nextLeft > target.right
+      );
+
+      if (horizontalStillOverlaps) {
+        nextTop =
+          rect.top + rect.height / 2 < stageHeight / 2
+            ? stageHeight - panelHeight - 18
+            : 18;
+      }
+
+      setInspectorPosition(nextLeft, nextTop);
+    });
   }
 
   function structuralSelector(element) {
@@ -384,6 +495,11 @@
     selected = element;
     inspector.hidden = false;
 
+    if (!inspector.dataset.positionReady) {
+      restoreInspectorPosition();
+      inspector.dataset.positionReady = 'true';
+    }
+
     const property = propertyFor(element);
     const selector = structuralSelector(element);
     selectedLabel.textContent = element.tagName.toLowerCase() + ' · ' + selector;
@@ -407,6 +523,7 @@
     const box = element.matches(BOX_SELECTOR) ? element : element.closest(BOX_SELECTOR);
     structureTools.hidden = !box;
     renderTags(element);
+    avoidInspectorOverlap(element);
   }
 
   function sanitizeClone(root) {
@@ -892,6 +1009,67 @@
     selected = null;
     inspector.hidden = true;
     decoratePreviewContent();
+  });
+
+  let inspectorDragState = null;
+
+  inspectorDragHandle.addEventListener('pointerdown', (event) => {
+    if (event.target.closest('button,input,textarea,label,a')) return;
+
+    inspectorDragState = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      left: inspector.offsetLeft,
+      top: inspector.offsetTop
+    };
+
+    inspectorDragHandle.setPointerCapture?.(event.pointerId);
+    inspector.classList.add('is-dragging');
+    event.preventDefault();
+  });
+
+  inspectorDragHandle.addEventListener('pointermove', (event) => {
+    if (
+      !inspectorDragState ||
+      event.pointerId !== inspectorDragState.pointerId
+    ) {
+      return;
+    }
+
+    setInspectorPosition(
+      inspectorDragState.left + event.clientX - inspectorDragState.startX,
+      inspectorDragState.top + event.clientY - inspectorDragState.startY
+    );
+
+    event.preventDefault();
+  });
+
+  function stopInspectorDrag(event) {
+    if (!inspectorDragState) return;
+
+    if (
+      event?.pointerId !== undefined &&
+      event.pointerId !== inspectorDragState.pointerId
+    ) {
+      return;
+    }
+
+    inspector.classList.remove('is-dragging');
+    inspectorDragState = null;
+    setInspectorPosition(
+      inspector.offsetLeft,
+      inspector.offsetTop,
+      true
+    );
+  }
+
+  inspectorDragHandle.addEventListener('pointerup', stopInspectorDrag);
+  inspectorDragHandle.addEventListener('pointercancel', stopInspectorDrag);
+
+  window.addEventListener('resize', () => {
+    if (inspector.hidden) return;
+    setInspectorPosition(inspector.offsetLeft, inspector.offsetTop);
   });
 
   saveButton.addEventListener('click', saveAll);
