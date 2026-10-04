@@ -1,9 +1,13 @@
 (() => {
   const ADMIN_EMAIL = 'giaphufpt1@gmail.com';
+  const ADMIN_GITHUB_LOGIN = 'dev-giaphu';
 
   const gate = document.getElementById('loginGate');
   const adminShell = document.getElementById('adminShell');
   const githubLoginBtn = document.getElementById('githubLoginBtn');
+  const googleLoginBtn = document.getElementById('googleLoginBtn');
+  const clearSessionBtn = document.getElementById('clearSessionBtn');
+  const currentSessionInfo = document.getElementById('currentSessionInfo');
   const loginMessage = document.getElementById('loginMessage');
   const frame = document.getElementById('previewFrame');
   const saveButton = document.getElementById('saveBtn');
@@ -44,6 +48,82 @@
     if (window.CSS?.escape) return window.CSS.escape(value);
     return String(value).replace(/["\\]/g, '\\$&');
   };
+
+  function authIdentity(user) {
+    const metadata = user?.user_metadata || {};
+    const email = String(user?.email || metadata.email || '').toLowerCase();
+    const githubLogin = String(
+      metadata.user_name ||
+      metadata.preferred_username ||
+      metadata.login ||
+      ''
+    ).toLowerCase();
+
+    return { email, githubLogin };
+  }
+
+  function isAllowedAdmin(user) {
+    if (!user) return false;
+    const identity = authIdentity(user);
+
+    return (
+      identity.email === ADMIN_EMAIL ||
+      identity.githubLogin === ADMIN_GITHUB_LOGIN
+    );
+  }
+
+  function describeSession(user) {
+    if (!user) {
+      currentSessionInfo.hidden = true;
+      currentSessionInfo.textContent = '';
+      return;
+    }
+
+    const identity = authIdentity(user);
+    const provider =
+      user.app_metadata?.provider ||
+      user.identities?.[0]?.provider ||
+      'oauth';
+
+    currentSessionInfo.hidden = false;
+    currentSessionInfo.textContent =
+      'Phiên hiện tại: ' +
+      (identity.githubLogin ? '@' + identity.githubLogin : identity.email || 'không rõ tài khoản') +
+      ' · ' +
+      provider;
+  }
+
+  async function startOAuth(provider) {
+    loginMessage.textContent =
+      provider === 'google'
+        ? 'Đang chuyển sang Google...'
+        : 'Đang chuyển sang GitHub...';
+
+    const redirectTo =
+      window.location.origin +
+      window.location.pathname;
+
+    const options = { redirectTo };
+
+    if (provider === 'google') {
+      options.queryParams = {
+        prompt: 'select_account'
+      };
+    }
+
+    const { error } = await client.auth.signInWithOAuth({
+      provider,
+      options
+    });
+
+    if (error) {
+      loginMessage.textContent =
+        'Không thể đăng nhập bằng ' +
+        (provider === 'google' ? 'Google' : 'GitHub') +
+        ': ' +
+        error.message;
+    }
+  }
 
   function setStatus(text, kind = '') {
     saveStatus.textContent = text;
@@ -523,38 +603,40 @@
     if (message) loginMessage.textContent = message;
   }
 
-  githubLoginBtn.addEventListener('click', async () => {
-    loginMessage.textContent = 'Đang chuyển sang GitHub...';
+  githubLoginBtn.addEventListener('click', () => {
+    startOAuth('github');
+  });
 
-    const redirectTo =
-      window.location.origin +
-      window.location.pathname;
+  googleLoginBtn.addEventListener('click', () => {
+    startOAuth('google');
+  });
 
-    const { error } = await client.auth.signInWithOAuth({
-      provider: 'github',
-      options: {
-        redirectTo,
-        skipBrowserRedirect: false
-      }
-    });
-
-    if (error) {
-      loginMessage.textContent = 'Không thể mở đăng nhập GitHub: ' + error.message;
-    }
+  clearSessionBtn.addEventListener('click', async () => {
+    loginMessage.textContent = 'Đang đăng xuất phiên hiện tại...';
+    await client.auth.signOut({ scope: 'local' });
+    describeSession(null);
+    loginMessage.textContent =
+      'Đã xóa phiên Supabase. Nếu GitHub vẫn tự dùng cùng một tài khoản, hãy đăng xuất GitHub trên github.com rồi thử lại.';
   });
 
   client.auth.onAuthStateChange((_event, session) => {
     const user = session?.user || null;
     if (!user) return;
 
-    if (user.email?.toLowerCase() === ADMIN_EMAIL) {
+    describeSession(user);
+
+    if (isAllowedAdmin(user)) {
       sessionUser = user;
       loadEditor();
       return;
     }
 
-    client.auth.signOut().finally(() => {
-      showLogin('Tài khoản này không có quyền admin.');
+    client.auth.signOut({ scope: 'local' }).finally(() => {
+      showLogin(
+        'Tài khoản này không có quyền admin. Admin chỉ chấp nhận GitHub @Dev-GiaPhu hoặc email ' +
+        ADMIN_EMAIL +
+        '.'
+      );
     });
   });
 
@@ -581,13 +663,20 @@
     const user = data.session?.user || null;
 
     if (!user) {
+      describeSession(null);
       showLogin();
       return;
     }
 
-    if (user.email?.toLowerCase() !== ADMIN_EMAIL) {
-      await client.auth.signOut();
-      showLogin('Tài khoản này không có quyền admin.');
+    describeSession(user);
+
+    if (!isAllowedAdmin(user)) {
+      await client.auth.signOut({ scope: 'local' });
+      showLogin(
+        'Tài khoản này không có quyền admin. Admin chỉ chấp nhận GitHub @Dev-GiaPhu hoặc email ' +
+        ADMIN_EMAIL +
+        '.'
+      );
       return;
     }
 
