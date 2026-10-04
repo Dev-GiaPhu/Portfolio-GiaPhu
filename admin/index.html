@@ -6,10 +6,10 @@
   <meta name="theme-color" content="#07090d">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <title>Portfolio Admin — Nguyễn Gia Phú</title>
-  <link rel="stylesheet" href="admin.css?v=20261004-1">
+  <link rel="stylesheet" href="admin.css?v=20261004-login-2">
 </head>
 <body>
-  <div class="admin-shell">
+  <div class="admin-shell" id="adminShell" hidden>
     <header class="admin-toolbar">
       <div class="admin-brand">
         <span class="admin-mark">GP</span>
@@ -29,7 +29,7 @@
     </header>
 
     <main class="editor-stage">
-      <iframe id="previewFrame" src="../index.html?admin-preview=1" title="Portfolio preview"></iframe>
+      <iframe id="previewFrame" src="about:blank" data-src="../index.html?admin-preview=1" title="Portfolio preview"></iframe>
 
       <aside id="inspector" class="inspector" hidden>
         <div class="inspector-head">
@@ -71,7 +71,7 @@
     <div class="login-card">
       <p class="eyebrow">SECURE ADMIN / SUPABASE AUTH</p>
       <h1>ĐĂNG NHẬP.</h1>
-      <p>Mật khẩu được xác thực bởi Supabase và không được lưu trong mã nguồn GitHub.</p>
+      <p>Đăng nhập bằng tài khoản GitHub đã liên kết với Supabase. Portfolio chỉ được tải sau khi xác thực thành công.</p>
 
       <button id="githubLoginBtn" type="button">ĐĂNG NHẬP BẰNG GITHUB ↗</button>
       <small id="loginMessage"></small>
@@ -80,6 +80,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../supabase-config.js?v=20260930-0122"></script>
-  <script src="admin.js?v=20261004-1"></script>
+  <script src="admin.js?v=20261004-login-2"></script>
 </body>
 </html>
