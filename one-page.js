@@ -4,7 +4,8 @@
   const thumb = document.querySelector('[data-scroll-thumb]');
   const links = [...document.querySelectorAll('[data-rail-link]')];
   const railNav = rail?.querySelector('.rail-nav');
-  const liquidBlob = rail?.querySelector('[data-rail-liquid-blob]');
+  const organicSvg = rail?.querySelector('[data-rail-organic-svg]');
+  const organicPath = rail?.querySelector('[data-rail-organic-path]');
   const sections = links
     .map((link) => document.querySelector(link.getAttribute('href')))
     .filter(Boolean);
@@ -93,24 +94,93 @@
     });
   });
 
-  function syncLiquidBlob(activeLink) {
-    if (!liquidBlob || !railNav || !activeLink) return;
+  let organicCurrentY = null;
+  let organicTargetY = null;
+  let organicCurrentWidth = null;
+  let organicTargetWidth = null;
+  let organicFrame = null;
+
+  function buildOrganicRailPath(height, centerY, extensionWidth) {
+    const right = 176;
+    const columnLeft = 124;
+    const radius = 26;
+    const top = 0;
+    const bottom = Math.max(70, height);
+    const center = clamp(centerY, 30, bottom - 30);
+
+    const lobeLeft = right - extensionWidth;
+    const outer = 23;
+    const neck = 37;
+
+    return [
+      `M ${columnLeft + radius} ${top}`,
+      `H ${right - radius}`,
+      `Q ${right} ${top} ${right} ${radius}`,
+      `V ${bottom - radius}`,
+      `Q ${right} ${bottom} ${right - radius} ${bottom}`,
+      `H ${columnLeft + radius}`,
+      `Q ${columnLeft} ${bottom} ${columnLeft} ${bottom - radius}`,
+      `V ${center + neck}`,
+      `C ${columnLeft - 1} ${center + 31}, ${columnLeft - 8} ${center + 27}, ${columnLeft - 18} ${center + 20}`,
+      `C ${columnLeft - 31} ${center + 11}, ${lobeLeft + 24} ${center + outer}, ${lobeLeft} ${center}`,
+      `C ${lobeLeft + 24} ${center - outer}, ${columnLeft - 31} ${center - 11}, ${columnLeft - 18} ${center - 20}`,
+      `C ${columnLeft - 8} ${center - 27}, ${columnLeft - 1} ${center - 31}, ${columnLeft} ${center - neck}`,
+      `V ${radius}`,
+      `Q ${columnLeft} ${top} ${columnLeft + radius} ${top}`,
+      'Z'
+    ].join(' ');
+  }
+
+  function renderOrganicRail() {
+    organicFrame = null;
+    if (!organicPath || !organicSvg || organicTargetY == null || organicTargetWidth == null) return;
+
+    if (organicCurrentY == null) organicCurrentY = organicTargetY;
+    if (organicCurrentWidth == null) organicCurrentWidth = organicTargetWidth;
+
+    organicCurrentY += (organicTargetY - organicCurrentY) * 0.2;
+    organicCurrentWidth += (organicTargetWidth - organicCurrentWidth) * 0.18;
+
+    const height = Math.max(1, rail?.offsetHeight || railNav?.offsetHeight || 220);
+    organicSvg.setAttribute('viewBox', `0 0 180 ${height}`);
+    organicPath.setAttribute(
+      'd',
+      buildOrganicRailPath(height, organicCurrentY, organicCurrentWidth)
+    );
+
+    const moving =
+      Math.abs(organicTargetY - organicCurrentY) > 0.35 ||
+      Math.abs(organicTargetWidth - organicCurrentWidth) > 0.35;
+
+    if (moving) {
+      organicFrame = requestAnimationFrame(renderOrganicRail);
+    } else {
+      organicCurrentY = organicTargetY;
+      organicCurrentWidth = organicTargetWidth;
+    }
+  }
+
+  function syncOrganicRail(activeLink) {
+    if (!organicPath || !organicSvg || !railNav || !activeLink) return;
 
     const label = activeLink.querySelector('span');
     const labelWidth = label?.scrollWidth || 52;
     const compact = window.matchMedia('(max-width: 900px)').matches;
-    const blobHeight = compact ? 38 : 42;
-    const minWidth = compact ? 96 : 110;
-    const maxWidth = compact ? 126 : 154;
-    const desiredWidth = clamp(labelWidth + (compact ? 55 : 68), minWidth, maxWidth);
 
-    const top =
+    organicTargetWidth = clamp(
+      labelWidth + (compact ? 64 : 74),
+      compact ? 100 : 116,
+      compact ? 138 : 164
+    );
+
+    organicTargetY =
       railNav.offsetTop +
       activeLink.offsetTop +
-      (activeLink.offsetHeight - blobHeight) / 2;
+      activeLink.offsetHeight / 2;
 
-    liquidBlob.style.top = top + 'px';
-    liquidBlob.style.width = desiredWidth + 'px';
+    if (!organicFrame) {
+      organicFrame = requestAnimationFrame(renderOrganicRail);
+    }
   }
 
   function updateActiveSection() {
@@ -137,7 +207,7 @@
       }
     });
 
-    syncLiquidBlob(activeLink);
+    syncOrganicRail(activeLink);
   }
 
   let ticking = false;
