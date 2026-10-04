@@ -6269,3 +6269,12 @@ main{
     height:78vh;
   }
 }
+
+
+.project-gallery:not(:has(.project-gallery-item)){
+  display:none;
+}
+
+.project-gallery:has(.project-gallery-item){
+  display:grid!important;
+}
