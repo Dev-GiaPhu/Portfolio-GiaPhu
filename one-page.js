@@ -101,15 +101,21 @@
   let glassTargetIndex = 0;
   let glassFrame = null;
 
-  function buildGlassRailPath(height, centerY, extensionWidth, activeIndex, itemCount) {
+  function buildGlassRailPath(
+    navTop,
+    navBottom,
+    centerY,
+    extensionWidth,
+    activeIndex,
+    itemCount
+  ) {
     const right = 184;
     const columnLeft = 142;
     const columnRadius = 21;
-    const top = 2;
-    const bottom = Math.max(82, height - 2);
+    const top = navTop;
+    const bottom = Math.max(navTop + 84, navBottom);
     const halfHeight = 21;
-    const lobeLeft = right - extensionWidth;
-    const capRight = lobeLeft + halfHeight;
+
     const isFirst = activeIndex === 0;
     const isLast = activeIndex === itemCount - 1;
 
@@ -117,21 +123,21 @@
       ? top + halfHeight
       : isLast
         ? bottom - halfHeight
-        : clamp(centerY, top + 44, bottom - 44);
+        : clamp(centerY, top + halfHeight + 2, bottom - halfHeight - 2);
 
-    const shoulder = 34;
+    const lobeLeft = right - extensionWidth;
+    const capRight = lobeLeft + halfHeight;
 
-    // FIRST ITEM:
-    // the top edge itself stretches left; nothing grows above the rail.
+    // FIRST TAB:
+    // top edge itself extends left. No growth above the rail and no inward notch.
     if (isFirst) {
-      const lowerJoin = Math.min(bottom - columnRadius, center + shoulder);
+      const lowerJoin = center + halfHeight;
 
       return [
         `M ${capRight} ${top}`,
-        `C ${lobeLeft + 8} ${top}, ${lobeLeft} ${top + 9}, ${lobeLeft} ${center}`,
-        `C ${lobeLeft} ${center + 12}, ${lobeLeft + 9} ${center + halfHeight}, ${capRight} ${center + halfHeight}`,
-        `C ${capRight + 28} ${center + halfHeight}, ${columnLeft - 26} ${center + 19}, ${columnLeft - 13} ${center + 23}`,
-        `C ${columnLeft - 4} ${center + 26}, ${columnLeft} ${center + 29}, ${columnLeft} ${lowerJoin}`,
+        `C ${lobeLeft + 9} ${top}, ${lobeLeft} ${top + 9}, ${lobeLeft} ${center}`,
+        `C ${lobeLeft} ${center + 12}, ${lobeLeft + 9} ${lowerJoin}, ${capRight} ${lowerJoin}`,
+        `C ${capRight + 26} ${lowerJoin}, ${columnLeft - 12} ${lowerJoin}, ${columnLeft} ${lowerJoin + 13}`,
         `V ${bottom - columnRadius}`,
         `Q ${columnLeft} ${bottom} ${columnLeft + columnRadius} ${bottom}`,
         `H ${right - columnRadius}`,
@@ -143,11 +149,10 @@
       ].join(' ');
     }
 
-    // LAST ITEM:
-    // mirror of the first item; the bottom edge stretches left without
-    // growing below the rail.
+    // LAST TAB:
+    // bottom edge itself extends left. The heart button sits outside this shape.
     if (isLast) {
-      const upperJoin = Math.max(top + columnRadius, center - shoulder);
+      const upperJoin = center - halfHeight;
 
       return [
         `M ${columnLeft + columnRadius} ${top}`,
@@ -157,19 +162,19 @@
         `Q ${right} ${bottom} ${right - columnRadius} ${bottom}`,
         `H ${capRight}`,
         `C ${lobeLeft + 9} ${bottom}, ${lobeLeft} ${bottom - 9}, ${lobeLeft} ${center}`,
-        `C ${lobeLeft} ${center - 12}, ${lobeLeft + 9} ${center - halfHeight}, ${capRight} ${center - halfHeight}`,
-        `C ${capRight + 28} ${center - halfHeight}, ${columnLeft - 26} ${center - 19}, ${columnLeft - 13} ${center - 23}`,
-        `C ${columnLeft - 4} ${center - 26}, ${columnLeft} ${center - 29}, ${columnLeft} ${upperJoin}`,
+        `C ${lobeLeft} ${center - 12}, ${lobeLeft + 9} ${upperJoin}, ${capRight} ${upperJoin}`,
+        `C ${capRight + 26} ${upperJoin}, ${columnLeft - 12} ${upperJoin}, ${columnLeft} ${upperJoin - 13}`,
         `V ${top + columnRadius}`,
         `Q ${columnLeft} ${top} ${columnLeft + columnRadius} ${top}`,
         'Z'
       ].join(' ');
     }
 
-    // MIDDLE ITEMS:
-    // a single broad extrusion from the left wall, not a separate bubble.
-    const upperJoin = center - shoulder;
-    const lowerJoin = center + shoulder;
+    // MIDDLE TABS:
+    // one clean outward bulge from the column wall.
+    // No concave waist / indentation at the joint.
+    const upperJoin = center - halfHeight;
+    const lowerJoin = center + halfHeight;
 
     return [
       `M ${columnLeft + columnRadius} ${top}`,
@@ -179,13 +184,11 @@
       `Q ${right} ${bottom} ${right - columnRadius} ${bottom}`,
       `H ${columnLeft + columnRadius}`,
       `Q ${columnLeft} ${bottom} ${columnLeft} ${bottom - columnRadius}`,
-      `V ${lowerJoin}`,
-      `C ${columnLeft} ${center + 29}, ${columnLeft - 5} ${center + 26}, ${columnLeft - 15} ${center + 22}`,
-      `C ${columnLeft - 28} ${center + 17}, ${capRight + 27} ${center + halfHeight}, ${capRight} ${center + halfHeight}`,
-      `C ${lobeLeft + 9} ${center + halfHeight}, ${lobeLeft} ${center + 12}, ${lobeLeft} ${center}`,
-      `C ${lobeLeft} ${center - 12}, ${lobeLeft + 9} ${center - halfHeight}, ${capRight} ${center - halfHeight}`,
-      `C ${capRight + 27} ${center - halfHeight}, ${columnLeft - 28} ${center - 17}, ${columnLeft - 15} ${center - 22}`,
-      `C ${columnLeft - 5} ${center - 26}, ${columnLeft} ${center - 29}, ${columnLeft} ${upperJoin}`,
+      `V ${lowerJoin + 13}`,
+      `C ${columnLeft - 12} ${lowerJoin}, ${capRight + 26} ${lowerJoin}, ${capRight} ${lowerJoin}`,
+      `C ${lobeLeft + 9} ${lowerJoin}, ${lobeLeft} ${center + 12}, ${lobeLeft} ${center}`,
+      `C ${lobeLeft} ${center - 12}, ${lobeLeft + 9} ${upperJoin}, ${capRight} ${upperJoin}`,
+      `C ${capRight + 26} ${upperJoin}, ${columnLeft - 12} ${upperJoin}, ${columnLeft} ${upperJoin - 13}`,
       `V ${top + columnRadius}`,
       `Q ${columnLeft} ${top} ${columnLeft + columnRadius} ${top}`,
       'Z'
@@ -217,11 +220,15 @@
       220
     );
 
+    const navTop = railNav?.offsetTop || 0;
+    const navBottom = navTop + (railNav?.offsetHeight || height);
+
     glassSvg.setAttribute('viewBox', `0 0 190 ${height}`);
     glassShape.setAttribute(
       'd',
       buildGlassRailPath(
-        height,
+        navTop,
+        navBottom,
         glassCurrentY,
         glassCurrentWidth,
         glassTargetIndex,
