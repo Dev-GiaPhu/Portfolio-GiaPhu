@@ -625,22 +625,6 @@
 
     if (!gallery || !files?.length) return;
 
-    setStatus('ĐANG KIỂM TRA QUYỀN...');
-
-    const { data: allowed, error: permissionError } = await client
-      .rpc('is_portfolio_admin');
-
-    if (permissionError || allowed !== true) {
-      setStatus('CHƯA CÓ QUYỀN UPLOAD');
-      alert(
-        'Supabase chưa nhận tài khoản hiện tại là admin.\n\n' +
-        'Hãy chạy lại TOÀN BỘ file admin/supabase-cms.sql mới nhất trong Supabase SQL Editor, ' +
-        'sau đó đăng xuất và đăng nhập lại admin một lần.\n\n' +
-        (permissionError?.message || 'is_portfolio_admin() đang trả về false.')
-      );
-      return;
-    }
-
     const before = cleanGalleryHtml(gallery);
     gallery.querySelectorAll('.project-gallery-empty').forEach((node) => node.remove());
 
@@ -697,7 +681,11 @@
     }
 
     if (errors.length) {
-      alert('Một số ảnh không upload được:\n\n' + errors.join('\n'));
+      alert(
+        'Một số ảnh không upload được:\n\n' +
+        errors.join('\n') +
+        '\n\nNếu lỗi có chữ RLS / policy hoặc bucket, hãy chạy file admin/supabase-cms-hotfix.sql trong Supabase SQL Editor rồi đăng nhập lại admin.'
+      );
     }
   }
 
@@ -1076,23 +1064,6 @@
       return;
     }
 
-    setStatus('ĐANG KIỂM TRA QUYỀN...');
-
-    const { data: allowed, error: permissionError } = await client
-      .rpc('is_portfolio_admin');
-
-    if (permissionError || allowed !== true) {
-      setStatus('CHƯA CÓ QUYỀN LƯU');
-
-      alert(
-        'Supabase chưa nhận tài khoản hiện tại là admin.\n\n' +
-        'Hãy chạy lại TOÀN BỘ file admin/supabase-cms.sql mới nhất trong Supabase SQL Editor, ' +
-        'sau đó đăng xuất và đăng nhập lại admin một lần.\n\n' +
-        (permissionError?.message || 'is_portfolio_admin() đang trả về false.')
-      );
-      return;
-    }
-
     setStatus('ĐANG LƯU...');
 
     const now = new Date().toISOString();
@@ -1109,8 +1080,9 @@
     if (error) {
       setStatus('LỖI LƯU');
       alert(
-        'Không lưu được. Hãy chạy lại admin/supabase-cms.sql nếu quyền RLS chưa được cập nhật.\n\n' +
-        error.message
+        'Không lưu được vào Supabase.\n\n' +
+        error.message +
+        '\n\nNếu lỗi có chữ RLS / policy, hãy chạy file admin/supabase-cms-hotfix.sql trong Supabase SQL Editor rồi đăng nhập lại admin.'
       );
       return;
     }
@@ -1121,22 +1093,6 @@
 
   async function uploadImage(file) {
     if (!selected || selected.tagName !== 'IMG' || !file) return;
-
-    setStatus('ĐANG KIỂM TRA QUYỀN...');
-
-    const { data: allowed, error: permissionError } = await client
-      .rpc('is_portfolio_admin');
-
-    if (permissionError || allowed !== true) {
-      setStatus('CHƯA CÓ QUYỀN UPLOAD');
-      alert(
-        'Supabase chưa nhận tài khoản hiện tại là admin.\n\n' +
-        'Hãy chạy lại TOÀN BỘ file admin/supabase-cms.sql mới nhất trong Supabase SQL Editor, ' +
-        'sau đó đăng xuất và đăng nhập lại admin một lần.\n\n' +
-        (permissionError?.message || 'is_portfolio_admin() đang trả về false.')
-      );
-      return;
-    }
 
     const selector = structuralSelector(selected);
     const before = valueFor(selected, 'src');
@@ -1154,7 +1110,11 @@
 
     if (error) {
       setStatus('LỖI UPLOAD');
-      alert('Không upload được ảnh.\n\n' + error.message);
+      alert(
+        'Không upload được ảnh lên Supabase Storage.\n\n' +
+        error.message +
+        '\n\nNếu lỗi có chữ RLS / policy hoặc bucket, hãy chạy file admin/supabase-cms-hotfix.sql trong Supabase SQL Editor rồi đăng nhập lại admin.'
+      );
       return;
     }
 
