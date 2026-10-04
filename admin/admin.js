@@ -75,8 +75,9 @@
     '.panel','.skill-card','.terminal-project-card','.contact-line',
     '.skill-story','.one-project-game','.hero-terminal-card',
     '.project-info-accordion','.project-info-content','.project-info-grid > div',
-    '.education-card','.education-activity','.education-stat','.education-program',
-    '.education-head','.education-card-top','.education-activity-note',
+    '.education-card','.education-stat','.education-program',
+    '.education-head','.education-card-top',
+    '.activity-card','.activities-head',
     '.section-head','.contact-compact-head'
   ].join(',');
 
