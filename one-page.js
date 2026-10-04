@@ -4,8 +4,13 @@
   const thumb = document.querySelector('[data-scroll-thumb]');
   const links = [...document.querySelectorAll('[data-rail-link]')];
   const railNav = rail?.querySelector('.rail-nav');
-  const organicSvg = rail?.querySelector('[data-rail-organic-svg]');
-  const organicPath = rail?.querySelector('[data-rail-organic-path]');
+  const liquidSvg = rail?.querySelector('[data-rail-liquid-svg]');
+  const waterColumn = rail?.querySelector('[data-rail-water-column]');
+  const waterLobe = rail?.querySelector('[data-rail-water-lobe]');
+  const waterBridge = rail?.querySelector('[data-rail-water-bridge]');
+  const waterNeckTop = rail?.querySelector('[data-rail-water-neck-top]');
+  const waterNeckBottom = rail?.querySelector('[data-rail-water-neck-bottom]');
+  const waterHighlight = rail?.querySelector('[data-rail-water-highlight]');
   const sections = links
     .map((link) => document.querySelector(link.getAttribute('href')))
     .filter(Boolean);
@@ -94,103 +99,121 @@
     });
   });
 
-  let organicCurrentY = null;
-  let organicTargetY = null;
-  let organicCurrentWidth = null;
-  let organicTargetWidth = null;
-  let organicFrame = null;
+  let waterCurrentY = null;
+  let waterTargetY = null;
+  let waterCurrentWidth = null;
+  let waterTargetWidth = null;
+  let waterFrame = null;
 
-  function buildOrganicRailPath(height, centerY, extensionWidth) {
-    const right = 176;
-    const columnLeft = 124;
-    const radius = 26;
-    const top = 0;
-    const bottom = Math.max(70, height);
-    const center = clamp(centerY, 30, bottom - 30);
+  function renderLiquidRail() {
+    waterFrame = null;
 
-    const lobeLeft = right - extensionWidth;
-    const lobeRadius = 22;
-    const neck = 38;
-    const shoulderX = columnLeft - 18;
-    const capJoinX = lobeLeft + lobeRadius;
+    if (
+      !liquidSvg ||
+      !waterColumn ||
+      !waterLobe ||
+      !waterBridge ||
+      !waterNeckTop ||
+      !waterNeckBottom ||
+      waterTargetY == null ||
+      waterTargetWidth == null
+    ) {
+      return;
+    }
 
-    return [
-      `M ${columnLeft + radius} ${top}`,
-      `H ${right - radius}`,
-      `Q ${right} ${top} ${right} ${radius}`,
-      `V ${bottom - radius}`,
-      `Q ${right} ${bottom} ${right - radius} ${bottom}`,
-      `H ${columnLeft + radius}`,
-      `Q ${columnLeft} ${bottom} ${columnLeft} ${bottom - radius}`,
-      `V ${center + neck}`,
+    if (waterCurrentY == null) waterCurrentY = waterTargetY;
+    if (waterCurrentWidth == null) waterCurrentWidth = waterTargetWidth;
 
-      // Lower neck stretches outward like liquid pulled from the main column.
-      `C ${columnLeft - 1} ${center + 32}, ${columnLeft - 7} ${center + 27}, ${shoulderX} ${center + 20}`,
-      `C ${columnLeft - 31} ${center + 12}, ${capJoinX + 22} ${center + lobeRadius}, ${capJoinX} ${center + lobeRadius}`,
+    waterCurrentY += (waterTargetY - waterCurrentY) * 0.18;
+    waterCurrentWidth += (waterTargetWidth - waterCurrentWidth) * 0.16;
 
-      // Rounded left cap. Both cubic tangents are vertical at the leftmost point,
-      // so the lobe stays soft instead of forming a leaf/arrow tip.
-      `C ${lobeLeft + 10} ${center + lobeRadius}, ${lobeLeft} ${center + 12}, ${lobeLeft} ${center}`,
-      `C ${lobeLeft} ${center - 12}, ${lobeLeft + 10} ${center - lobeRadius}, ${capJoinX} ${center - lobeRadius}`,
-
-      // Upper shoulder flows back into the same vertical liquid body.
-      `C ${capJoinX + 22} ${center - lobeRadius}, ${columnLeft - 31} ${center - 12}, ${shoulderX} ${center - 20}`,
-      `C ${columnLeft - 7} ${center - 27}, ${columnLeft - 1} ${center - 32}, ${columnLeft} ${center - neck}`,
-      `V ${radius}`,
-      `Q ${columnLeft} ${top} ${columnLeft + radius} ${top}`,
-      'Z'
-    ].join(' ');
-  }
-
-  function renderOrganicRail() {
-    organicFrame = null;
-    if (!organicPath || !organicSvg || organicTargetY == null || organicTargetWidth == null) return;
-
-    if (organicCurrentY == null) organicCurrentY = organicTargetY;
-    if (organicCurrentWidth == null) organicCurrentWidth = organicTargetWidth;
-
-    organicCurrentY += (organicTargetY - organicCurrentY) * 0.2;
-    organicCurrentWidth += (organicTargetWidth - organicCurrentWidth) * 0.18;
-
-    const height = Math.max(1, rail?.offsetHeight || railNav?.offsetHeight || 220);
-    organicSvg.setAttribute('viewBox', `0 0 180 ${height}`);
-    organicPath.setAttribute(
-      'd',
-      buildOrganicRailPath(height, organicCurrentY, organicCurrentWidth)
+    const height = Math.max(
+      1,
+      rail?.offsetHeight ||
+      railNav?.offsetHeight ||
+      220
     );
 
+    liquidSvg.setAttribute('viewBox', `0 0 190 ${height}`);
+    waterColumn.setAttribute('height', String(height));
+
+    const compact = window.matchMedia('(max-width: 900px)').matches;
+    const rightEdge = compact ? 158 : 160;
+    const rx = Math.max(38, waterCurrentWidth / 2);
+    const centerX = rightEdge - rx;
+    const centerY = clamp(waterCurrentY, 24, height - 24);
+    const lobeRy = compact ? 20 : 23;
+
+    waterLobe.setAttribute('cx', centerX.toFixed(2));
+    waterLobe.setAttribute('cy', centerY.toFixed(2));
+    waterLobe.setAttribute('rx', rx.toFixed(2));
+    waterLobe.setAttribute('ry', String(lobeRy));
+
+    // The bridge and two neck metaballs overlap both the active lobe and
+    // the vertical body. The shared goo filter fuses them into one liquid mass.
+    waterBridge.setAttribute('cx', compact ? '138' : '140');
+    waterBridge.setAttribute('cy', centerY.toFixed(2));
+    waterBridge.setAttribute('r', compact ? '20' : '22');
+
+    waterNeckTop.setAttribute('cx', compact ? '145' : '147');
+    waterNeckTop.setAttribute('cy', (centerY - 12).toFixed(2));
+    waterNeckTop.setAttribute('r', compact ? '16' : '18');
+
+    waterNeckBottom.setAttribute('cx', compact ? '145' : '147');
+    waterNeckBottom.setAttribute('cy', (centerY + 12).toFixed(2));
+    waterNeckBottom.setAttribute('r', compact ? '16' : '18');
+
+    if (waterHighlight) {
+      waterHighlight.setAttribute(
+        'cx',
+        (centerX - rx * 0.18).toFixed(2)
+      );
+      waterHighlight.setAttribute(
+        'cy',
+        (centerY - lobeRy * 0.42).toFixed(2)
+      );
+      waterHighlight.setAttribute(
+        'rx',
+        Math.max(14, rx * 0.38).toFixed(2)
+      );
+      waterHighlight.setAttribute(
+        'ry',
+        compact ? '4.5' : '5.5'
+      );
+    }
+
     const moving =
-      Math.abs(organicTargetY - organicCurrentY) > 0.35 ||
-      Math.abs(organicTargetWidth - organicCurrentWidth) > 0.35;
+      Math.abs(waterTargetY - waterCurrentY) > 0.25 ||
+      Math.abs(waterTargetWidth - waterCurrentWidth) > 0.25;
 
     if (moving) {
-      organicFrame = requestAnimationFrame(renderOrganicRail);
+      waterFrame = requestAnimationFrame(renderLiquidRail);
     } else {
-      organicCurrentY = organicTargetY;
-      organicCurrentWidth = organicTargetWidth;
+      waterCurrentY = waterTargetY;
+      waterCurrentWidth = waterTargetWidth;
     }
   }
 
-  function syncOrganicRail(activeLink) {
-    if (!organicPath || !organicSvg || !railNav || !activeLink) return;
+  function syncLiquidRail(activeLink) {
+    if (!liquidSvg || !railNav || !activeLink) return;
 
     const label = activeLink.querySelector('span');
     const labelWidth = label?.scrollWidth || 52;
     const compact = window.matchMedia('(max-width: 900px)').matches;
 
-    organicTargetWidth = clamp(
+    waterTargetWidth = clamp(
       labelWidth + (compact ? 64 : 74),
-      compact ? 100 : 116,
-      compact ? 138 : 164
+      compact ? 94 : 108,
+      compact ? 132 : 150
     );
 
-    organicTargetY =
+    waterTargetY =
       railNav.offsetTop +
       activeLink.offsetTop +
       activeLink.offsetHeight / 2;
 
-    if (!organicFrame) {
-      organicFrame = requestAnimationFrame(renderOrganicRail);
+    if (!waterFrame) {
+      waterFrame = requestAnimationFrame(renderLiquidRail);
     }
   }
 
@@ -218,7 +241,7 @@
       }
     });
 
-    syncOrganicRail(activeLink);
+    syncLiquidRail(activeLink);
   }
 
   let ticking = false;
