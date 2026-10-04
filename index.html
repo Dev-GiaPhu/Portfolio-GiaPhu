@@ -6,95 +6,81 @@
     <meta name="theme-color" content="#07090d">
     <meta name="description" content="Portfolio Nguyễn Gia Phú — Game Developer, Unity Developer, C#, gameplay và UI.">
     <title>Nguyễn Gia Phú — Portfolio Game Developer</title>
-    <link rel="stylesheet" href="style.css?v=20261004-liquid-real-18">
+    <link rel="stylesheet" href="style.css?v=20261004-liquidglass-19">
   </head>
   <body>
     <aside class="side-rail" data-scroll-rail aria-label="Điều hướng trang">
       <svg
-        class="rail-liquid-svg"
-        data-rail-liquid-svg
+        class="rail-glass-svg"
+        data-rail-glass-svg
         aria-hidden="true"
         focusable="false"
         preserveAspectRatio="none"
       >
         <defs>
-          <filter id="rail-water-goo" x="-120%" y="-80%" width="360%" height="260%" color-interpolation-filters="sRGB">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="7.5" result="blur"/>
-            <feColorMatrix
-              in="blur"
-              mode="matrix"
-              values="
-                1 0 0 0 0
-                0 1 0 0 0
-                0 0 1 0 0
-                0 0 0 20 -8"
-              result="goo"
+          <linearGradient id="railGlassFill" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#d8fff4" stop-opacity=".18"/>
+            <stop offset="42%" stop-color="#9ff7db" stop-opacity=".11"/>
+            <stop offset="100%" stop-color="#6ed7ba" stop-opacity=".08"/>
+          </linearGradient>
+
+          <linearGradient id="railGlassStroke" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity=".34"/>
+            <stop offset="52%" stop-color="#bfffea" stop-opacity=".12"/>
+            <stop offset="100%" stop-color="#7de4c7" stop-opacity=".04"/>
+          </linearGradient>
+
+          <filter id="railGlassSurface" x="-40%" y="-30%" width="180%" height="160%" color-interpolation-filters="sRGB">
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency=".012 .05"
+              numOctaves="2"
+              seed="8"
+              result="noise"
             />
-            <feBlend in="SourceGraphic" in2="goo" mode="normal"/>
+            <feDisplacementMap
+              in="SourceGraphic"
+              in2="noise"
+              scale="1.15"
+              xChannelSelector="R"
+              yChannelSelector="G"
+              result="distorted"
+            />
+            <feGaussianBlur in="SourceAlpha" stdDeviation=".7" result="alphaBlur"/>
+            <feSpecularLighting
+              in="alphaBlur"
+              surfaceScale="2.2"
+              specularConstant=".23"
+              specularExponent="20"
+              lighting-color="#ffffff"
+              result="specular"
+            >
+              <feDistantLight azimuth="225" elevation="58"/>
+            </feSpecularLighting>
+            <feComposite in="specular" in2="SourceAlpha" operator="in" result="specularIn"/>
+            <feMerge>
+              <feMergeNode in="distorted"/>
+              <feMergeNode in="specularIn"/>
+            </feMerge>
           </filter>
-
-          <linearGradient id="railWaterFill" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#baffea"/>
-            <stop offset="48%" stop-color="#76f4cb"/>
-            <stop offset="100%" stop-color="#58cfae"/>
-          </linearGradient>
-
-          <linearGradient id="railWaterHighlight" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#ffffff" stop-opacity=".5"/>
-            <stop offset="100%" stop-color="#d7fff3" stop-opacity="0"/>
-          </linearGradient>
         </defs>
 
-        <g class="rail-water-mass" filter="url(#rail-water-goo)">
-          <rect
-            data-rail-water-column
-            x="142"
-            y="0"
-            width="42"
-            height="220"
-            rx="21"
-            fill="url(#railWaterFill)"
-          />
-          <ellipse
-            data-rail-water-lobe
-            cx="103"
-            cy="28"
-            rx="51"
-            ry="23"
-            fill="url(#railWaterFill)"
-          />
-          <circle
-            data-rail-water-bridge
-            cx="137"
-            cy="28"
-            r="22"
-            fill="url(#railWaterFill)"
-          />
-          <circle
-            data-rail-water-neck-top
-            cx="145"
-            cy="16"
-            r="17"
-            fill="url(#railWaterFill)"
-          />
-          <circle
-            data-rail-water-neck-bottom
-            cx="145"
-            cy="40"
-            r="17"
-            fill="url(#railWaterFill)"
-          />
-        </g>
+        <path
+          data-rail-glass-shape
+          fill="url(#railGlassFill)"
+          stroke="url(#railGlassStroke)"
+          stroke-width="1.2"
+          filter="url(#railGlassSurface)"
+        ></path>
 
-        <ellipse
-          class="rail-water-highlight"
-          data-rail-water-highlight
-          cx="86"
-          cy="20"
-          rx="25"
-          ry="6"
-          fill="url(#railWaterHighlight)"
-        />
+        <path
+          class="rail-glass-highlight"
+          data-rail-glass-highlight
+          fill="none"
+          stroke="rgba(255,255,255,.22)"
+          stroke-width="1"
+          stroke-linecap="round"
+        ></path>
       </svg>
 
       <nav class="rail-nav" aria-label="Menu chính">
@@ -571,7 +557,7 @@
     <script src="site-info.js?v=20261004-onepage-1"></script>
     <script src="site-info-bind.js?v=20261004-onepage-1"></script>
     <script src="dark-ui.js?v=20261004-onepage-1"></script>
-    <script src="one-page.js?v=20261004-liquid-real-18"></script>
+    <script src="one-page.js?v=20261004-liquidglass-19"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js?v=20260930-0122"></script>
     <script src="likes.js?v=20261004-likeoauth-1"></script>
