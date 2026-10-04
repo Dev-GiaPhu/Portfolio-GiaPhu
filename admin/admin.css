@@ -14,6 +14,7 @@ html,body{width:100%;height:100%;margin:0;background:var(--bg);color:var(--ink);
 button,input,textarea{font:inherit}
 button{cursor:pointer}
 .admin-shell{width:100%;height:100%;display:grid;grid-template-rows:58px 1fr}
+.admin-shell[hidden]{display:none!important}
 .admin-toolbar{z-index:20;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:8px 14px;border-bottom:1px solid var(--line);background:#07090df2;backdrop-filter:blur(18px)}
 .admin-brand{display:flex;align-items:center;gap:10px}
 .admin-mark{display:grid;place-items:center;width:34px;height:34px;border:1px solid #8ff5d055;color:var(--mint);font:700 11px 'Space Mono',monospace}
