@@ -10,6 +10,7 @@
   const currentSessionInfo = document.getElementById('currentSessionInfo');
   const loginMessage = document.getElementById('loginMessage');
   const frame = document.getElementById('previewFrame');
+
   const saveButton = document.getElementById('saveBtn');
   const undoButton = document.getElementById('undoBtn');
   const redoButton = document.getElementById('redoBtn');
@@ -19,11 +20,35 @@
   const inspector = document.getElementById('inspector');
   const selectedLabel = document.getElementById('selectedLabel');
   const closeInspector = document.getElementById('closeInspector');
+
   const textTools = document.getElementById('textTools');
   const textValue = document.getElementById('textValue');
   const imageTools = document.getElementById('imageTools');
   const imageUrl = document.getElementById('imageUrl');
   const imageFile = document.getElementById('imageFile');
+
+  const layoutTools = document.getElementById('layoutTools');
+  const boxWidth = document.getElementById('boxWidth');
+  const boxMinHeight = document.getElementById('boxMinHeight');
+  const boxPadding = document.getElementById('boxPadding');
+  const boxRadius = document.getElementById('boxRadius');
+  const textSize = document.getElementById('textSize');
+  const textColor = document.getElementById('textColor');
+  const boxColor = document.getElementById('boxColor');
+  const borderColor = document.getElementById('borderColor');
+
+  const tagTools = document.getElementById('tagTools');
+  const tagList = document.getElementById('tagList');
+  const tagInput = document.getElementById('tagInput');
+  const addTagBtn = document.getElementById('addTagBtn');
+
+  const themeBg = document.getElementById('themeBg');
+  const themeMint = document.getElementById('themeMint');
+  const themeBlue = document.getElementById('themeBlue');
+
+  const structureTools = document.getElementById('structureTools');
+  const duplicateBoxBtn = document.getElementById('duplicateBoxBtn');
+  const deleteBoxBtn = document.getElementById('deleteBoxBtn');
   const resetSelected = document.getElementById('resetSelected');
 
   if (!window.supabase) {
@@ -36,9 +61,25 @@
     window.PORTFOLIO_SUPABASE_ANON_KEY
   );
 
+  const TEXT_SELECTOR = [
+    'main h1','main h2','main h3','main h4','main h5','main h6',
+    'main p','main span','main strong','main small',
+    '.rail-nav span','.project-terminal-link','.btn',
+    '.contact-line span','.contact-line strong',
+    'footer span'
+  ].join(',');
+
+  const BOX_SELECTOR = [
+    '.panel','.skill-card','.terminal-project-card','.contact-line',
+    '.skill-story','.one-project-game','.hero-terminal-card',
+    '.section-head','.contact-compact-head'
+  ].join(',');
+
   let sessionUser = null;
   let previewDocument = null;
   let selected = null;
+  let listenersBound = false;
+
   const focusBefore = new WeakMap();
   const dirty = new Map();
   const undoStack = [];
@@ -51,21 +92,19 @@
 
   function authIdentity(user) {
     const metadata = user?.user_metadata || {};
-    const email = String(user?.email || metadata.email || '').toLowerCase();
-    const githubLogin = String(
-      metadata.user_name ||
-      metadata.preferred_username ||
-      metadata.login ||
-      ''
-    ).toLowerCase();
-
-    return { email, githubLogin };
+    return {
+      email: String(user?.email || metadata.email || '').toLowerCase(),
+      githubLogin: String(
+        metadata.user_name ||
+        metadata.preferred_username ||
+        metadata.login ||
+        ''
+      ).toLowerCase()
+    };
   }
 
   function isAllowedAdmin(user) {
-    if (!user) return false;
     const identity = authIdentity(user);
-
     return (
       identity.email === ADMIN_EMAIL ||
       identity.githubLogin === ADMIN_GITHUB_LOGIN
@@ -99,16 +138,12 @@
         ? 'Đang chuyển sang Google...'
         : 'Đang chuyển sang GitHub...';
 
-    const redirectTo =
-      window.location.origin +
-      window.location.pathname;
-
-    const options = { redirectTo };
+    const options = {
+      redirectTo: window.location.origin + window.location.pathname
+    };
 
     if (provider === 'google') {
-      options.queryParams = {
-        prompt: 'select_account'
-      };
+      options.queryParams = { prompt: 'select_account' };
     }
 
     const { error } = await client.auth.signInWithOAuth({
@@ -135,13 +170,11 @@
     return property + ':' + selector;
   }
 
-  function selectorFor(element) {
-    if (element.dataset.siteText) {
-      return '[data-site-text="' + escapeCss(element.dataset.siteText) + '"]';
-    }
-
-    if (element.id) {
-      return '#' + escapeCss(element.id);
+  function structuralSelector(element) {
+    if (!element) return 'body';
+    if (element.id) return '#' + escapeCss(element.id);
+    if (element.dataset.cmsNode) {
+      return '[data-cms-node="' + escapeCss(element.dataset.cmsNode) + '"]';
     }
 
     const root = element.closest('[id]');
@@ -152,6 +185,11 @@
     let node = element;
 
     while (node && node !== root && node !== previewDocument.body) {
+      if (node.dataset.cmsNode) {
+        parts.unshift('[data-cms-node="' + escapeCss(node.dataset.cmsNode) + '"]');
+        break;
+      }
+
       const tag = node.tagName.toLowerCase();
       const siblings = node.parentElement
         ? [...node.parentElement.children].filter((item) => item.tagName === node.tagName)
@@ -164,19 +202,29 @@
     return rootSelector + (parts.length ? ' > ' + parts.join(' > ') : '');
   }
 
+  function contentSelector(element) {
+    if (element?.dataset.siteText) {
+      return '[data-site-text="' + escapeCss(element.dataset.siteText) + '"]';
+    }
+    return structuralSelector(element);
+  }
+
   function propertyFor(element) {
-    return element.tagName === 'IMG' ? 'src' : 'innerHTML';
+    return element?.tagName === 'IMG' ? 'src' : 'innerHTML';
   }
 
   function valueFor(element, property = propertyFor(element)) {
+    if (!element) return '';
     if (property === 'src') return element.getAttribute('src') || '';
     if (property === 'href') return element.getAttribute('href') || '';
     if (property === 'textContent') return element.textContent || '';
+    if (property === 'style') return element.getAttribute('style') || '';
     return element.innerHTML;
   }
 
   function applyValue(selector, property, value) {
     if (!previewDocument) return;
+
     let elements = [];
     try {
       elements = [...previewDocument.querySelectorAll(selector)];
@@ -188,12 +236,23 @@
       if (property === 'src') element.setAttribute('src', value);
       else if (property === 'href') element.setAttribute('href', value);
       else if (property === 'textContent') element.textContent = value;
+      else if (property === 'style') element.setAttribute('style', value);
       else element.innerHTML = value;
     });
 
-    if (selected && selectorFor(selected) === selector) {
-      if (property === 'src') imageUrl.value = value;
-      else textValue.value = value;
+    if (property === 'innerHTML') decoratePreviewContent();
+
+    if (selected) {
+      const selectedSelector =
+        property === 'style'
+          ? structuralSelector(selected)
+          : contentSelector(selected);
+
+      if (selectedSelector === selector) {
+        if (property === 'src') imageUrl.value = value;
+        else if (property === 'innerHTML') textValue.value = value;
+        populateLayoutControls(selected);
+      }
     }
   }
 
@@ -219,7 +278,7 @@
     const before = focusBefore.get(element);
     focusBefore.delete(element);
     const property = propertyFor(element);
-    const selector = selectorFor(element);
+    const selector = contentSelector(element);
     const after = valueFor(element, property);
     pushChange(selector, property, before, after);
   }
@@ -246,26 +305,180 @@
     markDirty(change.selector, change.property, change.after);
   }
 
+  function rgbToHex(value, fallback = '#000000') {
+    if (!value) return fallback;
+    if (value.startsWith('#')) return value.slice(0, 7);
+
+    const numbers = value.match(/[\d.]+/g);
+    if (!numbers || numbers.length < 3) return fallback;
+
+    const hex = numbers.slice(0, 3)
+      .map((item) => Math.max(0, Math.min(255, Math.round(Number(item)))))
+      .map((item) => item.toString(16).padStart(2, '0'))
+      .join('');
+
+    return '#' + hex;
+  }
+
+  function populateLayoutControls(element) {
+    if (!element || !previewDocument) return;
+    const computed = previewDocument.defaultView.getComputedStyle(element);
+
+    boxWidth.value = element.style.width || '';
+    boxMinHeight.value = element.style.minHeight || '';
+    boxPadding.value = element.style.padding || '';
+    boxRadius.value = element.style.borderRadius || '';
+    textSize.value = element.style.fontSize || '';
+
+    textColor.value = rgbToHex(computed.color, '#f3f7f4');
+    boxColor.value = rgbToHex(computed.backgroundColor, '#0f141d');
+    borderColor.value = rgbToHex(computed.borderTopColor, '#20252d');
+  }
+
+  function renderTags(card) {
+    const stack = card?.querySelector('.stack-list');
+    if (!stack) {
+      tagTools.hidden = true;
+      tagList.innerHTML = '';
+      return;
+    }
+
+    tagTools.hidden = false;
+    tagList.innerHTML = '';
+
+    [...stack.querySelectorAll('.chip')].forEach((chip) => {
+      const item = document.createElement('span');
+      item.className = 'tag-editor-item';
+
+      const label = document.createElement('span');
+      label.textContent = chip.textContent.trim();
+
+      const remove = document.createElement('button');
+      remove.type = 'button';
+      remove.textContent = '×';
+      remove.title = 'Xóa tag';
+      remove.addEventListener('click', () => {
+        const selector = structuralSelector(stack);
+        const before = stack.innerHTML;
+        chip.remove();
+        const after = stack.innerHTML;
+        pushChange(selector, 'innerHTML', before, after);
+        renderTags(card);
+      });
+
+      item.append(label, remove);
+      tagList.appendChild(item);
+    });
+  }
+
   function selectElement(element) {
+    if (!element || element.closest?.('.admin-project-image-handle')) return;
+
     selected = element;
     inspector.hidden = false;
 
     const property = propertyFor(element);
-    const selector = selectorFor(element);
+    const selector = structuralSelector(element);
     selectedLabel.textContent = element.tagName.toLowerCase() + ' · ' + selector;
 
     if (property === 'src') {
       textTools.hidden = true;
       imageTools.hidden = false;
-      imageUrl.value = valueFor(element, property);
-    } else {
+      imageUrl.value = valueFor(element, 'src');
+    } else if (element.matches(TEXT_SELECTOR)) {
       imageTools.hidden = true;
       textTools.hidden = false;
-      textValue.value = valueFor(element, property);
+      textValue.value = valueFor(element, 'innerHTML');
+    } else {
+      textTools.hidden = true;
+      imageTools.hidden = true;
     }
+
+    layoutTools.hidden = false;
+    populateLayoutControls(element);
+
+    const box = element.matches(BOX_SELECTOR) ? element : element.closest(BOX_SELECTOR);
+    structureTools.hidden = !box;
+    renderTags(element.closest('.terminal-project-card'));
+  }
+
+  function sanitizeClone(root) {
+    const clone = root.cloneNode(true);
+
+    clone.querySelectorAll('.admin-project-image-handle').forEach((node) => node.remove());
+    clone.querySelectorAll('[data-admin-editable],[data-admin-box]').forEach((node) => {
+      node.removeAttribute('data-admin-editable');
+      node.removeAttribute('data-admin-box');
+      node.removeAttribute('contenteditable');
+      node.removeAttribute('spellcheck');
+    });
+
+    clone.removeAttribute('data-admin-editable');
+    clone.removeAttribute('data-admin-box');
+    clone.removeAttribute('contenteditable');
+    clone.removeAttribute('spellcheck');
+
+    if (clone.id) clone.removeAttribute('id');
+    clone.querySelectorAll('[id]').forEach((node) => node.removeAttribute('id'));
+
+    return clone;
+  }
+
+  function cleanContainerHtml(container) {
+    const clone = container.cloneNode(true);
+    clone.querySelectorAll('.admin-project-image-handle').forEach((node) => node.remove());
+    clone.querySelectorAll('[data-admin-editable],[data-admin-box]').forEach((node) => {
+      node.removeAttribute('data-admin-editable');
+      node.removeAttribute('data-admin-box');
+      node.removeAttribute('contenteditable');
+      node.removeAttribute('spellcheck');
+    });
+    return clone.innerHTML;
+  }
+
+  function addProjectImageHandles() {
+    previewDocument.querySelectorAll('[data-project-card-image]').forEach((image, index) => {
+      const card = image.closest('.terminal-project-card');
+      if (!card || card.querySelector('.admin-project-image-handle')) return;
+
+      const handle = previewDocument.createElement('button');
+      handle.type = 'button';
+      handle.className = 'admin-project-image-handle';
+      handle.textContent = 'ẢNH NỀN ' + String(index + 1).padStart(2, '0');
+
+      handle.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        selectElement(image);
+      });
+
+      card.appendChild(handle);
+    });
+  }
+
+  function decoratePreviewContent() {
+    if (!previewDocument) return;
+
+    previewDocument.querySelectorAll(TEXT_SELECTOR).forEach((element) => {
+      element.dataset.adminEditable = 'true';
+      element.contentEditable = 'true';
+      element.spellcheck = false;
+    });
+
+    previewDocument.querySelectorAll('main img').forEach((element) => {
+      element.dataset.adminEditable = 'true';
+    });
+
+    previewDocument.querySelectorAll(BOX_SELECTOR).forEach((element) => {
+      element.dataset.adminBox = 'true';
+    });
+
+    addProjectImageHandles();
   }
 
   function injectEditorStyles(doc) {
+    if (doc.querySelector('[data-admin-style]')) return;
+
     const style = doc.createElement('style');
     style.dataset.adminStyle = 'true';
     style.textContent = `
@@ -275,18 +488,21 @@
       }
       [data-admin-editable]:hover{
         outline:1px dashed #8ff5d088!important;
-        outline-offset:4px!important;
-        background:#8ff5d008!important;
+        outline-offset:3px!important;
       }
       [data-admin-editable]:focus{
         outline:2px solid #8ff5d0!important;
-        outline-offset:4px!important;
-        background:#8ff5d00d!important;
+        outline-offset:3px!important;
+      }
+      [data-admin-box]{
+        cursor:default!important;
+      }
+      [data-admin-box]:hover{
+        box-shadow:inset 0 0 0 1px #7ca7ff35!important;
       }
       img[data-admin-editable]{
         cursor:pointer!important;
       }
-
       .admin-project-image-handle{
         position:absolute!important;
         z-index:50!important;
@@ -294,7 +510,6 @@
         bottom:12px!important;
         display:flex!important;
         align-items:center!important;
-        gap:6px!important;
         width:auto!important;
         height:30px!important;
         padding:0 9px!important;
@@ -308,69 +523,31 @@
         opacity:1!important;
         transform:none!important;
       }
-
-      .admin-project-image-handle:hover{
-        background:#0b1a16!important;
-        border-color:#8ff5d099!important;
-      }
     `;
+
     doc.head.appendChild(style);
   }
 
-  function preparePreview() {
-    previewDocument = frame.contentDocument;
-    if (!previewDocument) return;
-
-    injectEditorStyles(previewDocument);
-
-    const editableSelector = [
-      'main h1',
-      'main h2',
-      'main h3',
-      'main p',
-      'main .console-label',
-      'main .chip',
-      'main .skill strong',
-      'main .skill span',
-      'footer span',
-      'main img'
-    ].join(',');
-
-    previewDocument.querySelectorAll(editableSelector).forEach((element) => {
-      element.dataset.adminEditable = 'true';
-
-      if (element.tagName !== 'IMG') {
-        element.contentEditable = 'true';
-        element.spellcheck = false;
-      }
-    });
-
-    previewDocument.querySelectorAll('[data-project-card-image]').forEach((image, index) => {
-      const card = image.closest('.terminal-project-card');
-      if (!card || card.querySelector('.admin-project-image-handle')) return;
-
-      const handle = previewDocument.createElement('button');
-      handle.type = 'button';
-      handle.className = 'admin-project-image-handle';
-      handle.textContent = 'ẢNH NỀN ' + String(index + 1).padStart(2, '0');
-      handle.addEventListener('click', (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        selectElement(image);
-      });
-
-      card.appendChild(handle);
-    });
+  function bindPreviewEvents() {
+    if (listenersBound) return;
+    listenersBound = true;
 
     previewDocument.addEventListener('click', (event) => {
-      const editable = event.target.closest?.('[data-admin-editable]');
+      if (event.target.closest?.('.admin-project-image-handle')) return;
 
+      const editable = event.target.closest?.('[data-admin-editable]');
       if (editable) {
         selectElement(editable);
-        if (editable.tagName === 'IMG') {
-          event.preventDefault();
-          event.stopPropagation();
-        }
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      }
+
+      const box = event.target.closest?.('[data-admin-box]');
+      if (box) {
+        selectElement(box);
+        event.preventDefault();
+        event.stopPropagation();
         return;
       }
 
@@ -391,9 +568,11 @@
     previewDocument.addEventListener('input', (event) => {
       const element = event.target.closest?.('[data-admin-editable]');
       if (!element || element.tagName === 'IMG') return;
-      const selector = selectorFor(element);
+
+      const selector = contentSelector(element);
       const value = valueFor(element);
       markDirty(selector, 'innerHTML', value);
+
       if (selected === element) textValue.value = value;
     });
 
@@ -404,6 +583,46 @@
     });
 
     previewDocument.addEventListener('keydown', handleShortcut, true);
+  }
+
+  function preparePreview() {
+    previewDocument = frame.contentDocument;
+    if (!previewDocument) return;
+
+    listenersBound = false;
+    injectEditorStyles(previewDocument);
+    decoratePreviewContent();
+    bindPreviewEvents();
+
+    const rootStyle = previewDocument.documentElement.style;
+    themeBg.value = rootStyle.getPropertyValue('--bg').trim() || '#07090d';
+    themeMint.value = rootStyle.getPropertyValue('--mint').trim() || '#8ff5d0';
+    themeBlue.value = rootStyle.getPropertyValue('--blue').trim() || '#7ca7ff';
+  }
+
+  function applyStyleProperty(property, value) {
+    if (!selected) return;
+
+    const selector = structuralSelector(selected);
+    const before = valueFor(selected, 'style');
+
+    if (!value) selected.style.removeProperty(property);
+    else selected.style.setProperty(property, value);
+
+    const after = valueFor(selected, 'style');
+    pushChange(selector, 'style', before, after);
+    populateLayoutControls(selected);
+  }
+
+  function applyThemeVariable(variable, value) {
+    if (!previewDocument) return;
+
+    const root = previewDocument.documentElement;
+    const before = valueFor(root, 'style');
+    root.style.setProperty(variable, value);
+    const after = valueFor(root, 'style');
+
+    pushChange(':root', 'style', before, after);
   }
 
   async function saveAll() {
@@ -431,7 +650,7 @@
     if (error) {
       setStatus('LỖI LƯU');
       alert(
-        'Không lưu được. Nếu đây là lần đầu dùng admin, hãy chạy admin/supabase-cms.sql trong Supabase SQL Editor.\n\n' +
+        'Không lưu được. Hãy chạy lại admin/supabase-cms.sql nếu quyền RLS chưa được cập nhật.\n\n' +
         error.message
       );
       return;
@@ -444,7 +663,7 @@
   async function uploadImage(file) {
     if (!selected || selected.tagName !== 'IMG' || !file) return;
 
-    const selector = selectorFor(selected);
+    const selector = structuralSelector(selected);
     const before = valueFor(selected, 'src');
     const safeName = file.name.replace(/[^a-z0-9._-]+/gi, '-').toLowerCase();
     const path = Date.now() + '-' + safeName;
@@ -460,10 +679,7 @@
 
     if (error) {
       setStatus('LỖI UPLOAD');
-      alert(
-        'Không upload được ảnh. Hãy kiểm tra admin/supabase-cms.sql đã được chạy chưa.\n\n' +
-        error.message
-      );
+      alert('Không upload được ảnh.\n\n' + error.message);
       return;
     }
 
@@ -478,24 +694,24 @@
   async function resetCurrent() {
     if (!selected) return;
 
-    const selector = selectorFor(selected);
-    const property = propertyFor(selected);
-    const key = recordKey(selector, property);
+    const contentKey = recordKey(contentSelector(selected), propertyFor(selected));
+    const styleKey = recordKey(structuralSelector(selected), 'style');
 
     const { error } = await client
       .from('portfolio_content')
       .delete()
-      .eq('key', key);
+      .in('key', [contentKey, styleKey]);
 
     if (error) {
       alert(error.message);
       return;
     }
 
-    dirty.delete(key);
+    dirty.delete(contentKey);
+    dirty.delete(styleKey);
     setStatus('ĐÃ KHÔI PHỤC · ĐANG TẢI LẠI', 'is-saved');
-    frame.contentWindow.location.reload();
     inspector.hidden = true;
+    frame.contentWindow.location.reload();
   }
 
   function handleShortcut(event) {
@@ -529,14 +745,14 @@
 
   textValue.addEventListener('input', () => {
     if (!selected || selected.tagName === 'IMG') return;
-    const selector = selectorFor(selected);
+    const selector = contentSelector(selected);
     applyValue(selector, 'innerHTML', textValue.value);
     markDirty(selector, 'innerHTML', textValue.value);
   });
 
   textValue.addEventListener('change', () => {
     if (!selected || selected.tagName === 'IMG') return;
-    const selector = selectorFor(selected);
+    const selector = contentSelector(selected);
     const before = textValue.dataset.before ?? '';
     const after = textValue.value;
     pushChange(selector, 'innerHTML', before, after);
@@ -550,7 +766,7 @@
 
   imageUrl.addEventListener('change', () => {
     if (!selected || selected.tagName !== 'IMG') return;
-    const selector = selectorFor(selected);
+    const selector = structuralSelector(selected);
     const before = imageUrl.dataset.before ?? valueFor(selected, 'src');
     const after = imageUrl.value.trim();
     applyValue(selector, 'src', after);
@@ -564,10 +780,111 @@
     imageFile.value = '';
   });
 
+  [
+    [boxWidth, 'width'],
+    [boxMinHeight, 'min-height'],
+    [boxPadding, 'padding'],
+    [boxRadius, 'border-radius'],
+    [textSize, 'font-size']
+  ].forEach(([input, property]) => {
+    input.addEventListener('change', () => {
+      applyStyleProperty(property, input.value.trim());
+    });
+  });
+
+  textColor.addEventListener('change', () => {
+    applyStyleProperty('color', textColor.value);
+  });
+
+  boxColor.addEventListener('change', () => {
+    applyStyleProperty('background-color', boxColor.value);
+  });
+
+  borderColor.addEventListener('change', () => {
+    applyStyleProperty('border-color', borderColor.value);
+  });
+
+  themeBg.addEventListener('change', () => applyThemeVariable('--bg', themeBg.value));
+  themeMint.addEventListener('change', () => applyThemeVariable('--mint', themeMint.value));
+  themeBlue.addEventListener('change', () => applyThemeVariable('--blue', themeBlue.value));
+
+  addTagBtn.addEventListener('click', () => {
+    if (!selected) return;
+
+    const card = selected.closest('.terminal-project-card');
+    const stack = card?.querySelector('.stack-list');
+    const value = tagInput.value.trim().toUpperCase();
+
+    if (!stack || !value) return;
+
+    const selector = structuralSelector(stack);
+    const before = stack.innerHTML;
+
+    const chip = previewDocument.createElement('span');
+    chip.className = 'chip';
+    chip.textContent = value;
+    stack.appendChild(chip);
+
+    const after = stack.innerHTML;
+    pushChange(selector, 'innerHTML', before, after);
+
+    tagInput.value = '';
+    decoratePreviewContent();
+    renderTags(card);
+  });
+
+  duplicateBoxBtn.addEventListener('click', () => {
+    if (!selected) return;
+
+    const box = selected.matches(BOX_SELECTOR)
+      ? selected
+      : selected.closest(BOX_SELECTOR);
+
+    const parent = box?.parentElement;
+    if (!box || !parent) return;
+
+    const selector = structuralSelector(parent);
+    const before = cleanContainerHtml(parent);
+    const clone = sanitizeClone(box);
+
+    clone.dataset.cmsNode = 'clone-' + Date.now();
+    parent.insertBefore(clone, box.nextSibling);
+
+    const after = cleanContainerHtml(parent);
+    pushChange(selector, 'innerHTML', before, after);
+
+    decoratePreviewContent();
+    selectElement(clone);
+  });
+
+  deleteBoxBtn.addEventListener('click', () => {
+    if (!selected) return;
+
+    const box = selected.matches(BOX_SELECTOR)
+      ? selected
+      : selected.closest(BOX_SELECTOR);
+
+    const parent = box?.parentElement;
+    if (!box || !parent) return;
+
+    const selector = structuralSelector(parent);
+    const before = cleanContainerHtml(parent);
+
+    box.remove();
+
+    const after = cleanContainerHtml(parent);
+    pushChange(selector, 'innerHTML', before, after);
+
+    selected = null;
+    inspector.hidden = true;
+    decoratePreviewContent();
+  });
+
   saveButton.addEventListener('click', saveAll);
   undoButton.addEventListener('click', undo);
   redoButton.addEventListener('click', redo);
   resetSelected.addEventListener('click', resetCurrent);
+
   closeInspector.addEventListener('click', () => {
     inspector.hidden = true;
     selected = null;
@@ -589,6 +906,7 @@
     adminShell.hidden = false;
 
     const previewSrc = frame.dataset.src || '../index.html?admin-preview=1';
+
     if (frame.getAttribute('src') === 'about:blank') {
       frame.setAttribute('src', previewSrc);
     } else {
@@ -603,13 +921,8 @@
     if (message) loginMessage.textContent = message;
   }
 
-  githubLoginBtn.addEventListener('click', () => {
-    startOAuth('github');
-  });
-
-  googleLoginBtn.addEventListener('click', () => {
-    startOAuth('google');
-  });
+  githubLoginBtn.addEventListener('click', () => startOAuth('github'));
+  googleLoginBtn.addEventListener('click', () => startOAuth('google'));
 
   clearSessionBtn.addEventListener('click', async () => {
     loginMessage.textContent = 'Đang đăng xuất phiên hiện tại...';
@@ -645,9 +958,7 @@
     gate.hidden = false;
 
     const params = new URLSearchParams(window.location.search);
-    const oauthError =
-      params.get('error_description') ||
-      params.get('error');
+    const oauthError = params.get('error_description') || params.get('error');
 
     if (oauthError) {
       loginMessage.textContent = decodeURIComponent(oauthError);
