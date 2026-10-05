@@ -255,6 +255,15 @@
   function syncGlassRail(activeLink) {
     if (!glassSvg || !railNav || !activeLink) return;
 
+    if (window.matchMedia('(max-width: 767px)').matches) {
+      if (glassFrame) {
+        cancelAnimationFrame(glassFrame);
+        glassFrame = null;
+      }
+      glassShape?.setAttribute('d', '');
+      return;
+    }
+
     const label = activeLink.querySelector('span');
     const labelWidth = label?.scrollWidth || 52;
     const compact = window.matchMedia('(max-width: 900px)').matches;
@@ -435,11 +444,35 @@
   });
 
   // Game fullscreen controls.
+  // iPhone Safari does not always expose Element.requestFullscreen, so mobile
+  // gets a fixed-viewport fallback that behaves like fullscreen.
+  function setMobileGameExpanded(game, button, expanded) {
+    if (!game || !button) return;
+
+    game.classList.toggle('is-mobile-expanded', expanded);
+    document.documentElement.classList.toggle('game-mobile-open', expanded);
+    document.body.classList.toggle('game-mobile-open', expanded);
+
+    button.classList.toggle('is-active', expanded);
+    button.title = expanded ? 'Thoát toàn màn hình' : 'Toàn màn hình';
+    button.setAttribute(
+      'aria-label',
+      expanded ? 'Thoát chế độ toàn màn hình' : 'Mở trò chơi toàn màn hình'
+    );
+  }
+
   document.querySelectorAll('[data-game-fullscreen]').forEach((button) => {
     button.addEventListener('click', async () => {
       const iframe = document.getElementById(button.dataset.gameFullscreen);
       const game = iframe?.closest('.one-project-game');
       if (!game) return;
+
+      startDeferredGame(iframe);
+
+      if (game.classList.contains('is-mobile-expanded')) {
+        setMobileGameExpanded(game, button, false);
+        return;
+      }
 
       try {
         if (document.fullscreenElement === game) {
@@ -447,13 +480,20 @@
           return;
         }
 
-        if (game.requestFullscreen) {
-          await game.requestFullscreen();
-        } else if (iframe?.requestFullscreen) {
-          await iframe.requestFullscreen();
+        const fullscreenTarget =
+          (document.fullscreenEnabled && game.requestFullscreen && game) ||
+          (document.fullscreenEnabled && iframe?.requestFullscreen && iframe) ||
+          null;
+
+        if (fullscreenTarget) {
+          await fullscreenTarget.requestFullscreen();
+          return;
         }
+
+        setMobileGameExpanded(game, button, true);
       } catch (error) {
-        console.error('Không thể mở toàn màn hình:', error);
+        console.warn('Native fullscreen unavailable, using mobile fallback:', error);
+        setMobileGameExpanded(game, button, true);
       }
     });
   });
@@ -462,7 +502,21 @@
     document.querySelectorAll('[data-game-fullscreen]').forEach((button) => {
       const iframe = document.getElementById(button.dataset.gameFullscreen);
       const game = iframe?.closest('.one-project-game');
-      const active = Boolean(game && document.fullscreenElement === game);
+      const nativeActive = Boolean(
+        game &&
+        (
+          document.fullscreenElement === game ||
+          document.fullscreenElement === iframe
+        )
+      );
+      const fallbackActive = Boolean(game?.classList.contains('is-mobile-expanded'));
+      const active = nativeActive || fallbackActive;
+
+      if (!active) {
+        document.documentElement.classList.remove('game-mobile-open');
+        document.body.classList.remove('game-mobile-open');
+      }
+
       button.classList.toggle('is-active', active);
       button.title = active ? 'Thoát toàn màn hình' : 'Toàn màn hình';
       button.setAttribute(
@@ -517,6 +571,28 @@
     modal.querySelector('.project-gallery-lightbox-close').addEventListener('click', close);
     modal.querySelector('.project-gallery-lightbox-prev').addEventListener('click', () => show(galleryIndex - 1));
     modal.querySelector('.project-gallery-lightbox-next').addEventListener('click', () => show(galleryIndex + 1));
+
+    const galleryStage = modal.querySelector('.project-gallery-lightbox-stage');
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    galleryStage?.addEventListener('touchstart', (event) => {
+      const touch = event.changedTouches?.[0];
+      if (!touch) return;
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+    }, { passive: true });
+
+    galleryStage?.addEventListener('touchend', (event) => {
+      const touch = event.changedTouches?.[0];
+      if (!touch) return;
+
+      const dx = touch.clientX - touchStartX;
+      const dy = touch.clientY - touchStartY;
+
+      if (Math.abs(dx) < 48 || Math.abs(dx) <= Math.abs(dy)) return;
+      show(dx < 0 ? galleryIndex + 1 : galleryIndex - 1);
+    }, { passive: true });
 
     modal.addEventListener('click', (event) => {
       if (event.target === modal) close();
