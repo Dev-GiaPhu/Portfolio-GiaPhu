@@ -335,9 +335,19 @@
     event.preventDefault();
   }, { capture: true });
 
-  // Defer heavy Unity/WebGL startup until the viewer is close to a game.
-  // This keeps the initial portfolio lightweight while preserving both playable demos.
+  // Heavy Unity/WebGL downloads start only when the visitor explicitly
+  // asks to play. Scrolling the portfolio never starts an 80-100 MB game.
   const deferredGameFrames = [...document.querySelectorAll('[data-game-src]')];
+
+  function setGameGateState(iframe, loading) {
+    const gate = iframe
+      ?.closest('.one-project-game')
+      ?.querySelector('[data-game-load-gate]');
+
+    if (!gate) return;
+    gate.classList.toggle('is-loading', Boolean(loading));
+    gate.hidden = Boolean(loading);
+  }
 
   function startDeferredGame(iframe) {
     if (!iframe || iframe.dataset.gameLoaded === 'true') return;
@@ -345,27 +355,18 @@
     if (!source) return;
 
     iframe.dataset.gameLoaded = 'true';
+    setGameGateState(iframe, true);
     iframe.src = source;
   }
 
-  if ('IntersectionObserver' in window) {
-    const gameLoadObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        startDeferredGame(entry.target);
-        observer.unobserve(entry.target);
-      });
-    }, {
-      rootMargin: '360px 0px',
-      threshold: 0.01
+  document.querySelectorAll('[data-game-load]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const iframe = document.getElementById(button.dataset.gameLoad);
+      startDeferredGame(iframe);
     });
+  });
 
-    deferredGameFrames.forEach((iframe) => gameLoadObserver.observe(iframe));
-  } else {
-    deferredGameFrames.forEach(startDeferredGame);
-  }
-
-  // If someone jumps directly to a game anchor, start that game immediately.
+  // Direct links to a game are explicit intent, so start that game immediately.
   window.addEventListener('hashchange', () => {
     const target = document.querySelector(location.hash || '');
     const iframe = target?.querySelector?.('[data-game-src]');
@@ -440,6 +441,7 @@
     const id = slug === 'oops-brake' ? 'game-oops-brake' : 'game-lat-hinh';
     const state = gameStates.get(id);
     if (!state) return;
+    setGameGateState(state.iframe, true);
     sendAudio(state.iframe, state.userMuted || !state.inView);
   });
 
