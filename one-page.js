@@ -322,6 +322,49 @@
     event.preventDefault();
   }, { capture: true });
 
+  // Defer heavy Unity/WebGL startup until the viewer is close to a game.
+  // This keeps the initial portfolio lightweight while preserving both playable demos.
+  const deferredGameFrames = [...document.querySelectorAll('[data-game-src]')];
+
+  function startDeferredGame(iframe) {
+    if (!iframe || iframe.dataset.gameLoaded === 'true') return;
+    const source = iframe.dataset.gameSrc;
+    if (!source) return;
+
+    iframe.dataset.gameLoaded = 'true';
+    iframe.src = source;
+  }
+
+  if ('IntersectionObserver' in window) {
+    const gameLoadObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        startDeferredGame(entry.target);
+        observer.unobserve(entry.target);
+      });
+    }, {
+      rootMargin: '360px 0px',
+      threshold: 0.01
+    });
+
+    deferredGameFrames.forEach((iframe) => gameLoadObserver.observe(iframe));
+  } else {
+    deferredGameFrames.forEach(startDeferredGame);
+  }
+
+  // If someone jumps directly to a game anchor, start that game immediately.
+  window.addEventListener('hashchange', () => {
+    const target = document.querySelector(location.hash || '');
+    const iframe = target?.querySelector?.('[data-game-src]');
+    startDeferredGame(iframe);
+  });
+
+  if (location.hash) {
+    const target = document.querySelector(location.hash);
+    const iframe = target?.querySelector?.('[data-game-src]');
+    startDeferredGame(iframe);
+  }
+
   // Game audio:
   // - default muted;
   // - if the user unmutes, leaving the game section suspends audio;
