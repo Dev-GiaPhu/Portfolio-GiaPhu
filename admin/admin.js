@@ -780,12 +780,13 @@
       handle.type = 'button';
       handle.className = 'admin-project-image-handle';
       handle.dataset.imageKind = 'card';
-      handle.textContent = 'ẢNH NỀN ' + String(index + 1).padStart(2, '0');
+      handle.textContent = 'ĐỔI ẢNH NỀN ' + String(index + 1).padStart(2, '0');
 
       handle.addEventListener('click', (event) => {
         event.preventDefault();
         event.stopPropagation();
         selectElement(image);
+        imageFile.click();
       });
 
       card.appendChild(handle);
@@ -1124,6 +1125,33 @@
     applyValue(selector, 'src', url);
     pushChange(selector, 'src', before, url);
     imageUrl.value = url;
+
+    const key = recordKey(selector, 'src');
+    const { error: saveError } = await client
+      .from('portfolio_content')
+      .upsert({
+        key,
+        selector,
+        property: 'src',
+        value: url,
+        updated_at: new Date().toISOString(),
+        updated_by: sessionUser?.id || null
+      }, { onConflict: 'key' });
+
+    if (saveError) {
+      setStatus('ẢNH ĐÃ UPLOAD · CHƯA LƯU', 'is-dirty');
+      alert(
+        'Ảnh đã upload nhưng chưa lưu được vào CMS.\n\n' +
+        saveError.message
+      );
+      return;
+    }
+
+    dirty.delete(key);
+    setStatus(
+      dirty.size ? 'ẢNH ĐÃ LƯU · CÒN THAY ĐỔI KHÁC' : 'ẢNH ĐÃ LƯU',
+      dirty.size ? 'is-dirty' : 'is-saved'
+    );
   }
 
   async function resetCurrent() {
