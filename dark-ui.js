@@ -24,9 +24,20 @@
   // Soft cursor glow on desktop.
   const glow = document.querySelector('.cursor-glow');
   if (glow && !reducedMotion && finePointer) {
+    let glowFrame = 0;
+    let glowX = 0;
+    let glowY = 0;
+
     window.addEventListener('pointermove', (event) => {
-      glow.style.setProperty('--x', event.clientX + 'px');
-      glow.style.setProperty('--y', event.clientY + 'px');
+      glowX = event.clientX;
+      glowY = event.clientY;
+      if (glowFrame) return;
+
+      glowFrame = requestAnimationFrame(() => {
+        glowFrame = 0;
+        glow.style.setProperty('--x', glowX + 'px');
+        glow.style.setProperty('--y', glowY + 'px');
+      });
     }, { passive: true });
   }
 
@@ -47,25 +58,40 @@
 
       if (!shell) return;
 
+      let tiltFrame = 0;
+      let pointerX = 0;
+      let pointerY = 0;
+
       wrapper.addEventListener('pointermove', (event) => {
-        const rect = wrapper.getBoundingClientRect();
-        const px = (event.clientX - rect.left) / rect.width;
-        const py = (event.clientY - rect.top) / rect.height;
-        const rotateY = (px - 0.5) * 16;
-        const rotateX = (0.5 - py) * 14;
+        pointerX = event.clientX;
+        pointerY = event.clientY;
+        if (tiltFrame) return;
 
-        shell.style.transform =
-          `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-7px) scale(1.012)`;
+        tiltFrame = requestAnimationFrame(() => {
+          tiltFrame = 0;
+          const rect = wrapper.getBoundingClientRect();
+          const px = (pointerX - rect.left) / rect.width;
+          const py = (pointerY - rect.top) / rect.height;
+          const rotateY = (px - 0.5) * 16;
+          const rotateX = (0.5 - py) * 14;
 
-        if (glare) {
-          glare.style.setProperty('--mx', `${px * 100}%`);
-          glare.style.setProperty('--my', `${py * 100}%`);
-        }
+          shell.style.transform =
+            `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-7px) scale(1.012)`;
 
-        wrapper.classList.add('is-hovering');
-      });
+          if (glare) {
+            glare.style.setProperty('--mx', `${px * 100}%`);
+            glare.style.setProperty('--my', `${py * 100}%`);
+          }
+
+          wrapper.classList.add('is-hovering');
+        });
+      }, { passive: true });
 
       wrapper.addEventListener('pointerleave', () => {
+        if (tiltFrame) {
+          cancelAnimationFrame(tiltFrame);
+          tiltFrame = 0;
+        }
         shell.style.transform = '';
         wrapper.classList.remove('is-hovering');
       });
