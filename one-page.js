@@ -315,6 +315,13 @@
   window.addEventListener('resize', syncScrollUi, { passive: true });
   syncScrollUi();
 
+  // Prevent casual browser context/source actions over the embedded game area.
+  // The actual iframe also applies the same guard internally.
+  document.addEventListener('contextmenu', (event) => {
+    if (!event.target.closest?.('.one-project-game')) return;
+    event.preventDefault();
+  }, { capture: true });
+
   // Game audio:
   // - default muted;
   // - if the user unmutes, leaving the game section suspends audio;
