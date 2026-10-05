@@ -618,6 +618,51 @@
     });
   }
 
+  async function optimizeImageForUpload(file) {
+    if (
+      !file ||
+      !file.type?.startsWith('image/') ||
+      file.type === 'image/gif' ||
+      file.type === 'image/svg+xml' ||
+      file.size < 700000 ||
+      !window.createImageBitmap
+    ) {
+      return file;
+    }
+
+    try {
+      setStatus('ĐANG TỐI ƯU ẢNH...');
+
+      const bitmap = await createImageBitmap(file);
+      const maxDimension = 1920;
+      const scale = Math.min(1, maxDimension / Math.max(bitmap.width, bitmap.height));
+      const width = Math.max(1, Math.round(bitmap.width * scale));
+      const height = Math.max(1, Math.round(bitmap.height * scale));
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+
+      const context = canvas.getContext('2d', { alpha: true });
+      context.drawImage(bitmap, 0, 0, width, height);
+      bitmap.close?.();
+
+      const blob = await new Promise((resolve) => {
+        canvas.toBlob(resolve, 'image/webp', 0.86);
+      });
+
+      if (!blob || blob.size >= file.size) return file;
+
+      const baseName = file.name.replace(/\.[^.]+$/, '') || 'portfolio-image';
+      return new File([blob], baseName + '.webp', {
+        type: 'image/webp',
+        lastModified: Date.now()
+      });
+    } catch {
+      return file;
+    }
+  }
+
   async function uploadGalleryFiles(files) {
     const gallery = selected?.matches?.('[data-project-gallery]')
       ? selected
@@ -632,15 +677,17 @@
     const errors = [];
 
     for (const file of files) {
-      const safeName = file.name.replace(/[^a-z0-9._-]+/gi, '-').toLowerCase();
+      const optimizedFile = await optimizeImageForUpload(file);
+      const safeName = optimizedFile.name.replace(/[^a-z0-9._-]+/gi, '-').toLowerCase();
       const path = Date.now() + '-' + uploaded + '-' + safeName;
 
       setStatus('ĐANG UPLOAD ẢNH ' + (uploaded + 1) + '/' + files.length + '...');
 
       const { error } = await client.storage
         .from('portfolio-media')
-        .upload(path, file, {
-          cacheControl: '3600',
+        .upload(path, optimizedFile, {
+          cacheControl: '31536000',
+          contentType: optimizedFile.type || file.type || undefined,
           upsert: false
         });
 
@@ -1097,15 +1144,17 @@
 
     const selector = structuralSelector(selected);
     const before = valueFor(selected, 'src');
-    const safeName = file.name.replace(/[^a-z0-9._-]+/gi, '-').toLowerCase();
+    const optimizedFile = await optimizeImageForUpload(file);
+    const safeName = optimizedFile.name.replace(/[^a-z0-9._-]+/gi, '-').toLowerCase();
     const path = Date.now() + '-' + safeName;
 
     setStatus('ĐANG UPLOAD ẢNH...');
 
     const { error } = await client.storage
       .from('portfolio-media')
-      .upload(path, file, {
-        cacheControl: '3600',
+      .upload(path, optimizedFile, {
+        cacheControl: '31536000',
+        contentType: optimizedFile.type || file.type || undefined,
         upsert: false
       });
 
