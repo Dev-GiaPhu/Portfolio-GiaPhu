@@ -6338,7 +6338,7 @@ main{
     width:100%;
     max-width:100%;
     overflow-x:hidden;
-    padding-bottom:calc(84px + env(safe-area-inset-bottom));
+    padding-bottom:0;
   }
 
   html.game-mobile-open,
@@ -6358,7 +6358,7 @@ main{
     width:100%!important;
     max-width:none!important;
     margin:0!important;
-    padding:0 16px calc(96px + env(safe-area-inset-bottom))!important;
+    padding:0 16px 28px!important;
     overflow:visible!important;
   }
 
