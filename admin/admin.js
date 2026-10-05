@@ -387,6 +387,67 @@
     setStatus('CÓ THAY ĐỔI · CTRL+S ĐỂ LƯU', 'is-dirty');
   }
 
+  function contactHrefFromValue(action, value) {
+    const text = String(value || '').trim();
+
+    if (action === 'email') {
+      const email = text.replace(/^mailto:/i, '').replace(/\s+/g, '');
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+        ? 'mailto:' + email
+        : '';
+    }
+
+    if (action === 'phone' || action === 'tel' || action === 'sms') {
+      const plus = text.startsWith('+') ? '+' : '';
+      const digits = text.replace(/\D/g, '');
+      if (digits.length < 6) return '';
+      return (action === 'sms' ? 'sms:' : 'tel:') + plus + digits;
+    }
+
+    return '';
+  }
+
+  function syncContactActionsForElement(element) {
+    if (!element || !previewDocument) return;
+
+    const sourceKey = element.dataset?.siteText || '';
+    const links = [];
+
+    if (sourceKey) {
+      previewDocument
+        .querySelectorAll('a[data-contact-source="' + escapeCss(sourceKey) + '"]')
+        .forEach((link) => links.push(link));
+    }
+
+    const closestLink = element.closest?.(
+      'a[data-contact-action],a[href^="mailto:"],a[href^="tel:"],a[href^="sms:"]'
+    );
+    if (closestLink && !links.includes(closestLink)) links.push(closestLink);
+
+    if (!links.length) return;
+
+    const value = element.textContent?.trim() || '';
+
+    links.forEach((link) => {
+      const action =
+        String(link.dataset.contactAction || '').toLowerCase() ||
+        (link.getAttribute('href')?.startsWith('mailto:') ? 'email' : '') ||
+        (link.getAttribute('href')?.startsWith('tel:') ? 'phone' : '') ||
+        (link.getAttribute('href')?.startsWith('sms:') ? 'sms' : '');
+
+      const href = contactHrefFromValue(action, value);
+      if (!href) return;
+
+      const selector = structuralSelector(link);
+      const before = valueFor(link, 'href');
+
+      if (before === href) return;
+
+      link.setAttribute('href', href);
+      markDirty(selector, 'href', href);
+    });
+  }
+
   function pushChange(selector, property, before, after) {
     if (before === after) return;
     undoStack.push({ selector, property, before, after });
@@ -1050,6 +1111,7 @@
       const selector = contentSelector(element);
       const value = valueFor(element);
       markDirty(selector, 'innerHTML', value);
+      syncContactActionsForElement(element);
 
       if (selected === element) textValue.value = value;
     });
@@ -1260,6 +1322,7 @@
     const selector = contentSelector(selected);
     applyValue(selector, 'innerHTML', textValue.value);
     markDirty(selector, 'innerHTML', textValue.value);
+    syncContactActionsForElement(selected);
   });
 
   textValue.addEventListener('change', () => {
