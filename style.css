@@ -6306,3 +6306,15 @@ main{
     contain-intrinsic-size:auto 1200px;
   }
 }
+
+
+.one-project{
+  content-visibility:auto;
+  contain-intrinsic-size:auto 760px;
+}
+
+@media(max-width:620px){
+  .one-project{
+    contain-intrinsic-size:auto 620px;
+  }
+}
