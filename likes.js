@@ -18,6 +18,7 @@
   let user = null;
   let liked = false;
   let authPanel = null;
+  let initialStatePromise = null;
 
   function oauthRedirect() {
     return window.location.href.split('#')[0];
@@ -142,7 +143,20 @@
     button.querySelector('.like-heart').textContent = liked ? '♥' : '♡';
   }
 
+  async function ensureInitialState() {
+    if (!initialStatePromise) {
+      initialStatePromise = Promise.all([
+        refreshUserState(),
+        refreshCount()
+      ]);
+    }
+
+    await initialStatePromise;
+  }
+
   async function toggleLike() {
+    await ensureInitialState();
+
     if (!user) {
       createAuthPanel();
       return;
@@ -186,7 +200,17 @@
     await refreshCount();
   });
 
-  Promise.all([refreshUserState(), refreshCount()]).finally(() => {
-    button.disabled = false;
+  const startInitialState = () => {
+    ensureInitialState().finally(() => {
+      button.disabled = false;
+    });
+  };
+
+  requestAnimationFrame(() => {
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(startInitialState, { timeout: 1200 });
+    } else {
+      setTimeout(startInitialState, 240);
+    }
   });
 })();
