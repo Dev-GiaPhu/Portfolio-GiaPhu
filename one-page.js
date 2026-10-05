@@ -89,6 +89,10 @@
       if (!target) return;
 
       event.preventDefault();
+
+      const deferredGame = target.querySelector?.('[data-game-src]');
+      if (deferredGame) startDeferredGame(deferredGame);
+
       scrollToTarget(target);
       history.replaceState(null, '', selector);
     });
