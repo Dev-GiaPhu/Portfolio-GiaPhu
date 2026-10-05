@@ -172,29 +172,61 @@
         return match ? match[1] : fallback;
       }
 
-      const buildCacheToken =
-        Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
+      let buildVersion = '';
 
-      function assetUrl(base, buildDir, file) {
-        const url = new URL(buildDir.replace(/\/$/, '') + '/' + file, base);
-        url.searchParams.set('portfolio-build', buildCacheToken);
+      function rawAssetUrl(base, buildDir, file) {
+        return new URL(buildDir.replace(/\/$/, '') + '/' + file, base).href;
+      }
+
+      function versionedUrl(urlLike) {
+        const url = new URL(urlLike);
+        if (buildVersion) url.searchParams.set('v', buildVersion);
         return url.href;
       }
 
-      function freshUrl(urlLike) {
-        const url = new URL(urlLike);
-        url.searchParams.set('portfolio-build', buildCacheToken);
-        return url.href;
+      function assetUrl(base, buildDir, file) {
+        return versionedUrl(rawAssetUrl(base, buildDir, file));
+      }
+
+      function hashVersion(value) {
+        let hash = 2166136261;
+        for (let index = 0; index < value.length; index += 1) {
+          hash ^= value.charCodeAt(index);
+          hash = Math.imul(hash, 16777619);
+        }
+        return (hash >>> 0).toString(36);
+      }
+
+      async function resolveBuildVersion(base, buildDir, files, fallback) {
+        const markers = await Promise.all(
+          files.map(async (file) => {
+            try {
+              const response = await fetch(rawAssetUrl(base, buildDir, file), {
+                method: 'HEAD',
+                cache: 'no-cache'
+              });
+
+              return [
+                response.headers.get('etag') || '',
+                response.headers.get('last-modified') || '',
+                response.headers.get('content-length') || ''
+              ].join(':');
+            } catch {
+              return '';
+            }
+          })
+        );
+
+        const fingerprint = markers.filter(Boolean).join('|') || fallback || 'portfolio-build';
+        return hashVersion(fingerprint);
       }
 
       async function boot() {
-        const pageUrlObject = new URL('games/' + game + '/index.html', parent.location.href);
-        pageUrlObject.searchParams.set('portfolio-build', buildCacheToken);
-        const pageUrl = pageUrlObject.href;
+        const pageUrl = new URL('games/' + game + '/index.html', parent.location.href).href;
         statusText.textContent = 'Đang khởi động trò chơi...';
         progressValue.textContent = '0%';
 
-        const response = await fetch(pageUrl, { cache: 'no-store' });
+        const response = await fetch(pageUrl, { cache: 'no-cache' });
         if (!response.ok) throw new Error('Không tìm thấy games/' + game + '/index.html');
 
         const source = await response.text();
@@ -231,6 +263,13 @@
         const productName = parseQuoted(source, /productName\s*:\s*["']([^"']*)["']/, game);
         const productVersion = parseQuoted(source, /productVersion\s*:\s*["']([^"']*)["']/, '1.0');
 
+        buildVersion = await resolveBuildVersion(
+          base,
+          buildDir,
+          [dataFile, codeFile],
+          productVersion
+        );
+
         const displayName =
           fallbackNames[game] ||
           (productName && productName.trim()
@@ -244,13 +283,17 @@
           dataUrl: assetUrl(base, buildDir, dataFile),
           frameworkUrl: assetUrl(base, buildDir, frameworkFile),
           codeUrl: assetUrl(base, buildDir, codeFile),
-          streamingAssetsUrl: freshUrl(new URL('StreamingAssets/', base).href),
+          streamingAssetsUrl: versionedUrl(new URL('StreamingAssets/', base).href),
           companyName,
           productName,
           productVersion,
           showBanner: banner,
+          devicePixelRatio: Math.min(
+            window.devicePixelRatio || 1,
+            window.matchMedia('(max-width: 900px)').matches ? 1 : 1.5
+          ),
           cacheControl() {
-            return 'no-store';
+            return 'must-revalidate';
           }
         };
 
