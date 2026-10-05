@@ -7082,3 +7082,114 @@ main{
     top:8px!important;
   }
 }
+
+
+/* ============================================================
+   LOAD PERFORMANCE — EXPLICIT UNITY START + CHEAPER MOBILE PAINT
+   ============================================================ */
+.game-load-gate{
+  position:absolute;
+  z-index:11;
+  inset:0;
+  display:grid;
+  place-items:center;
+  padding:24px;
+  background:
+    radial-gradient(circle at 50% 42%,rgba(143,245,208,.08),transparent 34%),
+    linear-gradient(180deg,#080d14,#05070a);
+}
+
+.game-load-gate[hidden]{
+  display:none!important;
+}
+
+.game-load-gate button{
+  display:grid;
+  justify-items:center;
+  gap:9px;
+  width:min(360px,calc(100% - 24px));
+  padding:22px 20px;
+  border:1px solid rgba(143,245,208,.2);
+  border-radius:18px;
+  background:rgba(12,18,26,.88);
+  color:#eef7f4;
+  box-shadow:0 18px 50px rgba(0,0,0,.36);
+  cursor:pointer;
+  transition:transform .2s ease,border-color .2s ease,background .2s ease;
+}
+
+.game-load-gate button:hover{
+  transform:translateY(-2px);
+  border-color:rgba(143,245,208,.42);
+  background:rgba(16,28,27,.94);
+}
+
+.game-load-icon{
+  display:grid;
+  place-items:center;
+  width:48px;
+  height:48px;
+  padding-left:3px;
+  border-radius:50%;
+  background:var(--mint);
+  color:#07110e;
+  font-size:17px;
+  box-shadow:0 0 28px rgba(143,245,208,.16);
+}
+
+.game-load-gate strong{
+  font:700 12px/1.3 'Space Mono',monospace;
+  letter-spacing:.08em;
+}
+
+.game-load-gate small{
+  color:#8f9baa;
+  font-size:11px;
+  line-height:1.5;
+  text-align:center;
+}
+
+/* Avoid expensive blur/filter animation work during mobile scrolling.
+   Reveal still exists, but uses only compositor-friendly opacity/translate. */
+@media(max-width:767px){
+  [data-reveal]{
+    filter:none!important;
+    transform:translate3d(0,10px,0)!important;
+    transition:
+      opacity .34s ease,
+      transform .34s ease!important;
+    will-change:opacity,transform;
+  }
+
+  [data-reveal].is-visible{
+    transform:translate3d(0,0,0)!important;
+  }
+
+  .side-rail{
+    background:rgba(7,9,13,.97)!important;
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+
+  .terminal-card-meta,
+  .game-fullscreen-toggle,
+  .game-audio-toggle{
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+
+  .game-load-gate{
+    padding:16px!important;
+  }
+
+  .game-load-gate button{
+    width:min(320px,calc(100% - 12px));
+    padding:18px 16px;
+    border-radius:15px;
+  }
+
+  .game-load-icon{
+    width:44px;
+    height:44px;
+  }
+}
