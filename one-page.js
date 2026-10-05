@@ -328,6 +328,80 @@
   window.addEventListener('resize', syncScrollUi, { passive: true });
   syncScrollUi();
 
+  // Contact actions always follow the value currently shown on screen.
+  // This runs in capture phase so even a stale CMS href cannot win on click.
+  function contactActionFromLink(link) {
+    const explicit = String(link?.dataset?.contactAction || '').toLowerCase();
+    if (explicit) return explicit;
+
+    const href = String(link?.getAttribute?.('href') || '').toLowerCase();
+    if (href.startsWith('mailto:')) return 'email';
+    if (href.startsWith('tel:')) return 'phone';
+    if (href.startsWith('sms:')) return 'sms';
+    return '';
+  }
+
+  function contactValueFromLink(link, action) {
+    const sourceKey =
+      link?.dataset?.contactSource ||
+      (action === 'email' ? link?.dataset?.siteMailto : '') ||
+      (action === 'phone' ? link?.dataset?.siteTel : '') ||
+      '';
+
+    if (sourceKey) {
+      const local = [...link.querySelectorAll('[data-site-text]')]
+        .find((node) => node.dataset.siteText === sourceKey);
+      if (local) return local.textContent?.trim() || '';
+
+      const global = [...document.querySelectorAll('[data-site-text]')]
+        .find((node) => node.dataset.siteText === sourceKey);
+      if (global) return global.textContent?.trim() || '';
+    }
+
+    return (
+      link.querySelector('[data-contact-value]')?.textContent ||
+      link.querySelector('strong')?.textContent ||
+      link.textContent ||
+      ''
+    ).trim();
+  }
+
+  function contactHref(link) {
+    const action = contactActionFromLink(link);
+    if (!action) return '';
+
+    const value = contactValueFromLink(link, action);
+
+    if (action === 'email') {
+      const email = value.replace(/^mailto:/i, '').replace(/\s+/g, '');
+      if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return 'mailto:' + email;
+      }
+      return '';
+    }
+
+    if (action === 'phone' || action === 'tel' || action === 'sms') {
+      const plus = value.trim().startsWith('+') ? '+' : '';
+      const digits = value.replace(/\D/g, '');
+      if (digits.length < 6) return '';
+
+      const scheme = action === 'sms' ? 'sms:' : 'tel:';
+      return scheme + plus + digits;
+    }
+
+    return '';
+  }
+
+  document.addEventListener('click', (event) => {
+    const link = event.target.closest?.(
+      'a[data-contact-action],a[href^="mailto:"],a[href^="tel:"],a[href^="sms:"]'
+    );
+    if (!link) return;
+
+    const href = contactHref(link);
+    if (href) link.setAttribute('href', href);
+  }, { capture: true });
+
   // Prevent casual browser context/source actions over the embedded game area.
   // The actual iframe also applies the same guard internally.
   document.addEventListener('contextmenu', (event) => {
