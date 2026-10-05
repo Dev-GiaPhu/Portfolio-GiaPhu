@@ -359,6 +359,193 @@
     iframe.src = source;
   }
 
+  // Warm Unity build files in the browser cache after the portfolio has become
+  // interactive. This downloads game data in the background without creating
+  // a Unity instance, so clicking Play can reuse the same cached URLs.
+  const gamePreloadPromises = new WeakMap();
+
+  function parseUnityQuoted(source, pattern, fallback = '') {
+    const match = source.match(pattern);
+    return match?.[1] || fallback;
+  }
+
+  function hashBuildMarker(value) {
+    let hash = 2166136261;
+    for (let index = 0; index < value.length; index += 1) {
+      hash ^= value.charCodeAt(index);
+      hash = Math.imul(hash, 16777619);
+    }
+    return (hash >>> 0).toString(36);
+  }
+
+  async function getBuildFingerprint(base, buildDir, dataFile, codeFile, fallback) {
+    const markers = await Promise.all(
+      [dataFile, codeFile].map(async (file) => {
+        try {
+          const url = new URL(buildDir.replace(/\/$/, '') + '/' + file, base).href;
+          const response = await fetch(url, { method: 'HEAD', cache: 'no-cache' });
+          return [
+            response.headers.get('etag') || '',
+            response.headers.get('last-modified') || '',
+            response.headers.get('content-length') || ''
+          ].join(':');
+        } catch {
+          return '';
+        }
+      })
+    );
+
+    return hashBuildMarker(markers.filter(Boolean).join('|') || fallback || 'portfolio-build');
+  }
+
+  async function consumeForCache(url) {
+    const response = await fetch(url, {
+      cache: 'force-cache',
+      credentials: 'same-origin',
+      priority: 'low'
+    });
+
+    if (!response.ok) throw new Error('Không tải trước được ' + url);
+
+    if (!response.body?.getReader) {
+      await response.arrayBuffer();
+      return;
+    }
+
+    const reader = response.body.getReader();
+    while (true) {
+      const { done } = await reader.read();
+      if (done) break;
+    }
+  }
+
+  function markPreloadState(iframe, state) {
+    iframe.dataset.gamePreload = state;
+    const gate = iframe
+      ?.closest('.one-project-game')
+      ?.querySelector('[data-game-load-gate]');
+    gate?.setAttribute('data-preload-state', state);
+  }
+
+  async function preloadGameBuild(iframe) {
+    if (!iframe || iframe.dataset.gameLoaded === 'true') return;
+    if (gamePreloadPromises.has(iframe)) return gamePreloadPromises.get(iframe);
+
+    const promise = (async () => {
+      try {
+        markPreloadState(iframe, 'preparing');
+
+        const hostUrl = new URL(iframe.dataset.gameSrc, window.location.href);
+        const game = hostUrl.searchParams.get('game');
+        if (!game) return;
+
+        const pageUrl = new URL('games/' + game + '/index.html', window.location.href).href;
+        const response = await fetch(pageUrl, { cache: 'no-cache' });
+        if (!response.ok) return;
+
+        const source = await response.text();
+        const base = new URL('.', pageUrl).href;
+        const buildDir = parseUnityQuoted(
+          source,
+          /var\s+buildUrl\s*=\s*["']([^"']+)["']/,
+          'Build'
+        );
+        const loaderFile = parseUnityQuoted(
+          source,
+          /var\s+loaderUrl\s*=\s*buildUrl\s*\+\s*["']\/([^"']+)["']/
+        );
+        const dataFile = parseUnityQuoted(
+          source,
+          /dataUrl\s*:\s*buildUrl\s*\+\s*["']\/([^"']+)["']/
+        );
+        const frameworkFile = parseUnityQuoted(
+          source,
+          /frameworkUrl\s*:\s*buildUrl\s*\+\s*["']\/([^"']+)["']/
+        );
+        const codeFile = parseUnityQuoted(
+          source,
+          /codeUrl\s*:\s*buildUrl\s*\+\s*["']\/([^"']+)["']/
+        );
+        const productVersion = parseUnityQuoted(
+          source,
+          /productVersion\s*:\s*["']([^"']*)["']/,
+          '1.0'
+        );
+
+        if (!loaderFile || !dataFile || !frameworkFile || !codeFile) return;
+
+        const version = await getBuildFingerprint(
+          base,
+          buildDir,
+          dataFile,
+          codeFile,
+          productVersion
+        );
+
+        const buildUrl = (file) => {
+          const url = new URL(buildDir.replace(/\/$/, '') + '/' + file, base);
+          url.searchParams.set('v', version);
+          return url.href;
+        };
+
+        // Small runtime files first, then the two large payloads together.
+        await Promise.all([
+          consumeForCache(buildUrl(loaderFile)),
+          consumeForCache(buildUrl(frameworkFile))
+        ]);
+
+        await Promise.all([
+          consumeForCache(buildUrl(dataFile)),
+          consumeForCache(buildUrl(codeFile))
+        ]);
+
+        markPreloadState(iframe, 'ready');
+      } catch (error) {
+        console.info('Unity background preload skipped:', error);
+        markPreloadState(iframe, 'idle');
+      }
+    })();
+
+    gamePreloadPromises.set(iframe, promise);
+    return promise;
+  }
+
+  function scheduleGamePreloads() {
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if (connection?.saveData) return;
+    if (['slow-2g', '2g'].includes(connection?.effectiveType)) return;
+
+    let index = 0;
+    const preloadNext = async () => {
+      const iframe = deferredGameFrames[index++];
+      if (!iframe) return;
+
+      if (iframe.dataset.gameLoaded !== 'true') {
+        await preloadGameBuild(iframe);
+      }
+
+      if (index < deferredGameFrames.length) {
+        setTimeout(preloadNext, 250);
+      }
+    };
+
+    const begin = () => {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => preloadNext(), { timeout: 1800 });
+      } else {
+        setTimeout(preloadNext, 900);
+      }
+    };
+
+    if (document.readyState === 'complete') {
+      setTimeout(begin, 650);
+    } else {
+      window.addEventListener('load', () => setTimeout(begin, 650), { once: true });
+    }
+  }
+
+  scheduleGamePreloads();
+
   document.querySelectorAll('[data-game-load]').forEach((button) => {
     button.addEventListener('click', () => {
       const iframe = document.getElementById(button.dataset.gameLoad);
