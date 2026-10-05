@@ -424,7 +424,17 @@
     const gate = iframe
       ?.closest('.one-project-game')
       ?.querySelector('[data-game-load-gate]');
+
     gate?.setAttribute('data-preload-state', state);
+
+    const note = gate?.querySelector('small');
+    if (!note) return;
+
+    if (state === 'preparing') {
+      note.textContent = 'Đang chuẩn bị để vào game nhanh hơn...';
+    } else if (state === 'ready') {
+      note.textContent = 'Sẵn sàng — chạm để chơi.';
+    }
   }
 
   async function preloadGameBuild(iframe) {
