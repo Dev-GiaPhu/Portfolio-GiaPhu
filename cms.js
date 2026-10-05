@@ -86,9 +86,32 @@
     }
   }
 
+  function scheduleCms() {
+    const isAdminPreview =
+      new URLSearchParams(window.location.search).get('admin-preview') === '1';
+
+    if (isAdminPreview) {
+      applyCms();
+      return;
+    }
+
+    const run = () => applyCms();
+
+    // Give the browser the first paint and interaction setup before Supabase
+    // fetches and applies CMS overrides. Timeout guarantees content still
+    // refreshes quickly on busy devices.
+    requestAnimationFrame(() => {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(run, { timeout: 900 });
+      } else {
+        setTimeout(run, 180);
+      }
+    });
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', applyCms, { once: true });
+    document.addEventListener('DOMContentLoaded', scheduleCms, { once: true });
   } else {
-    applyCms();
+    scheduleCms();
   }
 })();
