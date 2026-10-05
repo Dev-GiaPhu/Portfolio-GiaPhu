@@ -399,7 +399,13 @@
     if (!link) return;
 
     const href = contactHref(link);
-    if (href) link.setAttribute('href', href);
+    if (!href) return;
+
+    // Never trust a previously saved/static href. Build the destination from
+    // the value currently visible after CMS has applied its changes.
+    link.setAttribute('href', href);
+    event.preventDefault();
+    window.location.href = href;
   }, { capture: true });
 
   // Prevent casual browser context/source actions over the embedded game area.
