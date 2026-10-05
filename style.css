@@ -6897,7 +6897,7 @@ main{
     left:8px!important;
     transform:none!important;
     display:grid!important;
-    grid-template-columns:minmax(0,1fr) 44px!important;
+    grid-template-columns:minmax(0,1fr) 60px!important;
     gap:6px!important;
     width:auto!important;
     height:auto!important;
@@ -6991,8 +6991,8 @@ main{
     display:flex!important;
     align-items:center!important;
     justify-content:center!important;
-    width:44px!important;
-    min-width:44px!important;
+    width:60px!important;
+    min-width:60px!important;
     height:46px!important;
     margin:0!important;
     padding:0!important;
@@ -7003,11 +7003,18 @@ main{
   }
 
   .rail-like .like-count{
-    display:none!important;
+    display:inline-block!important;
+    min-width:0!important;
+    margin-left:4px!important;
+    color:#dce9e5!important;
+    font:700 9px/1 'Space Mono',monospace!important;
+    letter-spacing:0!important;
+    white-space:nowrap!important;
   }
 
   .rail-like .like-heart{
     font-size:20px!important;
+    line-height:1!important;
   }
 }
 
@@ -7055,7 +7062,7 @@ main{
 @media(max-width:767px) and (orientation:landscape) and (max-height:560px){
   .side-rail{
     bottom:6px!important;
-    grid-template-columns:minmax(0,1fr) 42px!important;
+    grid-template-columns:minmax(0,1fr) 56px!important;
   }
 
   .rail-nav a,
