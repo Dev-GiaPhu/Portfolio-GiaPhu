@@ -6278,3 +6278,31 @@ main{
 .project-gallery:has(.project-gallery-item){
   display:grid!important;
 }
+
+
+/* ============================================================
+   PERFORMANCE: BELOW-THE-FOLD RENDERING
+   Keeps every section/feature intact while letting the browser skip
+   expensive off-screen layout/paint work until it is needed.
+   ============================================================ */
+.skills-deep-section,
+.education-section,
+.activities-section,
+.contact-compact-section{
+  content-visibility:auto;
+  contain-intrinsic-size:auto 900px;
+}
+
+.project-card-bg,
+.project-gallery-item img{
+  backface-visibility:hidden;
+}
+
+@media(max-width:900px){
+  .skills-deep-section,
+  .education-section,
+  .activities-section,
+  .contact-compact-section{
+    contain-intrinsic-size:auto 1200px;
+  }
+}
