@@ -13,13 +13,7 @@
 
   function escapeSelectorValue(value) {
     if (window.CSS?.escape) return window.CSS.escape(String(value));
-    return String(value).replace(/["\\]/g, '\\  window.PORTFOLIO_CMS_STATE = {
-    ready: false,
-    applied: 0,
-    error: null
-  };
-
-');
+    return String(value).replace(/["\\]/g, '\\$&');
   }
 
   function contactActionFor(link) {
@@ -41,11 +35,10 @@
       '';
 
     if (sourceKey) {
-      const selector = '[data-site-text="' + escapeSelectorValue(sourceKey) + '"]';
-      return (
-        link.querySelector(selector) ||
-        document.querySelector(selector)
-      );
+      const selector =
+        '[data-site-text="' + escapeSelectorValue(sourceKey) + '"]';
+
+      return link.querySelector(selector) || document.querySelector(selector);
     }
 
     return (
@@ -69,6 +62,7 @@
     const raw = String(value || '').trim();
     const plus = raw.startsWith('+') ? '+' : '';
     const digits = raw.replace(/\D/g, '');
+
     if (digits.length < 6) return '';
     return plus + digits;
   }
@@ -79,6 +73,7 @@
 
     try {
       if (/^https?:\/\//i.test(raw)) return new URL(raw).href;
+
       if (/^[\w.-]+\.[a-z]{2,}(?:[/?#].*)?$/i.test(raw)) {
         return new URL('https://' + raw).href;
       }
@@ -121,9 +116,10 @@
   }
 
   function syncContactLinks(root = document) {
-    const links = root.querySelectorAll?.(
-      'a[data-contact-action],a[href^="mailto:"],a[href^="tel:"],a[href^="sms:"]'
-    ) || [];
+    const links =
+      root.querySelectorAll?.(
+        'a[data-contact-action],a[href^="mailto:"],a[href^="tel:"],a[href^="sms:"]'
+      ) || [];
 
     links.forEach(syncContactLink);
   }
@@ -132,14 +128,11 @@
     syncContactLinks();
 
     const observer = new MutationObserver((mutations) => {
-      let shouldSync = false;
-
-      for (const mutation of mutations) {
-        if (mutation.type === 'characterData' || mutation.type === 'childList') {
-          shouldSync = true;
-          break;
-        }
-      }
+      const shouldSync = mutations.some(
+        (mutation) =>
+          mutation.type === 'characterData' ||
+          mutation.type === 'childList'
+      );
 
       if (shouldSync) syncContactLinks();
     });
@@ -150,7 +143,9 @@
       characterData: true
     });
 
-    window.addEventListener('portfolio-cms-ready', () => syncContactLinks());
+    window.addEventListener('portfolio-cms-ready', () => {
+      syncContactLinks();
+    });
   }
 
   function finishCms(state = {}) {
@@ -158,9 +153,11 @@
 
     resolveReady?.(window.PORTFOLIO_CMS_STATE);
 
-    window.dispatchEvent(new CustomEvent('portfolio-cms-ready', {
-      detail: window.PORTFOLIO_CMS_STATE
-    }));
+    window.dispatchEvent(
+      new CustomEvent('portfolio-cms-ready', {
+        detail: window.PORTFOLIO_CMS_STATE
+      })
+    );
   }
 
   async function applyCms() {
@@ -170,7 +167,10 @@
         return;
       }
 
-      if (!window.PORTFOLIO_SUPABASE_URL || !window.PORTFOLIO_SUPABASE_ANON_KEY) {
+      if (
+        !window.PORTFOLIO_SUPABASE_URL ||
+        !window.PORTFOLIO_SUPABASE_ANON_KEY
+      ) {
         finishCms({ error: 'Supabase config unavailable' });
         return;
       }
@@ -240,9 +240,6 @@
 
     const run = () => applyCms();
 
-    // Give the browser the first paint and interaction setup before Supabase
-    // fetches and applies CMS overrides. Timeout guarantees content still
-    // refreshes quickly on busy devices.
     requestAnimationFrame(() => {
       if ('requestIdleCallback' in window) {
         requestIdleCallback(run, { timeout: 900 });
@@ -253,10 +250,14 @@
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      installContactLinkSync();
-      scheduleCms();
-    }, { once: true });
+    document.addEventListener(
+      'DOMContentLoaded',
+      () => {
+        installContactLinkSync();
+        scheduleCms();
+      },
+      { once: true }
+    );
   } else {
     installContactLinkSync();
     scheduleCms();
