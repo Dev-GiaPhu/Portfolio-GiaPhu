@@ -7193,3 +7193,66 @@ main{
     height:44px;
   }
 }
+
+
+/* ============================================================
+   MOBILE TYPOGRAPHY SAFETY — prevent final glyph clipping
+   Geologica/Vietnamese uppercase glyphs can overhang their box on narrow screens.
+   ============================================================ */
+@media(max-width:767px){
+  .section-head > div,
+  .education-head > div,
+  .activities-head,
+  .contact-compact-head > div,
+  .play-only-heading{
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    overflow:visible!important;
+  }
+
+  .section-head h2,
+  .education-head h2,
+  .activities-head h2,
+  .contact-compact-head h2{
+    display:block!important;
+    width:100%!important;
+    max-width:none!important;
+    box-sizing:border-box!important;
+    padding-right:.16em!important;
+    overflow:visible!important;
+    font-size:clamp(31px,10vw,46px)!important;
+    line-height:1.12!important;
+    letter-spacing:-.028em!important;
+    text-wrap:balance!important;
+  }
+
+  .play-only-heading h3,
+  .education-card-top h3,
+  .terminal-project-card .console-body h3,
+  .terminal-card-meta h3{
+    max-width:100%!important;
+    box-sizing:border-box!important;
+    padding-right:.12em!important;
+    overflow:visible!important;
+    overflow-wrap:normal!important;
+    word-break:normal!important;
+  }
+
+  .eyebrow{
+    max-width:100%!important;
+    overflow:visible!important;
+    white-space:normal!important;
+    overflow-wrap:anywhere!important;
+  }
+}
+
+@media(max-width:390px){
+  .section-head h2,
+  .education-head h2,
+  .activities-head h2,
+  .contact-compact-head h2{
+    font-size:clamp(29px,9.6vw,38px)!important;
+    padding-right:.2em!important;
+  }
+}
