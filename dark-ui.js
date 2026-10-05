@@ -1,6 +1,7 @@
 (() => {
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const mobileViewport = window.matchMedia('(max-width: 767px)').matches;
 
   // Reveal sections on scroll.
   if (!reducedMotion && 'IntersectionObserver' in window) {
@@ -10,7 +11,10 @@
         entry.target.classList.add('is-visible');
         observer.unobserve(entry.target);
       });
-    }, { threshold: 0.12 });
+    }, {
+      threshold: mobileViewport ? 0.01 : 0.12,
+      rootMargin: mobileViewport ? '180px 0px' : '0px'
+    });
 
     document.querySelectorAll('[data-reveal]').forEach((element) => {
       observer.observe(element);
