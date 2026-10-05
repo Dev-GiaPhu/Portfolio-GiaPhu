@@ -178,6 +178,7 @@
   // Best-effort shortcut deterrence. Browsers can still expose DevTools
   // through their own menus; client-side code cannot disable that absolutely.
   document.addEventListener('contextmenu', (event) => {
+    if (!event.target.closest?.('.one-project-game')) return;
     event.preventDefault();
   });
 
